@@ -137,7 +137,8 @@ export default function Home() {
 						<div>
 							<Button
 								variant="link"
-								className="text-cyan-500 hover:text-cyan-400"
+								effect="hoverUnderline"
+								className="text-cyan-500 hover:text-cyan-400 after:bg-cyan-500"
 							>
 								<Link
 									href="/projects/ubc-grade-analyzer"
@@ -158,21 +159,6 @@ export default function Home() {
 						</div>
 					</li>
 				</ul>
-			</div>
-
-			{/* Contact Section */}
-			<div className="mt-10">
-				<h2 className="text-2xl font-semibold tracking-tight">Contact</h2>
-				<p className="font-mono mt-2">
-					Want to chat? Just shoot me an email{" "}
-					<Link
-						href="mailto:adrian@lams.cc"
-						className="text-cyan-500 hover:text-cyan-400"
-					>
-						here
-					</Link>{" "}
-					and I'll respond whenever I can.
-				</p>
 			</div>
 		</main>
 	);

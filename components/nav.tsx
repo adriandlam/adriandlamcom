@@ -1,9 +1,20 @@
-import { Camera, FileText, House, Mail, NotebookPen } from "lucide-react";
+'use client'
+
+import { Camera, House, Mail, NotebookPen, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Nav() {
+	const pathname = usePathname();
+
+	// TODO: active tab indicator
+	useEffect(() => {
+
+	}, [pathname])
+
 	return (
 		<nav className="fixed left-0 bottom-4 px-4 w-full flex justify-center z-10">
 			<div className="p-1 bg-background shadow-xl rounded-md border h-full flex justify-center max-w-xl">
@@ -39,7 +50,14 @@ export default function Nav() {
 					</li>
 					<li>
 						<Button size="icon" variant="ghost" asChild>
-							<Link href="https://www.github.com/adrianlamdev" target="_blank">
+							<Link href="https://x.com/adrianlam_dev" target="_blank">
+							<XIcon />
+							</Link>
+						</Button>
+					</li>
+					<li>
+						<Button size="icon" variant="ghost" asChild>
+							<Link href="https://www.github.com/adriandlam" target="_blank">
 								<svg
 									viewBox="0 0 24 24"
 									xmlns="http://www.w3.org/2000/svg"
@@ -57,3 +75,17 @@ export default function Nav() {
 		</nav>
 	);
 }
+
+const XIcon = () => (
+
+							<svg viewBox="0 0 300 301" className="text-foreground w-3! h-3!" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<g clipPath="url(#clip0_174_240)">
+<path d="M178.57 127.15L290.27 0H263.81L166.78 110.38L89.34 0H0L117.13 166.93L0 300.25H26.46L128.86 183.66L210.66 300.25H300M36.01 19.54H76.66L263.79 281.67H223.13"/>
+</g>
+<defs>
+<clipPath id="clip0_174_240">
+<rect width="300" height="301" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+	)

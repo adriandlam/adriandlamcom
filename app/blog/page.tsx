@@ -3,6 +3,7 @@ import path from "path";
 import { cn } from "@/lib/utils";
 import matter from "gray-matter";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -59,14 +60,17 @@ export default function BlogPage() {
 				{posts.map((post, i) => (
 					<article
 						key={post.slug}
-						className={cn("border-b pb-8", {
+						className={cn("border-b pb-4", {
 							"border-0 pb-0": i === posts.length - 1,
+							"mt-10": i == 0
 						})}
 					>
 						<Link href={`/blog/${post.slug}`} className="block group">
-							<h2 className="text-2xl font-semibold group-hover:text-cyan-500 transition-colors mb-0!">
+						<Button asChild variant="link" effect="hoverUnderline" className="p-0 text-cyan-500 group-hover:text-cyan-400 after:bg-cyan-500 after:bottom-1 after:w-full">
+							<h2 className="text-2xl font-semibold transition-colors my-0!">
 								{post.title}
 							</h2>
+						</Button>
 							<time className="text-sm text-muted-foreground block mt-2">
 								{formatDate(post.publishedAt)}
 							</time>
