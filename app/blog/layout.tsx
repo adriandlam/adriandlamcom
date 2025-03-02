@@ -1,0 +1,9 @@
+import "katex/dist/katex.min.css";
+
+export default function MdxLayout({ children }: { children: React.ReactNode }) {
+	return (
+		<div className="prose prose-headings:mt-8 prose-headings:font-semibold prose-headings:text-foreground prose-headings:tracking-tight prose-h1:mt-0 prose-h1:text-3xl prose-h1:mb-0 prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg prose-span:text-muted-foreground prose-p:text-foreground prose-p:font-mono prose-pre:bg-muted prose-li:text-foreground prose-strong:text-foreground prose-strong:font-semibold prose-th:text-muted-foreground prose-th:font-medium prose-thead:border-border prose-td:text-foreground">
+			{children}
+		</div>
+	);
+}

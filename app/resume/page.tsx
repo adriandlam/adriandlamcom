@@ -64,11 +64,11 @@ export default function ResumePage() {
 		if (!windowWidth) return 800;
 		if (windowWidth < 640) return windowWidth - 40; // Small screens
 		if (windowWidth < 1024) return 600; // Medium screens
-		return 800; // Large screens
+		return 650; // Large screens
 	};
 
 	return (
-		<main className="container mx-auto px-4 py-8">
+		<main className="max-w-2xl mx-auto px-4">
 			<div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
 				<div>
 					<h1 className="text-3xl font-semibold tracking-tight">Resume</h1>
@@ -126,7 +126,7 @@ export default function ResumePage() {
 						loading={null}
 						error={null}
 					>
-						{numPages > 0 && (
+						{numPages && numPages > 0 && (
 							<Page
 								pageNumber={1}
 								scale={scale}

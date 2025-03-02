@@ -5,40 +5,40 @@ import { Separator } from "./ui/separator";
 
 export default function Nav() {
 	return (
-		<nav className="fixed left-0 bottom-4 px-4 w-full">
-			<div className="px-3 py-2 bg-background shadow-xl rounded-full border h-full flex justify-center">
+		<nav className="fixed left-0 bottom-4 px-4 w-full flex justify-center z-10">
+			<div className="p-1 bg-background shadow-xl rounded-md border h-full flex justify-center max-w-xl">
 				<ul className="flex items-center gap-2">
 					<li>
-						<Button size="icon" variant="ghost">
-							<Link href="/resume">
+						<Button size="icon" variant="ghost" asChild>
+							<Link href="/">
 								<House />
 							</Link>
 						</Button>
 					</li>
 					<li>
-						<Button size="icon" variant="ghost">
+						<Button size="icon" variant="ghost" asChild>
 							<Link href="/resume">
 								<FileText />
 							</Link>
 						</Button>
 					</li>
 					<li>
-						<Button size="icon" variant="ghost">
+						<Button size="icon" variant="ghost" asChild>
 							<Link href="/blog">
 								<NotebookPen />
 							</Link>
 						</Button>
 					</li>
-					<Separator orientation="vertical" className="h-5" />
+					<Separator orientation="vertical" className="min-h-6!" />
 					<li>
-						<Button size="icon" variant="ghost">
+						<Button size="icon" variant="ghost" asChild>
 							<Link href="mailto:adrian@lams.cc">
 								<Mail />
 							</Link>
 						</Button>
 					</li>
 					<li>
-						<Button size="icon" variant="ghost">
+						<Button size="icon" variant="ghost" asChild>
 							<Link href="https://www.github.com/adrianlamdev" target="_blank">
 								<svg
 									viewBox="0 0 24 24"

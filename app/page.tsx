@@ -6,6 +6,7 @@ import Link from "next/link";
 export default function Home() {
 	return (
 		<main>
+			{/*  */}
 			<div className="flex items-center justify-between gap-6">
 				<div>
 					<h1 className="text-3xl font-semibold tracking-tight">Adrian Lam</h1>
@@ -20,6 +21,7 @@ export default function Home() {
 				</Avatar>
 			</div>
 
+			{/* GitHub Recent Activity */}
 			<div className="mt-10">
 				<h2 className="text-2xl font-semibold tracking-tight">
 					Recent GitHub Activity
@@ -30,10 +32,11 @@ export default function Home() {
 					className="mt-2"
 				/>
 				<p className="font-mono mt-2 text-muted-foreground text-xs text-center">
-					Psssst, can you tell when my exams are? I'm not sure if I can.
+					Psssst, can you tell when my exams are? I'm not sure if I can
 				</p>
 			</div>
 
+			{/* About Me Section */}
 			<div className="mt-10">
 				<h2 className="text-2xl font-semibold tracking-tight">About Me</h2>
 				<p className="font-mono mt-2">
@@ -43,6 +46,8 @@ export default function Home() {
 					learning, and data analysis.
 				</p>
 			</div>
+
+			{/* Education Section */}
 			<div className="mt-10">
 				<h2 className="text-2xl font-semibold tracking-tight">Education</h2>
 				<div className="mt-2">
@@ -57,6 +62,8 @@ export default function Home() {
 					</p>
 				</div>
 			</div>
+
+			{/* Projects Section */}
 			<div className="mt-10">
 				<h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
 				<p className="font-mono mt-2">
@@ -152,6 +159,8 @@ export default function Home() {
 					</li>
 				</ul>
 			</div>
+
+			{/* Contact Section */}
 			<div className="mt-10">
 				<h2 className="text-2xl font-semibold tracking-tight">Contact</h2>
 				<p className="font-mono mt-2">

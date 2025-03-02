@@ -34,10 +34,12 @@ export default function RootLayout({
 					defaultTheme="dark"
 					disableTransitionOnChange
 				>
-					<div className="px-6 pt-10 pb-24">
+					<div className="px-6">
 						<Nav />
-						{children}
-						<Footer />
+						<div className="mx-auto max-w-2xl pt-10 md:pt-20">
+							{children}
+							<Footer />
+						</div>
 					</div>
 				</ThemeProvider>
 			</body>

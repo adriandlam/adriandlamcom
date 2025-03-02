@@ -1,0 +1,56 @@
+---
+title: "My Home Lab"
+publishedAt: "2025-01-02"
+summary: "An overview of my home lab setup, including the hardware and software I use."
+---
+
+
+Originally, I was looking to make a micro ATX build, but was fortunate that my good ol' friend had gifted me a Dell PowerEdge T630 Server. I'll be going through the hardware and software I use in my home lab setup, as well as possible use cases for it, for those that are looking to do something similar.
+Anyways, rate my server set up:
+
+![](/blog-assets/my-home-lab/server.jpg)
+
+## Motivation
+
+Imagine, for the price of a few hard drives, some tedious set up, and a little bit of electricity, you can have your own personal cloud storage, ad blocker, and VPN. I've always been interested in self-hosting services, and I've been using a Raspberry Pi 4 for a while now. I wanted to upgrade to something more powerful, and I was lucky enough to get a server for free. I've been using it for a few months now, and it's been working great. I've been hosting my family's files, blocking ads on my network, and accessing my server from anywhere using TailScale. I thought it would be a good idea to dip my toes into devops and learn more about server management.
+
+## Hardware
+
+### Dell PowerEdge T630 Server
+
+- **CPU**: 2x Intel Xeon E5-2620 v3 (6 cores, 12 threads each)
+- **RAM**: 64GB DDR4 ECC (56GB usable, 2 sticks are finicky and I was too lazy to look into them)
+- **Storage (a little overkill)**: 2x 1TB HDDs (RAID 1), 2x 4TB HDDs (RAID 1)
+- **Network**: 4x 1Gbps Ethernet ports
+- **OS**: Debian 12
+
+## Use cases
+
+### File Server
+
+I'm currently hosting my family's files using Seafile to sync files between my devices. It's a self-hosted cloud storage solution that's similar to Google Drive, but with more control over your data. I was paying roughly ~$1.5/month for 50GB of storage on Apple iCloud, so 5TB of storage might be a little overkill.
+Honestly, Seafile makes it extremely easy to sync files between devices, and I can't recommend it enough. I had some troubles setting up SSL with Nginx since I'm not too familiar with it, but I managed to get it working in the end.
+
+### Pi-hole
+
+I'm using Pi-hole to block ads on my network. It's a DNS sinkhole that blocks ads at the DNS level, so it's network-wide. It's a great way to block ads on your network without having to install ad blockers on every device. I've been using it for a while now, and it's been working great.
+It won't be able to block all ads (ex. YouTube, since those are injected into the video stream), but it does a great job at blocking most ads. It also has a nice web interface that shows you the number of queries, blocked queries, and more.
+
+### TailScale
+
+This was honestly an amazing experience, TailScale makes it extremely easy to setup a VPN. It's a mesh VPN that connects all your devices together, so you can access them from anywhere. I've been using it to access my home server from my phone, and it's been working great. It's also free for personal use. 
+There was a time when I was playing around with configurations and I accidentally locked myself out of my server (rookie mistake), but I was able to access it using TailScale.
+
+## Future Plans
+
+It's hard to use the full potential of the server since I'm across the country from it. I've thought about grabbing some GPUs to do some machine learning and hosting, but I'm not sure if it's worth it.
+
+## Conclusion
+
+Honestly, I think self-hosting services is a great way to learn more about server management and devops. It's also a great way to have more control over your data. I've been using my server for a few months now, and it's been working great. I've been hosting my family's files, blocking ads on my network, and accessing my server from anywhere using TailScale.
+Some things to note are:
+
+- It's a little overkill for my use case (you could probably get away with some cheaper hardware)
+- It's VERY loud (I had it by my bed and it sounds like a genuine jet engine)
+- It's probably power hungry (I haven't checked, but it's a server, so it's probably power hungry)
+- You should probably be patient because it's literally bare metal (lots of tedious set up)
