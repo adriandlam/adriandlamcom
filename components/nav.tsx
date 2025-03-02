@@ -1,4 +1,4 @@
-import { FileText, House, Mail, NotebookPen } from "lucide-react";
+import { Camera, FileText, House, Mail, NotebookPen } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
@@ -17,15 +17,15 @@ export default function Nav() {
 					</li>
 					<li>
 						<Button size="icon" variant="ghost" asChild>
-							<Link href="/resume">
-								<FileText />
+							<Link href="/blog">
+								<NotebookPen />
 							</Link>
 						</Button>
 					</li>
 					<li>
 						<Button size="icon" variant="ghost" asChild>
-							<Link href="/blog">
-								<NotebookPen />
+							<Link href="/photos">
+								<Camera />
 							</Link>
 						</Button>
 					</li>
