@@ -64,7 +64,7 @@ export default function Home() {
 					of:
 				</p>
 				<ul className="mt-6 space-y-6">
-					<li className="border p-4 rounded-md shadow hover:shadow-lg transition-all list-none">
+					<li className="border p-4 rounded shadow hover:shadow-lg transition-all list-none">
 						<h3 className="font-medium text-lg tracking-tight">Heida</h3>
 						<p className="font-mono mt-0.5 text-sm">
 							A complete end-2-end web application for AI-powered productivity
@@ -84,7 +84,7 @@ export default function Home() {
 							</div>
 						</div>
 					</li>
-					<li className="border p-4 rounded-md shadow hover:shadow-lg transition-all">
+					<li className="border p-4 rounded shadow hover:shadow-lg transition-all">
 						<h3 className="font-medium text-lg tracking-tight">
 							MNIST Digit Classifier
 						</h3>
@@ -104,7 +104,7 @@ export default function Home() {
 							</div>
 						</div>
 					</li>
-					<li className="border p-4 rounded-md shadow hover:shadow-lg transition-all flex flex-col justify-between">
+					<li className="border p-4 rounded shadow hover:shadow-lg transition-all flex flex-col justify-between">
 						<div>
 							<h3 className="font-medium text-lg tracking-tight">
 								UBC Grade Analyzer
