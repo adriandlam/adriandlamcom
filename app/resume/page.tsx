@@ -17,11 +17,11 @@ import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function ResumePage() {
-	const [numPages, setNumPages] = useState(null);
+	const [numPages, setNumPages] = useState<number>(0);
 	const [loading, setLoading] = useState(true);
 	const [scale, setScale] = useState(1.0);
-	const [windowWidth, setWindowWidth] = useState(null);
-	const [error, setError] = useState(null);
+	const [windowWidth, setWindowWidth] = useState<number | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		// Get window width for responsive sizing
@@ -37,14 +37,14 @@ export default function ResumePage() {
 		}
 	}, []);
 
-	function onDocumentLoadSuccess({ numPages }) {
+	function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
 		console.log("PDF loaded successfully with", numPages, "pages");
 		setNumPages(numPages);
 		setLoading(false);
 		setError(null);
 	}
 
-	function onDocumentLoadError(error) {
+	function onDocumentLoadError(error: Error) {
 		console.error("PDF failed to load:", error);
 		setLoading(false);
 		setError(`Error loading PDF: ${error.message}`);
