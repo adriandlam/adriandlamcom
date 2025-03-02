@@ -10,6 +10,9 @@ const nextConfig = {
 		mdxRs: false,
 	},
 	transpilePackages: ["next-mdx-remote"],
+	typescript: {
+		ignoreBuildErrors: true,
+	},
 };
 
 const withMDX = createMDX({

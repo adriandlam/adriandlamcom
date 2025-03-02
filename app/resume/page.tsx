@@ -3,13 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-	ArrowLeft,
-	ArrowRight,
-	DownloadIcon,
-	ZoomInIcon,
-	ZoomOutIcon,
-} from "lucide-react";
+import { DownloadIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
