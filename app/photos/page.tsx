@@ -26,14 +26,13 @@ export default function PhotosPage() {
 			{/* Photo Grid */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
 				{photoFilenames.map((filename, i) => (
-					<div key={filename} className="relative w-full rounded">
-						<img
-							src={`/photos/${filename}`}
-							// biome-ignore lint/a11y/noRedundantAlt: <explanation>
-							alt={`Photo ${i + 1}`}
-							className="object-cover"
-						/>
-					</div>
+					<img
+						key={filename}
+						src={`/photos/${filename}`}
+						// biome-ignore lint/a11y/noRedundantAlt: <explanation>
+						alt={`Photo ${i + 1}`}
+						className="rounded shadow-sm"
+					/>
 				))}
 			</div>
 		</div>
