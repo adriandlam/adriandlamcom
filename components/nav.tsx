@@ -3,58 +3,83 @@
 import { Camera, House, Mail, NotebookPen, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
+interface Tab {
+	name: string;
+	icon: React.ReactNode;
+	href: string;
+}
+
+const tabs: Tab[] = [
+	{ name: "home", icon: <House />, href: "/" },
+	{ name: "blog", icon: <NotebookPen />, href: "/blog" },
+	{ name: "photos", icon: <Camera />, href: "/photos" },
+];
+
 export default function Nav() {
 	const pathname = usePathname();
+	const [activeTab, setActiveTab] = useState<string>(tabs[0].name);
 
-	// TODO: active tab indicator
-	useEffect(() => {}, [pathname]);
+	useEffect(() => {
+		const tab = tabs.find((tab) => tab.href === pathname);
+		if (tab) setActiveTab(tab.name);
+	}, [pathname]);
 
 	return (
 		<nav className="fixed left-0 bottom-4 px-4 w-full flex justify-center z-10">
 			<div className="p-1 bg-background shadow-xl rounded-md border h-full flex justify-center max-w-xl">
 				<ul className="flex items-center gap-2">
-					<li>
-						<Button size="icon" variant="ghost" asChild>
-							<Link href="/">
-								<House />
-							</Link>
-						</Button>
-					</li>
-					<li>
-						<Button size="icon" variant="ghost" asChild>
-							<Link href="/blog">
-								<NotebookPen />
-							</Link>
-						</Button>
-					</li>
-					<li>
-						<Button size="icon" variant="ghost" asChild>
-							<Link href="/photos">
-								<Camera />
-							</Link>
-						</Button>
-					</li>
+					{tabs.map((tab) => (
+						<li key={tab.name}>
+							<Button size="icon" variant="ghost" asChild>
+								<Link
+									href={tab.href}
+									className={`${
+										activeTab === tab.name
+											? "text-cyan-400"
+											: "text-muted-foreground"
+									}`}
+								>
+									{tab.icon}
+								</Link>
+							</Button>
+						</li>
+					))}
 					<Separator orientation="vertical" className="min-h-6!" />
 					<li>
-						<Button size="icon" variant="ghost" asChild>
+						<Button
+							size="icon"
+							variant="ghost"
+							asChild
+							className="text-muted-foreground"
+						>
 							<Link href="mailto:adrian@lams.cc">
 								<Mail />
 							</Link>
 						</Button>
 					</li>
 					<li>
-						<Button size="icon" variant="ghost" asChild>
+						<Button
+							size="icon"
+							variant="ghost"
+							asChild
+							className="text-muted-foreground"
+						>
 							<Link href="https://x.com/adrianlam_dev" target="_blank">
 								<XIcon />
 							</Link>
 						</Button>
 					</li>
 					<li>
-						<Button size="icon" variant="ghost" asChild>
+						<Button
+							size="icon"
+							variant="ghost"
+							asChild
+							className="text-muted-foreground"
+						>
 							<Link href="https://www.github.com/adriandlam" target="_blank">
 								<svg
 									viewBox="0 0 24 24"
