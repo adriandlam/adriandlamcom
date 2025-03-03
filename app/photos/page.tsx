@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import Image from "next/image";
 
 // Function to get all photo filenames
 function getPhotoFilenames(): string[] {
@@ -26,13 +27,18 @@ export default function PhotosPage() {
 			{/* Photo Grid */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
 				{photoFilenames.map((filename, i) => (
-					<img
+					<div
 						key={filename}
-						src={`/photos/${filename}`}
-						// biome-ignore lint/a11y/noRedundantAlt: <explanation>
-						alt={`Photo ${i + 1}`}
-						className="rounded shadow-sm"
-					/>
+						className="relative aspect-square w-full overflow-hidden rounded shadow-sm"
+					>
+						<Image
+							src={`/photos/${filename}`}
+							alt={`Photo ${i + 1}`}
+							fill
+							className="object-cover"
+							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+						/>
+					</div>
 				))}
 			</div>
 		</div>
