@@ -5,6 +5,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
+import "highlight.js/styles/vs2015.css";
+import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 
 // Format date helper function
@@ -49,7 +51,10 @@ export default async function Page({
 						options={{
 							mdxOptions: {
 								remarkPlugins: [remarkMath, remarkGfm],
-								rehypePlugins: [rehypeKatex],
+								rehypePlugins: [
+									rehypeKatex,
+									[rehypeHighlight, { detect: true }],
+								],
 							},
 						}}
 					/>

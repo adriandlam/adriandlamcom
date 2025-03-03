@@ -55,7 +55,7 @@ export default function Home() {
 						<h3 className="font-medium tracking-tight">
 							University of British Columbia
 						</h3>
-						<p className="font-mono">2022 - 2026</p>
+						<p className="font-mono text-muted-foreground">2022 - 2026</p>
 					</div>
 					<p className="font-mono text-sm mt-0.5">
 						Bachelor of Science, Mathematics
