@@ -63,39 +63,39 @@ export default function Home() {
 				</div>
 			</div>
 
-{/* Projects Section */}
-<div className="mt-10">
-  <h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-  <p className="font-mono mt-2">
-    I've worked on a bunch of projects, but here are a few that I'm proud
-    of:
-  </p>
-  <ul className="mt-6 space-y-6">
-    {RESUME.projects.map((project) => (
-      <li
-        key={project.name}
-        className="border rounded shadow hover:shadow-md hover:border-cyan-900 transition-all"
-      >
-        <Link 
-          href={`/projects/${project.name.toLowerCase()}`}
-          className="block p-4 h-full w-full"
-        >
-          <h3 className="font-medium text-lg tracking-tight">
-            {project.name}
-          </h3>
-          <p className="font-mono mt-0.5 text-sm">
-            {project.description}
-          </p>
-          <div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
-            {project.stack.map((tech) => (
-              <Badge key={tech}>{tech}</Badge>
-            ))}
-          </div>
-        </Link>
-      </li>
-    ))}
-  </ul>
-</div>
+			{/* Projects Section */}
+			<div className="mt-10">
+				<h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
+				<p className="font-mono mt-2">
+					I've worked on a bunch of projects, but here are a few that I'm proud
+					of:
+				</p>
+				<ul className="mt-6 space-y-6">
+					{RESUME.projects.map((project) => (
+						<li
+							key={project.name}
+							className="border rounded shadow hover:shadow-md hover:border-cyan-900 transition-all"
+						>
+							<Link
+								href={`/projects/${project.slug}`}
+								className="block p-4 h-full w-full"
+							>
+								<h3 className="font-medium text-lg tracking-tight">
+									{project.name}
+								</h3>
+								<p className="font-mono mt-0.5 text-sm">
+									{project.description}
+								</p>
+								<div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
+									{project.stack.map((tech) => (
+										<Badge key={tech}>{tech}</Badge>
+									))}
+								</div>
+							</Link>
+						</li>
+					))}
+				</ul>
+			</div>
 		</main>
 	);
 }

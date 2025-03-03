@@ -9,6 +9,7 @@ const RESUME = {
 	},
 	projects: [
 		{
+			slug: "heida",
 			name: "Heida",
 			description:
 				"A complete end-2-end web application for AI-powered productivity",
@@ -22,12 +23,14 @@ const RESUME = {
 			],
 		},
 		{
+			slug: "mnist-digit-classifier",
 			name: "MNIST Digit Classifier",
 			description:
 				"Neural network implementation from scratch with 98.32% accuracy",
 			stack: ["Python", "NumPy", "PyTorch", "Neural Networks"],
 		},
 		{
+			slug: "ubc-grade-analyzer",
 			name: "UBC Grade Analyzer",
 			description: "Course difficulty prediction system with 4.84% error rate",
 			stack: ["Python", "Pandas", "Scikit-learn", "Seaborn", "NumPy"],
