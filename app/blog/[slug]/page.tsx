@@ -49,7 +49,7 @@ export default async function Page({
 		<div>
 			<article>
 				<header className="mb-6">
-					<h1 className="text-3xl font-bold">{metadata.title}</h1>
+					<h1 className="text-3xl font-medium">{metadata.title}</h1>
 					<span className="text-muted-foreground text-sm">{formattedDate}</span>
 				</header>
 				<div className="prose max-w-none">

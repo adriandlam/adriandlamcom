@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, House, Mail, NotebookPen, X } from "lucide-react";
+import { Camera, House, Mail, NotebookPen, Quote, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ const tabs: Tab[] = [
 	{ name: "home", icon: <House />, href: "/" },
 	{ name: "blog", icon: <NotebookPen />, href: "/blog" },
 	{ name: "photos", icon: <Camera />, href: "/photos" },
+	{ name: "quotes", icon: <Quote />, href: "/quotes" },
 ];
 
 export default function Nav() {
