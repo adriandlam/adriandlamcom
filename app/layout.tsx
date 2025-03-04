@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
+import Script from "next/script";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "Adrian Lam | Mathematics Student & Developer",
 	description:
 		"Portfolio of Adrian Lam, Mathematics student at UBC and software developer passionate about building meaningful projects.",
@@ -28,6 +29,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+			<Script
+				defer
+				src="https://cloud.umami.is/script.js"
+				data-website-id="5457805a-0169-41e3-b6ce-6ca2025c6dac"
+			/>
 			<body className="antialiased">
 				<ThemeProvider
 					attribute="class"
