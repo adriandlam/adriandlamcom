@@ -1,10 +1,13 @@
-import RESUME from "@/data/resume";
-import { notFound } from "next/navigation";
+"use client";
 
-export default async function Project({
-	params,
-}: { params: Promise<{ slug: string }> }) {
-	const { slug } = await params;
+import { Separator } from "@/components/ui/separator";
+import RESUME from "@/data/resume";
+import { notFound, useParams } from "next/navigation";
+import React from "react";
+
+export default function Project() {
+	const params = useParams();
+	const slug = params.slug;
 
 	const project = RESUME.projects.find((project) => project.slug === slug);
 	if (!project) {
@@ -19,7 +22,13 @@ export default async function Project({
 				</h1>
 				<p className="font-mono mt-2">{project.description}</p>
 			</div>
-			{project?.name}
+			<div className="my-10">
+				<img
+					alt={`${project.name} demo`}
+					src={project.imagePath}
+					className="rounded border shadow"
+				/>
+			</div>
 		</main>
 	);
 }

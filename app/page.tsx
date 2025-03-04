@@ -78,19 +78,19 @@ export default function Home() {
 						>
 							<Link
 								href={`/projects/${project.slug}`}
-								className="block p-4 h-full w-full"
+								className="block p-4 h-full w-full gap-6"
 							>
-								<h3 className="font-medium text-lg tracking-tight">
-									{project.name}
-								</h3>
-								<p className="font-mono mt-0.5 text-sm">
-									{project.description}
-								</p>
-								<div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
-									{project.stack.map((tech) => (
-										<Badge key={tech}>{tech}</Badge>
-									))}
-								</div>
+									<h3 className="font-medium text-lg tracking-tight">
+										{project.name}
+									</h3>
+									<p className="font-mono mt-0.5 text-sm">
+										{project.description}
+									</p>
+									<div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
+										{project.stack.map((tech) => (
+											<Badge key={tech}>{tech}</Badge>
+										))}
+									</div>
 							</Link>
 						</li>
 					))}
