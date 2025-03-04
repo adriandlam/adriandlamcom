@@ -38,11 +38,11 @@ For larger knowledge bases that exceed the model's context window, RAG is usuall
 4. When a user inputs a query to the model, the vector database is used as a lookup to find the most relevant chunks based on semantic similarity to the query
 5. The most relevant chunks are returned and added to the user's prompt (usually hidden from the user) then sent to the LLM.
 
-The problem is that embedding models capture semantic meaning and miss exact keyword matches. Usually, embedding models are combined with BM25 (Best Matching 25).
+The problem is that embedding models capture semantic meaning and miss exact keyword matches. Usually, embedding models are combined with BM25.
 
 ## BM25: The Secret Sauce
 
-BM25 (Best Matching 25) is a ranking function that uses lexical matching to find precise word or phrase matches. It's effective for queries that include unique identifiers or technical terms. For example, if a user queries "HTTP 200 Ok" in a technical support database, BM25 can find the exact "HTTP 200" match.
+BM25 (Best Matching 25) is a ranking function that uses lexical matching to find precise word or phrase matches. It's effective for queries that include unique identifiers or technical terms. For example, if a user queries "HTTP 200" in a technical support database, BM25 can find the exact "HTTP 200" match.
 
 ### How is BM25 combined with embeddings?
 
