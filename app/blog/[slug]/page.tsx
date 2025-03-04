@@ -6,8 +6,15 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/vs2015.css";
+import {
+	Callout,
+	CalloutDescription,
+	CalloutTitle,
+} from "@/components/callout";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+
+const components = { Callout, CalloutTitle, CalloutDescription };
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -48,6 +55,7 @@ export default async function Page({
 				<div className="prose max-w-none">
 					<MDXRemote
 						source={content}
+						components={components}
 						options={{
 							mdxOptions: {
 								remarkPlugins: [remarkMath, remarkGfm],

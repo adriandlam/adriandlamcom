@@ -1,0 +1,94 @@
+---
+title: "What is RAG?"
+publishedAt: "2025-03-03"
+summary: "An introduction into RAG pipelines, and their (common) components."
+---
+
+In my opinion, RAG is probably one of the most used words when it comes to AI/LLMs. It also seems like one of the most jankiest solutions for reducing LLM hallucinations.
+
+![](/blog-assets/rag/)
+
+
+## Core Idea Behind RAG
+
+For an LLM to be useful in certain scenarios, it often needs more background knowledge. For example, a lawyer chatbot needs to know about past cases and relevant laws in order to provide useful information to the user.
+
+Developers typically improve an LLM's knowledge using Retrieval-Augmented Generation (RAG). RAG is a pipeline that retrieves relevant information from a knowledge base and adds it to the user's prompt, drastically reducing the model's hallucination rates.
+The simple idea is:
+
+
+The simple idea is:
+
+$$
+\text{Context} \uparrow \implies \text{Model hallucinations} \downarrow
+$$
+
+<Callout>
+<CalloutTitle>Why not just use a longer prompt?</CalloutTitle>
+<CalloutDescription>
+It depends. The problem with just using more context is that it's not always possible to provide the model with all the context it needs. An (extreme) example, if you're building a chatbot, and decide to ask "Where's the nearest gym?" You can't just provide the model with the entire internet. However, if your knowledge base is rather small (compared to the model's context window), you can just include the entire knowledge base in the prompt that you give the model for certain tasks (ex. summarizing text).
+</CalloutDescription>
+</Callout>
+
+
+## How RAG Works
+
+For larger knowledge bases that exceed the model's context window, RAG is usually the industry solution. RAG typically works by preprocessing a knowledge base through some steps:
+
+1. Break down the document into smaller chunks of text
+2. Use an embedding model to convert these chunks into vector embeddings that encode meaning
+3. Store these embeddings in a vector database (for searching by semantic similarity)
+4. When a user inputs a query to the model, the vector database is used as a lookup to find the most relevant chunks based on semantic similarity to the query
+5. The most relevant chunks are returned and added to the user's prompt (usually hidden from the user) then sent to the LLM.
+
+The problem is that embedding models capture semantic meaning and miss exact keyword matches. Usually, embedding models are combined with BM25 (Best Matching 25).
+
+## BM25: The Secret Sauce
+
+BM25 (Best Matching 25) is a ranking function that uses lexical matching to find precise word or phrase matches. It's effective for queries that include unique identifiers or technical terms. For example, if a user queries "HTTP 200 Ok" in a technical support database, BM25 can find the exact "HTTP 200" match.
+
+### How is BM25 combined with embeddings?
+
+BM25 and embeddings work better together than either does alone. Think of it like this: embeddings are good at finding content with similar meaning, while BM25 is a function that finds exact keyword matches.
+
+The way it usually works is:
+
+1. You break your docs into chunks (I found 300-500 tokens works well for most cases)
+2. Create both embeddings AND BM25 indices for these chunks
+3. When a query comes in, run it against both systems
+4. Combine the results (usually with some fancy rank fusion math)
+5. Return the top $k$ results and feed it into your LLM
+
+**TLDR:** You have two people, one understands meaning, the other is extremely good at spotting exact word matches. Together, they catch what the other might miss.
+
+## Reranking (The Cherry on Top)
+
+Reranking is a technique that further improves retrieval accuracy. It's like having a third person who's really good at picking out the best chunks from the top results (a meta-model). Here's how it works:
+
+1. You do your initial retrieval (embedding + BM25 search) and get a bunch of chunks
+2. You run these chunks through a specialized reranking model
+3. The reranker scores each chunk based on how relevant it is to the query
+4. You keep only the top $k$ chunks (usually 10-20) to send to your LLM
+
+### Some things to note about reranking:
+
+- It's computationally expensive (you may need to chunk big docs, run an embeddings model, run BM25, and then run a reranker model)
+- It's a trade-off between performance and speed (you're adding another step at runtime)
+- It's not always needed (if your initial retrieval is good enough, you might not need it)
+
+## Things to Note About RAG Systems
+
+There are some practical considerations for RAG:
+
+- It's definitely overkill for simple use cases (if your knowledge base is a PDF that's \< ~500 pages, just feed the entire document)
+- It can get computationally expensive with large knowledge bases (embeddings + BM25 for retrieval $\rightarrow$ reranker $\rightarrow$ LLM)
+- You need to be patient because there's LOTS of tedious tuning involved (for different LLMs, you may want to include a 'dynamic chunking' system that adjusts the chunk size based on the model's context window)
+- If you want the best performance, stack all these techniques: embeddings + BM25 + reranking
+
+## Conclusion
+
+Honestly, I think RAG is still pretty janky as a solution, there's alot of moving parts. But it's commonly used since it reduces LLM hallucination rates. 
+
+I'd like to also note that many companies are scaling up their model's context window, which might make RAG less useful in the future (ex. Google's Gemini 2.0 Flash Lite model has a context window of 1m tokens)
+
+Is RAG perfect? Definitely not. Is it a pain to set up properly? Absolutely. But for now, it's the best tool we have for grounding LLMs in factual information, and if you've used any major LLM provider with lots of context from file attachments, you've most likely seen firsthand how much it can improve responses when implemented well.
