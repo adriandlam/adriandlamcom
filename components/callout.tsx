@@ -19,29 +19,36 @@ export function Callout({
 	const variantMap = {
 		info: {
 			icon: InfoIcon,
-			className: "bg-blue-50 prose-h5:text-blue-500 [&_p]:text-blue-500",
+			className:
+				"bg-blue-500/15 backdrop-blur border-blue-500/25 prose-h5:text-blue-500 [&_p]:text-blue-500",
 			iconClassName: "text-blue-500",
 		},
 		warning: {
 			icon: AlertTriangleIcon,
-			className: "bg-yellow-50 prose-h5:text-yellow-500  [&_p]:text-yellow-500",
+			className:
+				"bg-yellow-500/15 backdrop-blur border-yellow-500/25 prose-h5:text-yellow-500  [&_p]:text-yellow-500",
 			iconClassName: "text-yellow-500",
 		},
 		error: {
 			icon: XCircleIcon,
-			className: "bg-red-50 prose-h5:text-rose-500 [&_p]:text-rose-500",
+			className:
+				"bg-rose-500/15 backdrop-blur border-rose-500/25 prose-h5:text-rose-500 [&_p]:text-rose-500",
 			iconClassName: "text-rose-500",
 		},
 		success: {
 			icon: CheckCircleIcon,
-			className: "bg-green-50 prose-h5:text-green-500 [&_p]:text-green-500",
+			className:
+				"bg-green-500/15 backdrop-blur border-green-500/25 prose-h5:text-green-500 [&_p]:text-green-500",
 			iconClassName: "text-green-500",
 		},
 	};
 	const { icon: Icon, className, iconClassName } = variantMap[variant];
 	return (
 		<div
-			className={cn("relative w-full rounded-md p-4 my-10 shadow", className)}
+			className={cn(
+				"relative w-full border rounded-md p-4 my-10 shadow",
+				className,
+			)}
 		>
 			<div className="flex gap-3">
 				<Icon className={cn("h-4 w-4 flex-shrink-0", iconClassName)} />
