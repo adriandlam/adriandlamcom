@@ -27,8 +27,8 @@ export default function Home() {
 					Recent GitHub Activity
 				</h2>
 				<img
-					src="https://ghchart.rshah.org/409ba5/adrianlamdev"
-					alt="adrianlamdev's Github chart"
+					src="https://ghchart.rshah.org/409ba5/adriandlam"
+					alt="adriandlam's Github chart"
 					className="mt-2"
 				/>
 				<p className="font-mono mt-2 text-muted-foreground text-xs text-center">
