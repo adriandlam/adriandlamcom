@@ -24,7 +24,7 @@ export default function ProjectCard({ project }: { project: Project }) {
 	return (
 		<div
 			key={project.name}
-			className="border rounded-lg overflow-hidden hover:shadow-md hover:border-cyan-900 transition-all flex flex-col h-full"
+			className="border rounded-lg overflow-hidden hover:shadow-md hover:border-cyan-900 transition-all flex flex-col h-full group"
 		>
 			<Link href={`/projects/${project.slug}`} className="cursor-pointer">
 				<div className="w-full h-48 overflow-hidden">

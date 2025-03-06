@@ -54,7 +54,7 @@ export default function BlogPage() {
 
 	return (
 		<div>
-			<h1 className="text-4xl! font-medium tracking-tight">Blog</h1>
+			<h1 className="text-4xl font-medium tracking-tight">Blog</h1>
 			<p className="font-mono text-muted-foreground mt-2">
 				A collection of articles and thoughts on software development and who I
 				am as a person.
@@ -70,9 +70,9 @@ export default function BlogPage() {
 					>
 						<Link
 							href={`/blog/${post.slug}`}
-							className="block group transition-all"
+							className="block group transition-all hover:opacity-75"
 						>
-							<h2 className="text-2xl group-hover:text-cyan-600 transition-colors my-0!">
+							<h2 className="text-2xl group-hover:text-cyan-600 transition-colors my-0">
 								{post.title}
 							</h2>
 							<time className="text-sm text-muted-foreground block mt-2">

@@ -1,5 +1,6 @@
 import ProjectCard from "@/components/project-card";
 import RESUME from "@/data/resume";
+import Link from "next/link";
 
 export default function ProjectsPage() {
 	return (
@@ -34,12 +35,12 @@ export default function ProjectsPage() {
 				</h2>
 				<p className="font-mono text-muted-foreground mb-6">
 					Additional smaller projects and experiments can be found on my
-					<a
+					<Link
 						href="https://github.com/adriandlam"
-						className="text-cyan-700 hover:text-cyan-500 ml-1 underline"
+						className="text-cyan-700 hover:text-cyan-500 ml-1 underline underline-offset-4 transition"
 					>
 						GitHub profile
-					</a>
+					</Link>
 					.
 				</p>
 			</div>
