@@ -171,7 +171,7 @@ const RESUME = {
 				"Console-based UI for gameplay",
 			],
 			challenges:
-				"Currently debugging the move generation algorithm which has an error in the number of moves being generated. Perftest is showing inconsistencies that need to be resolved before proceeding with optimization.",
+				"Currently debugging the move generation algorithm which has an error in the number of moves being generated. Perftest is showing inconsistencies that need to be fixed before I continue with optimizations.",
 			year: 2024,
 		},
 	],
