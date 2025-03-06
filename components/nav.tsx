@@ -1,6 +1,13 @@
 "use client";
 
-import { Camera, House, Mail, NotebookPen, Quote, X } from "lucide-react";
+import {
+	Camera,
+	FolderGit2,
+	House,
+	Mail,
+	NotebookPen,
+	Quote,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,6 +23,7 @@ interface Tab {
 const tabs: Tab[] = [
 	{ name: "home", icon: <House />, href: "/" },
 	{ name: "blog", icon: <NotebookPen />, href: "/blog" },
+	{ name: "projects", icon: <FolderGit2 />, href: "/projects" },
 	{ name: "photos", icon: <Camera />, href: "/photos" },
 	{ name: "quotes", icon: <Quote />, href: "/quotes" },
 ];
@@ -40,7 +48,7 @@ export default function Nav() {
 									href={tab.href}
 									className={`${
 										activeTab === tab.name
-											? "text-cyan-400"
+											? "text-cyan-500"
 											: "text-muted-foreground"
 									}`}
 								>
