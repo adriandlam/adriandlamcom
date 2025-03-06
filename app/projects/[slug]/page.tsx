@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
@@ -7,8 +5,11 @@ import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-	const project = RESUME.projects.find((p) => p.slug === params.slug);
+export default async function ProjectPage({
+	params,
+}: { params: Promise<{ slug: string }> }) {
+	const { slug } = await params;
+	const project = RESUME.projects.find((p) => p.slug === slug);
 
 	// Handle case where project doesn't exist or shouldn't be shown
 	if (!project) {
