@@ -6,6 +6,11 @@ const quotes = [
 		author: "Marcus Aurelius, Meditations",
 		date: "2025-03-04",
 	},
+	{
+		text: "You're 40, a billionaire, successful company, what now? [...] You'll get bored cause you didn't enjoy the present. Why do you think you'll enjoy the future's present? [...] You'll always be chasing the future. You'll die like that. [...] If you're not enjoying life then you'll never enjoy the future you create.",
+		author: "Shubhaankar Sharma",
+		date: "2025-03-05",
+	},
 ];
 
 export default function QuotesPage() {
