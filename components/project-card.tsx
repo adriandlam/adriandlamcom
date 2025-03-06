@@ -13,7 +13,6 @@ interface Project {
 	imagePath?: string;
 	githubUrl?: string;
 	liveUrl?: string;
-	preview: boolean;
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
