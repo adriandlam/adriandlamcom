@@ -105,7 +105,7 @@ export async function generateMetadata({
 				metadata.excerpt || `Read ${metadata.title} on Adrian Lam's Blog`,
 			type: "article",
 			publishedTime: metadata.publishedAt,
-			url: `https://adriandlam.com/blog/${params.slug}`,
+			url: `https://adriandlam.com/blog/${slug}`,
 			images: [
 				{
 					url: ogImage,
@@ -123,7 +123,7 @@ export async function generateMetadata({
 			images: [ogImage],
 		},
 		alternates: {
-			canonical: `https://adriandlam.com/blog/${params.slug}`,
+			canonical: `https://adriandlam.com/blog/${slug}`,
 		},
 	};
 }
