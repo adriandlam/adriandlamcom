@@ -1,7 +1,8 @@
+import ProjectCard from "@/components/project-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -23,7 +24,7 @@ export default function Home() {
 
 			{/* GitHub Recent Activity */}
 			<div className="mt-10">
-				<h2 className="text-2xl font-semibold tracking-tight">
+				<h2 className="text-2xl font-medium tracking-tight">
 					Recent GitHub Activity
 				</h2>
 				<img
@@ -38,7 +39,7 @@ export default function Home() {
 
 			{/* About Me Section */}
 			<div className="mt-10">
-				<h2 className="text-2xl font-semibold tracking-tight">About Me</h2>
+				<h2 className="text-2xl font-medium tracking-tight">About Me</h2>
 				<p className="font-mono mt-2">
 					I'm a Mathematics student at the University of British Columbia, set
 					to graduate in 2026. I have a strong background in software
@@ -49,7 +50,7 @@ export default function Home() {
 
 			{/* Education Section */}
 			<div className="mt-10">
-				<h2 className="text-2xl font-semibold tracking-tight">Education</h2>
+				<h2 className="text-2xl font-medium tracking-tight">Education</h2>
 				<div className="mt-2">
 					<div className="flex justify-between items-end">
 						<h3 className="font-medium tracking-tight">
@@ -65,36 +66,28 @@ export default function Home() {
 
 			{/* Projects Section */}
 			<div className="mt-10">
-				<h2 className="text-2xl font-semibold tracking-tight">Projects</h2>
-				<p className="font-mono mt-2">
-					I've worked on a bunch of projects, but here are a few that I'm proud
-					of:
+				<h2 className="text-2xl font-medium tracking-tight">Projects</h2>
+				<p className="font-mono mt-2 mb-6">
+					Here are some of my notable projects that showcase my skills and
+					interests:
 				</p>
-				<ul className="mt-6 space-y-6">
-					{RESUME.projects.map((project) => (
-						<li
-							key={project.name}
-							className="border rounded shadow hover:shadow-md hover:border-cyan-900 transition-all"
-						>
-							<Link
-								href={`/projects/${project.slug}`}
-								className="block p-4 h-full w-full gap-6"
-							>
-									<h3 className="font-medium text-lg tracking-tight">
-										{project.name}
-									</h3>
-									<p className="font-mono mt-0.5 text-sm">
-										{project.description}
-									</p>
-									<div className="flex items-center gap-2 mt-3 text-xs flex-wrap">
-										{project.stack.map((tech) => (
-											<Badge key={tech}>{tech}</Badge>
-										))}
-									</div>
-							</Link>
-						</li>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					{RESUME.projects.slice(0, 4).map((project) => (
+						<ProjectCard key={project.name} project={project} />
 					))}
-				</ul>
+				</div>
+				<div className="mt-4 flex justify-center">
+					<Button
+						variant="link"
+						effect={"hoverUnderline"}
+						asChild
+						className="after:w-full px-0"
+					>
+						<Link href="/projects">
+							View All Projects <ArrowRight />
+						</Link>
+					</Button>
+				</div>
 			</div>
 		</main>
 	);

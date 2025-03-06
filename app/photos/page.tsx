@@ -14,7 +14,7 @@ export default function PhotosPage() {
 
 	return (
 		<div>
-			<h1 className="text-3xl font-bold">Photos</h1>
+			<h1 className="text-4xl! font-medium tracking-tight">Photos</h1>
 			<p className="mt-2 font-mono">
 				A collection of photos I've taken over the years. I'm not a professional
 				photographer, but I enjoy capturing moments.

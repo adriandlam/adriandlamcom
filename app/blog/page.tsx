@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import matter from "gray-matter";
 import Link from "next/link";
@@ -55,7 +54,11 @@ export default function BlogPage() {
 
 	return (
 		<div>
-			<h1 className="text-3xl">Blog</h1>
+			<h1 className="text-4xl! font-medium tracking-tight">Blog</h1>
+			<p className="font-mono text-muted-foreground mt-2">
+				A collection of articles and thoughts on software development and who I
+				am as a person.
+			</p>
 			<div className="space-y-10 mt-2">
 				{posts.map((post, i) => (
 					<article
@@ -65,17 +68,13 @@ export default function BlogPage() {
 							"mt-10": i === 0,
 						})}
 					>
-						<Link href={`/blog/${post.slug}`} className="block group">
-							<Button
-								asChild
-								variant="link"
-								effect="hoverUnderline"
-								className="p-0 text-cyan-500 group-hover:text-cyan-400 after:bg-cyan-500 after:bottom-1 after:w-full"
-							>
-								<h2 className="text-2xl transition-colors my-0!">
-									{post.title}
-								</h2>
-							</Button>
+						<Link
+							href={`/blog/${post.slug}`}
+							className="block group transition-all"
+						>
+							<h2 className="text-2xl group-hover:text-cyan-600 transition-colors my-0!">
+								{post.title}
+							</h2>
 							<time className="text-sm text-muted-foreground block mt-2">
 								{formatDate(post.publishedAt)}
 							</time>
