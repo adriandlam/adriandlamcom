@@ -70,7 +70,7 @@ export default function Nav() {
 							</Link>
 						</Button>
 					</li>
-					<li>
+					{/* <li>
 						<Button
 							size="icon"
 							variant="ghost"
@@ -81,7 +81,7 @@ export default function Nav() {
 								<XIcon />
 							</Link>
 						</Button>
-					</li>
+					</li> */}
 					<li>
 						<Button
 							size="icon"
