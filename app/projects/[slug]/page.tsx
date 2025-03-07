@@ -21,7 +21,7 @@ export default async function ProjectPage({
 			{/* Back button */}
 			<Link
 				href="/projects"
-				className="inline-flex items-center text-sm font-medium text-cyan-500 hover:text-cyan-600 mb-6 transition-colors gap-1"
+				className="inline-flex items-center text-sm font-medium text-cyan-500 hover:text-cyan-600 mb-6 transition-colors gap-1 no-underline"
 			>
 				<ArrowLeft className="h-4 w-4" />
 				Back to all projects

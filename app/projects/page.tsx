@@ -1,15 +1,22 @@
 import ProjectCard from "@/components/project-card";
 import RESUME from "@/data/resume";
+import { FolderGit2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ProjectsPage() {
 	return (
 		<main>
-			<h1 className="text-4xl font-medium tracking-tight">Projects</h1>
-			<p className="font-mono text-muted-foreground mt-2">
-				A collection of projects I've built throughout my journey as a developer
-				and hobbyist.
-			</p>
+			<div className="relative">
+				<FolderGit2
+					strokeWidth={1.75}
+					className="text-muted w-14 h-14 absolute -z-10 -top-8 -left-10"
+				/>
+				<h1 className="text-4xl font-medium tracking-tight">Projects</h1>
+				<p className="font-mono text-muted-foreground mt-2">
+					A collection of projects I've built throughout my journey as a
+					developer and hobbyist.
+				</p>
+			</div>
 
 			{/* Projects Grid */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">

@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { Camera } from "lucide-react";
 import Image from "next/image";
 
 // Function to get all photo filenames
@@ -13,12 +14,18 @@ export default function PhotosPage() {
 	const photoFilenames = getPhotoFilenames();
 
 	return (
-		<div>
-			<h1 className="text-4xl! font-medium tracking-tight">Photos</h1>
-			<p className="mt-2 font-mono">
-				A collection of photos I've taken over the years. I'm not a professional
-				photographer, but I enjoy capturing moments.
-			</p>
+		<main>
+			<div className="relative">
+				<Camera
+					strokeWidth={1.75}
+					className="text-muted w-14 h-14 absolute -z-10 -top-8 -left-10"
+				/>
+				<h1 className="text-4xl font-medium tracking-tight">Photos</h1>
+				<p className="font-mono text-muted-foreground mt-2">
+					A collection of photos I've taken over the years. I'm not a
+					professional photographer, but I enjoy capturing moments.
+				</p>
+			</div>
 			<p className="mt-2 font-mono">
 				My photos are taken with a Panasonic Lumix G85 and a Panasonic Lumix G
 				25mm F1.7. lens.
@@ -41,6 +48,6 @@ export default function PhotosPage() {
 					</div>
 				))}
 			</div>
-		</div>
+		</main>
 	);
 }

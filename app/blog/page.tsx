@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { cn } from "@/lib/utils";
 import matter from "gray-matter";
+import { NotebookPen } from "lucide-react";
 import Link from "next/link";
 
 // Format date helper function
@@ -54,11 +55,17 @@ export default function BlogPage() {
 
 	return (
 		<div>
-			<h1 className="text-4xl font-medium tracking-tight">Blog</h1>
-			<p className="font-mono text-muted-foreground mt-2">
-				A collection of articles and thoughts on software development and who I
-				am as a person.
-			</p>
+			<div className="relative">
+				<NotebookPen
+					strokeWidth={1.75}
+					className="text-muted w-14 h-14 absolute -z-10 -top-8 -left-10"
+				/>
+				<h1 className="text-4xl font-medium tracking-tight">Blog</h1>
+				<p className="font-mono text-muted-foreground mt-2">
+					A collection of articles and thoughts on software development and who
+					I am as a person.
+				</p>
+			</div>
 			<div className="space-y-10 mt-2">
 				{posts.map((post, i) => (
 					<article

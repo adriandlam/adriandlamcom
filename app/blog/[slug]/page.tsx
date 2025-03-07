@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
+import Link from "next/link";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
@@ -13,6 +14,8 @@ import {
 	CalloutDescription,
 	CalloutTitle,
 } from "@/components/callout";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -146,7 +149,15 @@ export default async function Page({
 	const formattedDate = formatDate(metadata.publishedAt);
 
 	return (
-		<div>
+		<main>
+			{/* Back button */}
+			<Link
+				href="/blog"
+				className="inline-flex items-center text-sm font-medium text-cyan-500 hover:text-cyan-600 mb-6 transition-colors gap-1 no-underline"
+			>
+				<ArrowLeft className="h-4 w-4" />
+				Back to all posts
+			</Link>
 			<article>
 				<header className="mb-8">
 					{metadata.coverImage && (
@@ -163,9 +174,11 @@ export default async function Page({
 					)}
 					<h1 className="text-3xl font-bold mb-2">{metadata.title}</h1>
 					{metadata.excerpt && (
-						<p className="text-xl text-gray-600 mb-4">{metadata.excerpt}</p>
+						<p className="text-xl text-muted-foreground mb-4">
+							{metadata.excerpt}
+						</p>
 					)}
-					<div className="flex items-center text-gray-500 text-sm">
+					<div className="flex items-center text-muted-foreground text-sm">
 						{metadata.author && (
 							<span className="mr-4">By {metadata.author}</span>
 						)}
@@ -177,12 +190,7 @@ export default async function Page({
 					{metadata.tags && metadata.tags.length > 0 && (
 						<div className="mt-4 flex flex-wrap gap-2">
 							{metadata.tags.map((tag: string) => (
-								<span
-									key={tag}
-									className="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full"
-								>
-									{tag}
-								</span>
+								<Badge key={tag}>{tag}</Badge>
 							))}
 						</div>
 					)}
@@ -203,7 +211,7 @@ export default async function Page({
 					/>
 				</div>
 			</article>
-		</div>
+		</main>
 	);
 }
 

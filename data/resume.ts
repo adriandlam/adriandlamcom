@@ -9,6 +9,27 @@ const RESUME = {
 	},
 	projects: [
 		{
+			slug: "adrians-research-engine",
+			name: "Adrian's Research Engine",
+			description:
+				"An AI-powered research engine that helps you find relevant papers and insights for your research from natural language.",
+			longDescription:
+				"Adrian's Research Engine is a research assistant that helps you find relevant papers and insights for your research from natural language. It uses a hybrid retrieval system that combines light weight semantic search with BM25 to improve query results, with reranking in order to determine relevance. I'm currently working on it!",
+			stack: [
+				"Next.js",
+				"Express",
+				"Redis",
+				"Vector Embeddings",
+				"TypeScript",
+				"TailwindCSS",
+			],
+			keyFeatures: [
+				"Hybrid retrieval combining light weight semantic search with BM25",
+				"Reranking in order to determine relevance",
+			],
+			year: 2025,
+		},
+		{
 			slug: "heida",
 			name: "Heida",
 			description:
