@@ -123,36 +123,38 @@ const RESUME = {
 		},
 		{
 			slug: "redis-cpp",
-			name: "Redis C++ (WIP)",
+			name: "Redis C++",
 			description:
 				"A C++ library for Redis that provides a high-performance, thread-safe, and easy-to-use interface for interacting with Redis databases.",
 			longDescription:
 				"Redis C++ is a C++ library for Redis that provides a high-performance, thread-safe, and easy-to-use interface for interacting with Redis databases.",
 			githubUrl: "https://github.com/adriandlam/redis-cpp",
 			stack: ["C++", "Redis", "CMake", "GitHub Actions"],
+			inProgress: true,
 			year: 2025,
 		},
-		{
-			slug: "adrians-research-engine",
-			name: "Adrian's Research Engine (WIP)",
-			description:
-				"An AI-powered research engine that helps you find relevant papers and insights for your research from natural language.",
-			longDescription:
-				"Adrian's Research Engine is a research assistant that helps you find relevant papers and insights for your research from natural language. It uses a hybrid retrieval system that combines light weight semantic search with BM25 to improve query results, with reranking in order to determine relevance.",
-			stack: [
-				"Next.js",
-				"Express",
-				"Redis",
-				"Vector Embeddings",
-				"TypeScript",
-				"TailwindCSS",
-			],
-			keyFeatures: [
-				"Hybrid retrieval combining light weight semantic search with BM25",
-				"Reranking in order to determine relevance",
-			],
-			year: 2025,
-		},
+		// {
+		// 	slug: "adrians-research-engine",
+		// 	name: "Adrian's Research Engine",
+		// 	description:
+		// 		"An AI-powered research engine that helps you find relevant papers and insights for your research from natural language.",
+		// 	longDescription:
+		// 		"Adrian's Research Engine is a research assistant that helps you find relevant papers and insights for your research from natural language. It uses a hybrid retrieval system that combines light weight semantic search with BM25 to improve query results, with reranking in order to determine relevance.",
+		// 	stack: [
+		// 		"Next.js",
+		// 		"Express",
+		// 		"Redis",
+		// 		"Vector Embeddings",
+		// 		"TypeScript",
+		// 		"TailwindCSS",
+		// 	],
+		// 	keyFeatures: [
+		// 		"Hybrid retrieval combining light weight semantic search with BM25",
+		// 		"Reranking in order to determine relevance",
+		// 	],
+		// 	inProgress: true,
+		// 	year: 2025,
+		// },
 		{
 			slug: "wellbeing-analyzer",
 			name: "Wellbeing Analyzer",
@@ -182,8 +184,8 @@ const RESUME = {
 			year: 2024,
 		},
 		{
-			slug: "chess-cpp",
-			name: "Chess C++ (In Progress)",
+			slug: "chess-engine-cpp",
+			name: "Chess Engine C++",
 			description:
 				"A chess engine written in C++ that implements minimax algorithm with alpha-beta pruning for efficient move calculation.",
 			longDescription:
@@ -204,6 +206,7 @@ const RESUME = {
 			],
 			challenges:
 				"Currently debugging the move generation algorithm which has an error in the number of moves being generated. Perftest is showing inconsistencies that need to be fixed before I continue with optimizations.",
+			inProgress: true,
 			year: 2024,
 		},
 	],
