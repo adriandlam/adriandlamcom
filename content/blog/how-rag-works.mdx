@@ -67,7 +67,7 @@ Reranking is a technique that further improves retrieval accuracy. It's like hav
 3. The reranker scores each chunk based on how relevant it is to the query
 4. You keep only the top $k$ chunks (usually 10-20) to send to your LLM
 
-### Some things to note about reranking:
+### Some things to note about reranking
 
 - It's computationally expensive (you may need to chunk big docs, run an embeddings model, run BM25, and then run a reranker model)
 - It's a trade-off between performance and speed (you're adding another step at runtime)
