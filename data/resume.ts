@@ -8,6 +8,33 @@ const RESUME = {
 		duration: "2022 - 2026",
 	},
 	projects: [
+{
+			slug: "merin",
+			name: "Merin",
+			description:
+				"An intelligent email platform reimagined for the AI era, designed to help users process emails faster with AI-powered assistance.",
+			longDescription:
+				"Merin is an intelligent email platform that transforms how users manage their inbox. It features AI-powered triage that automatically categorizes and prioritizes emails, contextual response generation, focus mode to eliminate distractions, and keyboard-first navigation for maximum efficiency. The platform helps users process hundreds of emails in minutes, with smart notifications that reduce interruptions by 85% and save 5+ hours per week. Built with a clean, minimal interface and seamless integrations with other productivity tools.",
+			imagePath: "/projects/merin.png",
+			liveUrl: "https://merin.ai",
+			// githubUrl: "https://github.com/adriandlam/merin",
+			stack: [
+				"Next.js",
+				"Supabase",
+				"TypeScript",
+				"TailwindCSS",
+			],
+			keyFeatures: [
+				"Intelligent email triage with automatic categorization",
+				"Context-aware AI assistance for quick responses",
+				"Focus mode with distraction-free interface",
+				"Keyboard-first design with customizable shortcuts",
+				"Seamless integration with productivity tools",
+				"Smart notifications for reduced interruptions",
+			],
+			inProgress: true,
+			year: 2025,
+		},
 		{
 			slug: "heida",
 			name: "Heida",
