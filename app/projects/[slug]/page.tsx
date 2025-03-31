@@ -1,7 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
-import { ArrowLeft, Check, CircleDot, ExternalLink, Github } from "lucide-react";
+import {
+	ArrowLeft,
+	Check,
+	CircleDot,
+	ExternalLink,
+	Github,
+} from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -117,13 +123,13 @@ export default async function ProjectPage({
 					<section className="border rounded p-4">
 						<h3 className="text-lg font-medium mb-3">Status</h3>
 						{project.inProgress ? (
-						<Badge className="text-xs font-medium border-yellow-800/30 text-yellow-700 backdrop-blur bg-yellow-800/20 animate-pulse">
-							<CircleDot className="size-4" /> In Progress
-						</Badge>
-					) : (
-						<Badge className="text-xs font-medium border-green-800/30 text-green-700 backdrop-blur bg-green-800/20">
-							<Check className="size-4" /> Completed
-						</Badge>
+							<Badge className="text-xs font-medium border-yellow-800/30 text-yellow-700 backdrop-blur bg-yellow-800/20 animate-pulse">
+								<CircleDot className="size-4" /> In Progress
+							</Badge>
+						) : (
+							<Badge className="text-xs font-medium border-green-800/30 text-green-700 backdrop-blur bg-green-800/20">
+								<Check className="size-4" /> Completed
+							</Badge>
 						)}
 					</section>
 
@@ -142,6 +148,47 @@ export default async function ProjectPage({
 						<section className="border rounded p-4">
 							<h3 className="text-lg font-medium mb-2">Year</h3>
 							<p className="font-mono">{project.year}</p>
+						</section>
+					)}
+
+					{project.collaborators && project.collaborators.length > 0 && (
+						<section className="border rounded p-4">
+							<h3 className="text-lg font-medium mb-3">Collaborators</h3>
+							<ul className="space-y-4">
+								{project.collaborators.map(
+									(collaborator: {
+										name: string;
+										portfolio?: string;
+										twitter?: string;
+									}) => (
+										<li key={collaborator.name} className="font-mono">
+											{collaborator.name}
+											<div className="flex gap-2 mt-1">
+												{collaborator.portfolio && (
+													<Link
+														href={collaborator.portfolio}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="text-xs text-cyan-500 hover:underline"
+													>
+														Portfolio
+													</Link>
+												)}
+												{collaborator.twitter && (
+													<Link
+														href={collaborator.twitter}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="text-xs text-cyan-500 hover:underline"
+													>
+														Twitter
+													</Link>
+												)}
+											</div>
+										</li>
+									),
+								)}
+							</ul>
 						</section>
 					)}
 				</div>

@@ -8,7 +8,7 @@ const RESUME = {
 		duration: "2022 - 2026",
 	},
 	projects: [
-{
+		{
 			slug: "merin",
 			name: "Merin",
 			description:
@@ -32,7 +32,41 @@ const RESUME = {
 				"Seamless integration with productivity tools",
 				"Smart notifications for reduced interruptions",
 			],
+			collaborators: [
+				{
+					name: "Michael Han",
+					portfolio: "https://michaelhan.dev",
+					twitter: "https://x.com/Mike_TheSolo",
+				},
+				{
+					name: "Shubhaankar Sharma",
+					portfolio: "https://spongeboi.com",
+					twitter: "https://x.com/__spongeboi",
+				},
+			],
 			inProgress: true,
+			year: 2025,
+		},
+		{
+			slug: "ubc-purity-test",
+			name: "UBC Purity Test",
+			description:
+				"A fun platform that allows UBC students to test their innocence level with custom surveys for different faculties.",
+			longDescription:
+				"The UBC Purity Test is a fun self-graded survey platform that assesses how 'pure' or innocent a student's university experience has been. It features specialized versions for different faculties including the classic general test, a Business UBC Test for Sauder students, and a Sciences UBC Test for science majors and pre-med students. Scores range from 100% (completely pure) to 0% (not pure at all), calculated based on experiences the student has had during their time at UBC.",
+			githubUrl: "https://github.com/adriandlam/ubc-purity-test",
+			imagePath: "/projects/ubc-purity-test.png",
+			liveUrl: "https://ubc-purity-test.vercel.app",
+			stack: ["Next.js", "TailwindCSS", "TypeScript", "Supabase"],
+			collaborators: [
+				{
+					name: "Ryan Haraki",
+					portfolio: "https://haraki.org/",
+					twitter: "https://x.com/ryanharaki_",
+				},
+			],
+			keyFeatures: [],
+			inProgress: false,
 			year: 2025,
 		},
 		{
