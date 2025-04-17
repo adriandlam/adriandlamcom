@@ -48,6 +48,29 @@ const RESUME = {
 			year: 2025,
 		},
 		{
+			slug: "obsidian-vercel",
+			name: "Obsidian Vercel",
+			description:
+			"A tool for Obsidian users to avoid paying for publish/sync and host their notes on Vercel via a CI/CD pipeline.",
+			longDescription:
+				"Obsidian Vercel is a tool for Obsidian users to publish and sync their notes on the cloud with Vercel for free, avoiding the need to pay for publish/sync.",
+			imagePath: "/projects/obsidian-vercel.png",
+			liveUrl: "http://obsidian-vercel-umber.vercel.app/",
+			githubUrl: "https://github.com/adriandlam/obsidian-vercel",
+			stack: [
+				"Next.js",
+				"TypeScript",
+				"TailwindCSS",
+			],
+			keyFeatures: [
+				"Free hosting for Obsidian users",
+				"Avoiding the need to pay for publish/sync",
+				"Latex + Markdown support",
+			],
+			inProgress: true,
+			year: 2025,
+		},
+		{
 			slug: "ubc-purity-test",
 			name: "UBC Purity Test",
 			description:

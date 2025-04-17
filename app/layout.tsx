@@ -38,14 +38,12 @@ export default function RootLayout({
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
+					forcedTheme="dark"
 					disableTransitionOnChange
 				>
 					<div className="px-6">
 						<Nav />
-						<div className="mx-auto max-w-2xl pt-10 md:pt-20">
-							{children}
-							<Footer />
-						</div>
+						{children}
 					</div>
 				</ThemeProvider>
 			</body>

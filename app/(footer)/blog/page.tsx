@@ -36,13 +36,15 @@ function getBlogPosts(): PostMetadata[] {
 			const filePath = path.join(blogDirectory, filename);
 			const fileContent = fs.readFileSync(filePath, "utf8");
 			const { data } = matter(fileContent);
+			if (data.private) return undefined;
 			return {
 				title: data.title,
 				publishedAt: data.publishedAt,
 				summary: data.summary,
 				slug: filename.replace(/\.mdx$/, ""),
 			};
-		});
+		})
+		.filter(Boolean) as PostMetadata[];
 
 	return posts.sort(
 		(a, b) =>

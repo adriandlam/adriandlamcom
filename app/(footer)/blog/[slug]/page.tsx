@@ -15,7 +15,7 @@ import {
 	CalloutTitle,
 } from "@/components/callout";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import TableOfContents from "@/components/table-of-contents";
 import { notFound } from "next/navigation";
 import rehypeHighlight from "rehype-highlight";
@@ -57,24 +57,22 @@ function extractHeadings(content: string) {
 	const headingRegex = /^#{1,6}\s+(.+)$/gm;
 	const headings = [];
 	let match;
-  
+
 	while ((match = headingRegex.exec(content)) !== null) {
-	  const text = match[1];
-	  const level = match[0].split('#').length - 1;
-	  
-	  // Match the exact ID format that the browser is creating
-	  // Replace non-alphanumeric characters with hyphens and preserve trailing hyphens
-	  const slug = text
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
+		const text = match[1];
+		const level = match[0].split("#").length - 1;
+
+		// Match the exact ID format that the browser is creating
+		// Replace non-alphanumeric characters with hyphens and preserve trailing hyphens
+		const slug = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 		// Importantly, do NOT trim trailing hyphens as they're preserved in the browser IDs
 		//.replace(/(^-|-$)/g, '');
-	  
-	  headings.push({ text, level, slug });
+
+		headings.push({ text, level, slug });
 	}
-  
+
 	return headings;
-  }
+}
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -94,6 +92,7 @@ async function getBlogPost(slug: string) {
 	try {
 		const fileContent = fs.readFileSync(filePath, "utf8");
 		const { data: metadata, content } = matter(fileContent);
+		if (metadata.private) return null;
 		return { metadata, content };
 	} catch (error) {
 		return null;
@@ -182,82 +181,97 @@ export default async function Page({
 				Back to all posts
 			</Link>
 			<div className="relative">
-        <div className="hidden lg:block lg:fixed lg:right-4 xl:right-8 2xl:right-24 top-20 z-10">
-          <TableOfContents headings={headings} />
-        </div>
-        
-        {/* Main article with right margin on large screens */}
-        <article>
-          <header className="mb-8">
-            {metadata.coverImage && (
-              <div className="mb-6">
-                <Image
-                  src={metadata.coverImage}
-                  alt={`Cover image for ${metadata.title}`}
-                  width={1200}
-                  height={630}
-                  className="rounded-lg"
-                  priority
-                />
-              </div>
-            )}
-            <h1 className="text-3xl font-bold mb-2">{metadata.title}</h1>
-            {metadata.excerpt && (
-              <p className="text-xl text-muted-foreground mb-4">
-                {metadata.excerpt}
-              </p>
-            )}
-            <div className="flex items-center text-muted-foreground text-sm">
-              {metadata.author && (
-                <span className="mr-4">By {metadata.author}</span>
-              )}
-              <time dateTime={metadata.publishedAt}>{formattedDate}</time>
-              {metadata.readingTime && (
-                <span className="ml-4">{metadata.readingTime} min read</span>
-              )}
-            </div>
-            {metadata.tags && metadata.tags.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {metadata.tags.map((tag: string) => (
-                  <Badge key={tag}>{tag}</Badge>
-                ))}
-              </div>
-            )}
-          </header>
-          <div className="prose max-w-none">
-            <MDXRemote
-              source={content}
-              components={{
-                ...components,
-                h1: ({ children }) => (
-                  <h1 id={children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 id={children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 id={children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
-                    {children}
-                  </h3>
-                ),
-              }}
-              options={{
-                mdxOptions: {
-                  remarkPlugins: [remarkMath, remarkGfm],
-                  rehypePlugins: [
-                    rehypeKatex,
-                    [rehypeHighlight, { detect: true }],
-                  ],
-                },
-              }}
-            />
-          </div>
-        </article>
-      </div>
+				<div className="hidden lg:block lg:fixed lg:right-4 xl:right-8 2xl:right-24 top-20 z-10">
+					<TableOfContents headings={headings} />
+				</div>
+
+				{/* Main article with right margin on large screens */}
+				<article>
+					<header className="mb-8">
+						{metadata.coverImage && (
+							<div className="mb-6">
+								<Image
+									src={metadata.coverImage}
+									alt={`Cover image for ${metadata.title}`}
+									width={1200}
+									height={630}
+									className="rounded-lg"
+									priority
+								/>
+							</div>
+						)}
+						<h1 className="text-3xl font-bold mb-2">{metadata.title}</h1>
+						{metadata.excerpt && (
+							<p className="text-xl text-muted-foreground mb-4">
+								{metadata.excerpt}
+							</p>
+						)}
+						<div className="flex items-center text-muted-foreground text-sm">
+							{metadata.author && (
+								<span className="mr-4">By {metadata.author}</span>
+							)}
+							<time dateTime={metadata.publishedAt}>{formattedDate}</time>
+							{metadata.readingTime && (
+								<span className="ml-4">{metadata.readingTime} min read</span>
+							)}
+						</div>
+						{metadata.tags && metadata.tags.length > 0 && (
+							<div className="mt-4 flex flex-wrap gap-2">
+								{metadata.tags.map((tag: string) => (
+									<Badge key={tag}>{tag}</Badge>
+								))}
+							</div>
+						)}
+					</header>
+					<div className="prose max-w-none">
+						<MDXRemote
+							source={content}
+							components={{
+								...components,
+								h1: ({ children }) => (
+									<h1
+										id={children
+											?.toString()
+											.toLowerCase()
+											.replace(/[^a-z0-9]+/g, "-")}
+									>
+										{children}
+									</h1>
+								),
+								h2: ({ children }) => (
+									<h2
+										id={children
+											?.toString()
+											.toLowerCase()
+											.replace(/[^a-z0-9]+/g, "-")}
+									>
+										{children}
+									</h2>
+								),
+								h3: ({ children }) => (
+									<h3
+										id={children
+											?.toString()
+											.toLowerCase()
+											.replace(/[^a-z0-9]+/g, "-")}
+									>
+										{children}
+									</h3>
+								),
+							}}
+							options={{
+								mdxOptions: {
+									remarkPlugins: [remarkMath, remarkGfm],
+									rehypePlugins: [
+										rehypeKatex,
+										[rehypeHighlight, { detect: true }],
+									],
+								},
+							}}
+						/>
+					</div>
+				</article>
+			</div>
 		</main>
 	);
 }

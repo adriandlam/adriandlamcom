@@ -33,7 +33,7 @@ export default function QuotesPage() {
 						/>
 					</g>
 				</svg>
-				<h1 className="text-3xl font-medium tracking-tight">Quotes</h1>
+				<h1 className="text-4xl font-medium tracking-tight">Quotes</h1>
 				<p className="font-mono mt-2">
 					Some quotes ({quotes.length}) that I find interesting or inspiring.
 				</p>

@@ -11,9 +11,7 @@ export default function Home() {
 			{/* Intro Section */}
 			<div className="flex items-center justify-between gap-6">
 				<div>
-					<h1 className="text-3xl font-semibold tracking-tight">
-						{RESUME.name}
-					</h1>
+					<h1 className="text-4xl font-medium tracking-tight">{RESUME.name}</h1>
 					<p className="font-mono mt-2">{RESUME.bio}</p>
 				</div>
 				<Avatar className="w-28 h-28">

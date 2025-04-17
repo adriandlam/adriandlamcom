@@ -75,7 +75,7 @@ export default async function ProjectPage({
 
 			{/* Project image */}
 			{project.imagePath && (
-				<div className="mb-10 border rounded-md overflow-hidden shadow-md">
+				<div className="mb-10 border rounded-md overflow-hidden shadow-xs">
 					<img
 						src={project.imagePath}
 						alt={`${project.name} screenshot`}
