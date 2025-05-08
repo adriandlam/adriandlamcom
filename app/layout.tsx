@@ -41,7 +41,7 @@ export default function RootLayout({
 					forcedTheme="dark"
 					disableTransitionOnChange
 				>
-					<div className="px-6">
+					<div>
 						<Nav />
 						{children}
 					</div>

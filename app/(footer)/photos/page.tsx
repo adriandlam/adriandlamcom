@@ -1,24 +1,45 @@
-import fs from "fs";
-import path from "path";
+"use client";
+
 import { Camera } from "lucide-react";
 import Image from "next/image";
-
-// Function to get all photo filenames
-function getPhotoFilenames(): string[] {
-	const photoDirectory = path.join(process.cwd(), "public/photos");
-	const filenames = fs.readdirSync(photoDirectory);
-	return filenames;
-}
+import { useEffect, useState } from "react";
+import supabase from "@/utils/supabase";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export default function PhotosPage() {
-	const photoFilenames = getPhotoFilenames();
+	const [loading, setLoading] = useState(true);
+	const [photoUrls, setPhotoUrls] = useState<string[]>([]);
+
+	useEffect(() => {
+		async function fetchPhotos() {
+			const { data, error } = await supabase.storage.from("photos").list();
+			if (data) {
+				const sortedData = data
+					.sort(
+						(a, b) =>
+							new Date(a.created_at).getTime() -
+							new Date(b.created_at).getTime(),
+					)
+					.reverse();
+				const photos = sortedData.map((photo) => photo.name);
+				const urls = photos.map(
+					(photo) =>
+						supabase.storage.from("photos").getPublicUrl(photo).data.publicUrl,
+				);
+				setPhotoUrls(urls);
+				setLoading(false);
+			}
+		}
+		fetchPhotos();
+	}, []);
 
 	return (
 		<main>
-			<div className="relative">
+			<div className="relative mb-10">
 				<Camera
 					strokeWidth={1.75}
-					className="text-muted w-14 h-14 absolute -z-10 -top-8 -left-10"
+					className="text-muted w-12 h-12 absolute opacity-30 -top-6 -left-6 -z-10"
 				/>
 				<h1 className="text-4xl font-medium tracking-tight">Photos</h1>
 				<p className="font-mono text-muted-foreground mt-2">
@@ -26,27 +47,37 @@ export default function PhotosPage() {
 					professional photographer, but I enjoy capturing moments.
 				</p>
 			</div>
-			<p className="mt-2 font-mono">
-				My photos are taken with a Panasonic Lumix G85 and a Panasonic Lumix G
-				25mm F1.7. lens.
+			<p className="text-sm">
+				My photos are taken with a Panasonic Lumix G85 with a Panasonic Lumix G
+				25mm F1.7. lens but I've also recently upgraded to a Panasonic Lumix G
+				Vario 12-60mm f/3.5-5.6.
 			</p>
 
 			{/* Photo Grid */}
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-				{photoFilenames.map((filename, i) => (
-					<div
-						key={filename}
-						className="relative aspect-square w-full overflow-hidden rounded shadow-sm"
-					>
-						<Image
-							src={`/photos/${filename}`}
-							alt={`Photo ${i + 1}`}
-							fill
-							className="object-cover"
-							sizes="(max-width: 768px) 100vw, 50vw"
-						/>
-					</div>
-				))}
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-14">
+				{loading
+					? Array.from({ length: 10 }).map((_, i) => (
+							<Skeleton
+								key={i}
+								className="aspect-square rounded w-full h-full bg-muted animate-pulse"
+							/>
+						))
+					: photoUrls.map((url, i) => (
+							<Link
+								href={url}
+								key={url}
+								target="_blank"
+								className="transition-all duration-300 hover:scale-105 hover:brightness-105 hover:ring hover:ring-accent/30 relative aspect-square w-full overflow-hidden rounded shadow-md"
+							>
+								<Image
+									src={url}
+									alt={`Photo ${i + 1}`}
+									fill
+									className="object-cover"
+									sizes="(max-width: 768px) 100vw, 50vw"
+								/>
+							</Link>
+						))}
 			</div>
 		</main>
 	);
