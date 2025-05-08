@@ -54,9 +54,9 @@ export default function Home() {
 						<h3 className="font-medium tracking-tight">
 							University of British Columbia
 						</h3>
-						<p className="font-mono text-muted-foreground">2022 - 2026</p>
+						<p>2022 - 2026</p>
 					</div>
-					<p className="font-mono text-sm mt-0.5">
+					<p className="font-mono text-sm mt-0.5 text-muted-foreground">
 						Bachelor of Science, Mathematics
 					</p>
 				</div>
@@ -87,6 +87,15 @@ export default function Home() {
 					</Button>
 				</div>
 			</div>
+
+			{/* Extra Section */}
+			{/* <div className="mt-10">
+				<h2 className="text-2xl font-medium tracking-tight">
+					Some extra stuff
+				</h2>
+				<p className="font-mono mt-2 mb-6">
+				</p>
+			</div> */}
 		</main>
 	);
 }

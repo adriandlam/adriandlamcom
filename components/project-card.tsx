@@ -51,20 +51,20 @@ export default function ProjectCard({ project }: { project: Project }) {
 						<h3 className="font-medium text-lg tracking-tight hover:text-cyan-600 transition-colors">
 							{project.name}
 						</h3>
-				</Link>
-				<div>
-					{project.inProgress ? (
-						<Badge className="text-xs font-medium border-yellow-800/30 text-yellow-700 backdrop-blur bg-yellow-800/20 animate-pulse">
-							<CircleDot className="size-4" /> In Progress
-						</Badge>
-					) : (
-						<Badge className="text-xs font-medium border-green-800/30 text-green-700 backdrop-blur bg-green-800/20">
-							<Check className="size-4" /> Completed
-						</Badge>
-					)}
+					</Link>
+					<div>
+						{project.inProgress ? (
+							<Badge className="text-xs font-medium border-yellow-800/30 text-yellow-700 backdrop-blur bg-yellow-800/20 animate-pulse">
+								<CircleDot className="size-4" /> In Progress
+							</Badge>
+						) : (
+							<Badge className="text-xs font-medium border-green-800/30 text-green-700 backdrop-blur bg-green-800/20">
+								<Check className="size-4" /> Completed
+							</Badge>
+						)}
 					</div>
 				</div>
-				<p className="font-mono mt-2 text-sm flex-grow">
+				<p className="mt-2 text-sm flex-grow text-muted-foreground">
 					{project.description}
 				</p>
 				<div className="flex items-center gap-2 mt-4 mb-2 text-xs flex-wrap">
