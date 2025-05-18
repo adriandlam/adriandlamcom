@@ -90,7 +90,7 @@ export default async function ProjectPage({
 				<div className="md:col-span-2 space-y-6">
 					<section>
 						<h2 className="text-2xl font-medium mb-3">Overview</h2>
-						<div className="font-mono space-y-4">
+						<div className="space-y-4">
 							<p>{project.longDescription || project.description}</p>
 						</div>
 					</section>
@@ -98,7 +98,7 @@ export default async function ProjectPage({
 					{project.keyFeatures && (
 						<section>
 							<h2 className="text-2xl font-medium mb-3">Key Features</h2>
-							<ul className="list-disc list-inside font-mono space-y-2 pl-2">
+							<ul className="list-disc list-inside space-y-2 pl-2">
 								{project.keyFeatures.map((feature: string) => (
 									<li key={feature}>{feature}</li>
 								))}
@@ -111,7 +111,7 @@ export default async function ProjectPage({
 							<h2 className="text-2xl font-medium mb-3">
 								Challenges & Solutions
 							</h2>
-							<div className="font-mono">
+							<div>
 								<p>{project.challenges}</p>
 							</div>
 						</section>
@@ -132,6 +132,17 @@ export default async function ProjectPage({
 							</Badge>
 						)}
 					</section>
+
+					{project.awards && project.awards.length > 0 && (
+						<section className="border rounded p-4">
+							<h3 className="text-lg font-medium mb-3">Awards</h3>
+							<ul className="space-y-2">
+								{project.awards.map((award: string) => (
+									<li key={award}>{award}</li>
+								))}
+							</ul>
+						</section>
+					)}
 
 					<section className="border rounded p-4">
 						<h3 className="text-lg font-medium mb-3">Tech Stack</h3>
@@ -161,7 +172,7 @@ export default async function ProjectPage({
 										portfolio?: string;
 										twitter?: string;
 									}) => (
-										<li key={collaborator.name} className="font-mono">
+										<li key={collaborator.name}>
 											{collaborator.name}
 											<div className="flex gap-2 mt-1">
 												{collaborator.portfolio && (

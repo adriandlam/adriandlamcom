@@ -9,6 +9,51 @@ const RESUME = {
 	},
 	projects: [
 		{
+			slug: "spec2mcp",
+			name: "Spec2MCP",
+			description:
+				"Turn any API docs (OpenAPI) into ready-to-use MCP server schemas—no deep technical setup needed. Top 3 at YC MCP Hackathon.",
+			longDescription:
+				"Spec2MCP converts API docs (OpenAPI) into ready-to-use MCP server schemas in seconds, letting anyone build MCP tools without manual setup. Built with Next.js, TypeScript, TailwindCSS, Supabase, and FastAPI, it won top 3 at the Y Combinator MCP Hackathon. Users can upload/paste OpenAPI specs, preview live MCP schemas, and export instantly—abstracting technical details for a streamlined developer experience.",
+			imagePath: "/projects/spec2mcp.png",
+			liveUrl:
+				"https://devpost.com/software/openapi-schema-to-mcp-server?ref_content=my-projects-tab&ref_feature=my_projects",
+			stack: [
+				"Next.js",
+				"TypeScript",
+				"TailwindCSS",
+				"Supabase",
+				"FastAPI",
+				"Python",
+			],
+			keyFeatures: [
+				"Automatic OpenAPI → MCP schema conversion",
+				"Live schema preview and validation",
+				"File upload and clipboard support",
+				"Developer-friendly, intuitive UI",
+			],
+			collaborators: [
+				{
+					name: "Shreyas Goyal",
+					portfolio: "",
+					twitter: "https://x.com/xenshreyas",
+				},
+				{
+					name: "Yash Arya",
+					portfolio: "",
+					twitter: "https://x.com/yashisbuilding",
+				},
+				{
+					name: "Daniel Lima",
+					portfolio: "",
+					twitter: "https://x.com/LimaL310",
+				},
+			],
+			awards: ["Top 3 at Y Combinator MCP Hackathon (2025)"],
+			inProgress: false,
+			year: 2025,
+		},
+		{
 			slug: "merin",
 			name: "Merin",
 			description:
@@ -18,12 +63,7 @@ const RESUME = {
 			imagePath: "/projects/merin.png",
 			liveUrl: "https://merin.ai",
 			// githubUrl: "https://github.com/adriandlam/merin",
-			stack: [
-				"Next.js",
-				"Supabase",
-				"TypeScript",
-				"TailwindCSS",
-			],
+			stack: ["Next.js", "Supabase", "TypeScript", "TailwindCSS"],
 			keyFeatures: [
 				"Intelligent email triage with automatic categorization",
 				"Context-aware AI assistance for quick responses",
@@ -51,17 +91,13 @@ const RESUME = {
 			slug: "obsidian-vercel",
 			name: "Obsidian Vercel",
 			description:
-			"A tool for Obsidian users to avoid paying for publish/sync and host their notes on Vercel via a CI/CD pipeline.",
+				"A tool for Obsidian users to avoid paying for publish/sync and host their notes on Vercel via a CI/CD pipeline.",
 			longDescription:
 				"Obsidian Vercel is a tool for Obsidian users to publish and sync their notes on the cloud with Vercel for free, avoiding the need to pay for publish/sync.",
 			imagePath: "/projects/obsidian-vercel.png",
 			liveUrl: "http://obsidian-vercel-umber.vercel.app/",
 			githubUrl: "https://github.com/adriandlam/obsidian-vercel",
-			stack: [
-				"Next.js",
-				"TypeScript",
-				"TailwindCSS",
-			],
+			stack: ["Next.js", "TypeScript", "TailwindCSS"],
 			keyFeatures: [
 				"Free hosting for Obsidian users",
 				"Avoiding the need to pay for publish/sync",
