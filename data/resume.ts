@@ -12,7 +12,7 @@ const RESUME = {
 			slug: "spec2mcp",
 			name: "Spec2MCP",
 			description:
-				"Turn any API docs (OpenAPI) into ready-to-use MCP server schemas—no deep technical setup needed. Top 3 at YC MCP Hackathon.",
+				"Turn any API docs (OpenAPI) into ready-to-use MCP server schemas—no deep technical setup needed. 🏆 Top 3 at YC MCP Hackathon.",
 			longDescription:
 				"Spec2MCP converts API docs (OpenAPI) into ready-to-use MCP server schemas in seconds, letting anyone build MCP tools without manual setup. Built with Next.js, TypeScript, TailwindCSS, Supabase, and FastAPI, it won top 3 at the Y Combinator MCP Hackathon. Users can upload/paste OpenAPI specs, preview live MCP schemas, and export instantly—abstracting technical details for a streamlined developer experience.",
 			imagePath: "/projects/spec2mcp.png",
@@ -49,7 +49,7 @@ const RESUME = {
 					twitter: "https://x.com/LimaL310",
 				},
 			],
-			awards: ["Top 3 at Y Combinator MCP Hackathon (2025)"],
+			awards: ["🏆 Top 3 at Y Combinator MCP Hackathon (2025)"],
 			inProgress: false,
 			year: 2025,
 		},
