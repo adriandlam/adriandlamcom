@@ -115,7 +115,7 @@ const RESUME = {
 				"The UBC Purity Test is a fun self-graded survey platform that assesses how 'pure' or innocent a student's university experience has been. It features specialized versions for different faculties including the classic general test, a Business UBC Test for Sauder students, and a Sciences UBC Test for science majors and pre-med students. Scores range from 100% (completely pure) to 0% (not pure at all), calculated based on experiences the student has had during their time at UBC.",
 			githubUrl: "https://github.com/adriandlam/ubc-purity-test",
 			imagePath: "/projects/ubc-purity-test.png",
-			liveUrl: "https://ubc-purity-test.vercel.app",
+			liveUrl: "https://ubcpuritytest.com/",
 			stack: ["Next.js", "TailwindCSS", "TypeScript", "Supabase"],
 			collaborators: [
 				{
