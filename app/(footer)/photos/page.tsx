@@ -1,15 +1,56 @@
 "use client";
 
-import { Camera } from "lucide-react";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
+import { Camera, ChevronLeft, ChevronRight, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import supabase from "@/utils/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function PhotosPage() {
   const [loading, setLoading] = useState(true);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
+  const [carouselOpen, setCarouselOpen] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  useHotkeys("esc", () => setCarouselOpen(false), { enabled: carouselOpen });
+  useHotkeys(
+    "left",
+    () => {
+      if (carouselOpen) {
+        setCarouselIndex((prev) =>
+          prev > 0 ? prev - 1 : photoUrls.length - 1
+        );
+      }
+    },
+    [carouselOpen, photoUrls.length]
+  );
+  useHotkeys(
+    "right",
+    () => {
+      if (carouselOpen) {
+        setCarouselIndex((prev) =>
+          prev < photoUrls.length - 1 ? prev + 1 : 0
+        );
+      }
+    },
+    [carouselOpen, photoUrls.length]
+  );
+
+  // Disable scroll when carousel is open
+  useEffect(() => {
+    if (carouselOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup function to restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [carouselOpen]);
 
   useEffect(() => {
     async function fetchPhotos() {
@@ -63,11 +104,13 @@ export default function PhotosPage() {
               />
             ))
           : photoUrls.map((url, i) => (
-              <Link
-                href={url}
+              <span
                 key={url}
-                target="_blank"
-                className="transition-all duration-300 hover:scale-105 hover:brightness-105 hover:ring hover:ring-accent/30 relative aspect-square w-full overflow-hidden rounded shadow-md"
+                onClick={() => {
+                  setCarouselOpen(true);
+                  setCarouselIndex(i);
+                }}
+                className="hover:cursor-pointer transition-all duration-300 hover:scale-105 hover:brightness-105 relative aspect-square w-full overflow-hidden rounded shadow-md"
               >
                 <Image
                   src={url}
@@ -75,10 +118,80 @@ export default function PhotosPage() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
-              </Link>
+              </span>
             ))}
       </div>
+      {carouselOpen && (
+        <div className="fixed inset-0 z-50">
+          {/* Background overlay */}
+          <div
+            className="absolute inset-0 bg-black/75 backdrop-blur-md"
+            onClick={() => setCarouselOpen(false)}
+          />
+
+          {/* Close button */}
+          <Button
+            onClick={() => setCarouselOpen(false)}
+            variant="secondary"
+            className="fixed top-4 right-4 z-[60] p-2 rounded-full h-6 flex justify-between gap-1 border"
+            aria-label="Close carousel"
+          >
+            <X />
+            Close
+          </Button>
+
+          {/* Previous button */}
+          <button
+            onClick={() =>
+              setCarouselIndex((prev) =>
+                prev > 0 ? prev - 1 : photoUrls.length - 1
+              )
+            }
+            className="fixed left-4 top-1/2 -translate-y-1/2 z-[60] cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Previous photo"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          {/* Next button */}
+          <button
+            onClick={() =>
+              setCarouselIndex((prev) =>
+                prev < photoUrls.length - 1 ? prev + 1 : 0
+              )
+            }
+            className="fixed right-4 top-1/2 -translate-y-1/2 z-[60] cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Next photo"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          {/* Image container */}
+          <div className="flex items-center justify-center w-full h-full relative z-[55] pointer-events-none">
+            {photoUrls.map((url, index) => (
+              <Image
+                key={url}
+                src={url}
+                alt={`Photo ${index + 1} of ${photoUrls.length}`}
+                width={0}
+                height={0}
+                sizes="100vw"
+                className={`max-w-[90vw] max-h-[80vh] w-auto h-auto rounded-lg absolute transition-opacity duration-200 pointer-events-auto ${
+                  index === carouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+                priority={Math.abs(index - carouselIndex) <= 1}
+              />
+            ))}
+          </div>
+
+          {/* Photo counter */}
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] px-3 py-1 bg-black/75 backdrop-blur-md text-white text-sm rounded-full border border-white/20">
+            {carouselIndex + 1} / {photoUrls.length}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

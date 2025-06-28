@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface Tab {
   name: string;
@@ -54,18 +55,20 @@ export default function Nav() {
                     <Button size="icon" variant="ghost" asChild>
                       <Link
                         href={tab.href}
-                        className={`${
-                          activeTab === tab.name
-                            ? "text-cyan-500 hover:text-cyan-600"
-                            : "text-muted-foreground hover:text-foreground"
-                        }`}
+                        className={cn(
+                          "text-muted-foreground hover:text-foreground",
+                          activeTab === tab.name &&
+                            "text-cyan-500 hover:text-cyan-600"
+                        )}
                       >
                         {tab.icon}
                       </Link>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent className="bg-background text-foreground">
-                    <p>{tab.name}</p>
+                    <p>
+                      {tab.name.charAt(0).toUpperCase() + tab.name.slice(1)}
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </li>
