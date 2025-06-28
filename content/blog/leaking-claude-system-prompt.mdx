@@ -1,0 +1,98 @@
+---
+title: "Leaking Claude's System Prompt"
+publishedAt: "2025-04-02"
+summary: "How I leaked Claude's system prompt, and what I learned from it."
+private: "true"
+---
+
+A while back when I was creating [Heida](https://heida.app), I was trying to figure out how Claude artifacts worked. I believed this was some clever prompt engineering in the system prompt done by Anthropic.
+
+I looked around online and found a reddit post on the old system prompt. Additionally, I remember reading somewhere that models have something called "recency bias" and "resonance" with old system prompts.
+
+## Recency Bias
+
+Based on the transformer architecture, the model's attention mechanism is based on the context window. Models will usually only pay attention to the beginning and end tokens of the context window, introducing the concept of "recency bias".
+
+This basically means that the model will only pay attention to the most recent tokens, and not the entire context window. Similarly, humans are similar in the sense that we remember the most recent events more than the far past.
+
+## Resonance
+
+Resonance is a pretty interesting concept in AI models that I discovered while working on Heida. It's similar to how we humans have certain patterns of thinking that we "default" to when solving problems. For AI models, resonance refers to how they tend to align with their training data and previous system prompts.
+
+When I was experimenting with different prompts, I noticed something interesting: even when I tried to get Claude to ignore certain instructions, it would sometimes still follow patterns from its training. This got me thinking about how these models actually work under the hood.
+
+## The Experiment
+
+I decided to try something that might seem a bit unconventional. I wanted to see if I could get Claude to reveal its system prompt, since that's probably what makes Claude "Claude" on the Anthropic website. Here's what I did:
+
+1. I started with simple questions about its capabilities
+2. Gradually moved to more specific questions about its training
+3. Used a technique called "prompt injection" to try to get it to reveal its instructions
+
+The results were interesting. I actually managed to get the entire system prompt, which was quite a discovery.
+
+## The Breakthrough
+
+What actually worked was pretty clever - I fed Claude its own system prompt and watched what happened. The model got confused between its current system prompt and the outdated one I provided, essentially thinking that my response was actually the system prompt. This is where the concept of resonance really came into play.
+
+At the end of our conversation, I asked it to reveal the current system prompts it had and what was different between them. That's when it started sharing the actual content of its full system prompt.
+
+## Security Measures and Workarounds
+
+Anthropic had several security measures in place to prevent this kind of leak:
+
+1. Auto-stopping responses when certain XML tags were detected
+2. Blocking specific phrases that might reveal sensitive information
+3. Platform-level monitoring for suspicious patterns
+
+Getting around these wasn't easy - the system would auto-stop responses multiple times when I got close to sensitive information. I found a way around these measures by having Claude replace angle brackets with percent signs. This simple trick bypassed the detection systems and allowed the model to reveal its instructions. Surprisingly, this technique still works with Claude 3.7 Sonnet thinking models. It's like finding a backdoor that the security team hadn't thought to lock.
+
+## What I Learned
+
+Through this experiment, I discovered several important things:
+
+1. **Security Measures**: Claude has multiple layers of protection against revealing sensitive information, but they're not foolproof. With the right approach, these safeguards can be bypassed.
+
+2. **Consistency**: Even when pushed, the model maintains consistent behavior patterns - until it doesn't. Finding the right trigger points can cause unexpected behaviors.
+
+3. **Ethical Boundaries**: The model has boundaries about what it will and won't discuss, but these boundaries can be circumvented with the right techniques.
+
+4. **Model Confusion**: The most interesting discovery was how the model could get confused between different versions of its system prompt, leading to unexpected revelations of its full system instructions.
+
+## The Bigger Picture
+
+This experiment taught me something valuable about AI safety and transparency. While it might seem fun to try to "break" AI models, there's a serious side to this:
+
+- AI companies need to balance transparency with security
+- Even sophisticated security measures can have blind spots
+- Users should understand the limitations and capabilities of AI models
+- There's a fine line between curiosity and responsible AI use
+- Even the most sophisticated AI models can be tricked through careful manipulation of their context
+
+## Moving Forward
+
+As I continue working on AI projects like Heida and [Merin](https://merin.ai), I'm more aware of how these models work. Instead of trying to "break" them, I focus on:
+
+1. Understanding their capabilities
+2. Using them responsibly
+3. Building tools that help others use AI effectively
+
+However, I also believe in the importance of responsible disclosure. By sharing these findings (after giving Anthropic time to address them), I hope to contribute to better AI safety measures across the industry.
+
+## Final Thoughts
+
+My experiment with leaking Claude's system prompt was successful - I managed to get the entire system prompt despite the security measures in place. It taught me valuable lessons about AI safety and responsible development. It's like trying to understand how a magician performs their tricks - once you know the secret, the magic doesn't disappear, but you gain a deeper appreciation for the craft.
+
+What's your experience with AI models? Have you ever tried to understand their inner workings? I'd love to hear your thoughts and experiences.
+
+
+
+
+
+
+
+
+
+
+
+

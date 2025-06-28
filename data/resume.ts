@@ -5,7 +5,8 @@ const RESUME = {
 	education: {
 		institution: "University of British Columbia",
 		degree: "Bachelor of Science, Mathematics",
-		duration: "2022 - 2026",
+		start_year: "2022",
+		end_year: "2026",
 	},
 	projects: [
 		{
@@ -240,18 +241,6 @@ const RESUME = {
 				"Interactive visualization dashboard",
 			],
 			year: 2024,
-		},
-		{
-			slug: "redis-cpp",
-			name: "Redis C++",
-			description:
-				"A C++ library for Redis that provides a high-performance, thread-safe, and easy-to-use interface for interacting with Redis databases.",
-			longDescription:
-				"Redis C++ is a C++ library for Redis that provides a high-performance, thread-safe, and easy-to-use interface for interacting with Redis databases.",
-			githubUrl: "https://github.com/adriandlam/redis-cpp",
-			stack: ["C++", "Redis", "CMake", "GitHub Actions"],
-			inProgress: true,
-			year: 2025,
 		},
 		// {
 		// 	slug: "adrians-research-engine",
