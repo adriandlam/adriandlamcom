@@ -1,6 +1,6 @@
 # adriandlamcom
 
-Personal website of Adrian Lam, built with modern web technologies and open-sourced for the community.
+Personal website of Adrian Lam, built with Next.js and deployed on Vercel.
 
 ## Overview
 
@@ -80,32 +80,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Feel free to use this repository as a template for your own personal website. If you do, please consider:
 
 1. Giving appropriate credit
-2. Removing my personal information and replacing it with your own
+2. Removing my personal information (inside `data/resume.ts`) and replacing it with your own
 3. Sharing your own improvements back with the community
-
-## Project Structure
-
-```
-adriandlamcom/
-├── app/                # Next.js app router pages
-│   ├── blog/           # Blog page and individual post pages
-│   ├── photos/         # Photo gallery page
-│   ├── page.tsx        # Homepage
-│   └── layout.tsx      # Root layout with metadata
-├── components/         # React components
-│   ├── ui/             # shadcn/ui components
-│   ├── nav.tsx         # Navigation component
-│   ├── footer.tsx      # Footer component
-│   └── theme-provider.tsx # Theme provider for dark/light mode
-├── content/
-│   └── blog/           # MDX blog posts
-├── lib/
-│   └── utils.ts        # Utility functions
-└── public/             # Static assets
-    ├── photos/         # Photos for gallery
-    ├── blog-assets/    # Images for blog posts
-    └── me.jpg          # Your profile photo
-```
 
 ## Contributing
 
