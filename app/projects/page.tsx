@@ -37,14 +37,14 @@ export default function ProjectsPage() {
 
       {/* Other projects section */}
       <div className="mt-16">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">
+        <h2 className="text-2xl font-medium tracking-tight mb-4">
           More Projects
         </h2>
-        <p className=" text-muted-foreground mb-6">
-          Additional smaller projects and experiments can be found on my
+        <p className="opacity-80 mb-6">
+          Additional smaller projects and experiments can be found on my{" "}
           <Link
             href="https://github.com/adriandlam"
-            className="text-cyan-700 hover:text-cyan-500 ml-1 underline underline-offset-4 transition"
+            className="text-muted-foreground hover:text-foreground underline underline-offset-4 transition"
           >
             GitHub profile
           </Link>

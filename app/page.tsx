@@ -1,9 +1,12 @@
+"use client";
+
 import ProjectCard from "@/components/project-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import GitHubCalendar, { Activity } from "react-github-calendar";
 
 export default function Home() {
   return (
@@ -25,12 +28,22 @@ export default function Home() {
         <h2 className="text-2xl font-medium tracking-tight">
           Recent GitHub Activity
         </h2>
-        <img
-          src="https://ghchart.rshah.org/409ba5/adriandlam"
-          alt="adriandlam's Github chart"
-          className="mt-2"
-        />
-        <p className="mt-2 text-muted-foreground text-xs text-center">
+        <div className="mt-4">
+          <GitHubCalendar
+            username="adriandlam"
+            colorScheme="dark"
+            transformData={(data) => selectLastNMonths(data, 10)}
+            labels={{
+              totalCount: "{{count}} contributions in the last 10 months",
+            }}
+            fontSize={14}
+            errorMessage="Error loading GitHub contributions"
+            theme={{
+              dark: ["#262626", "#0d4429", "#016d32", "#26a641", "#3ad353"],
+            }}
+          />
+        </div>
+        <p className="mt-2.5 text-muted-foreground text-xs text-center">
           Psssst, can you tell when my exams are?
         </p>
       </div>
@@ -115,7 +128,9 @@ export default function Home() {
         </div>
         <div className="mt-4 flex justify-center">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/projects">View All Projects</Link>
+            <Link href="/projects">
+              View All Projects <ChevronRight />
+            </Link>
           </Button>
         </div>
       </div>
@@ -131,3 +146,14 @@ export default function Home() {
     </main>
   );
 }
+
+const selectLastNMonths = (contributions: Activity[], n: number) => {
+  const now = new Date();
+  const cutoffDate = new Date(now);
+  cutoffDate.setMonth(now.getMonth() - n);
+
+  return contributions.filter((activity) => {
+    const activityDate = new Date(activity.date);
+    return activityDate >= cutoffDate && activityDate <= now;
+  });
+};

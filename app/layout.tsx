@@ -41,9 +41,10 @@ export default function RootLayout({
           forcedTheme="dark"
           disableTransitionOnChange
         >
-          <div className="max-w-screen-md mx-auto pt-10 md:pt-20 px-4 sm:px-6 lg:px-8 pb-24">
+          <div className="max-w-screen-md mx-auto pt-10 md:pt-20 px-4 sm:px-6 lg:px-8">
             <Nav />
             {children}
+            <Footer />
           </div>
         </ThemeProvider>
       </body>

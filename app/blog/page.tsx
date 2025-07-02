@@ -10,8 +10,6 @@ function formatDate(dateString: string) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
     year: "numeric",
-    month: "long",
-    day: "numeric",
   });
 }
 
@@ -68,33 +66,49 @@ export default function BlogPage() {
           I am as a person.
         </p>
       </div>
-      <div className="space-y-10 mt-2">
-        {posts.map((post, i) => (
-          <article
-            key={post.slug}
-            className={cn("border-b pb-4", {
-              "border-0 pb-0": i === posts.length - 1,
-              "mt-10": i === 0,
-            })}
-          >
-            <Link
-              href={`/blog/${post.slug}`}
-              className="block group transition-all hover:opacity-75"
+      <table className="mt-8 w-full">
+        <thead>
+          <tr className="border-b border-border">
+            <th className="text-left py-2 px-0 text-sm text-muted-foreground/65 font-normal">
+              date
+            </th>
+            <th className="text-left py-2 px-6 text-sm text-muted-foreground/65 font-normal">
+              title
+            </th>
+            <th className="text-left py-2 px-4 text-sm text-muted-foreground/65 font-normal">
+              summary
+            </th>
+            {/* TODO: add views */}
+            {/* <th className="text-left py-2 px-4 text-sm text-muted-foreground/65 font-normal">
+              views
+            </th> */}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {posts.map((post) => (
+            <tr
+              key={post.slug}
+              className="hover:bg-muted/50 transition-colors relative group"
             >
-              <h2 className="text-2xl group-hover:text-cyan-600 transition-colors my-0">
-                {post.title}
-              </h2>
-              <time className="text-sm text-muted-foreground block mt-2">
+              <td className="py-3 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono">
                 {formatDate(post.publishedAt)}
-              </time>
-
-              <p className="mt-4 text-sm line-clamp-3 text-muted-foreground">
-                {post.summary}
-              </p>
-            </Link>
-          </article>
-        ))}
-      </div>
+              </td>
+              <td className="py-3 px-6">
+                <span className="line-clamp-1">{post.title}</span>
+              </td>
+              <td className="py-3 px-4 text-sm text-muted-foreground">
+                <span className="line-clamp-1">{post.summary}</span>
+              </td>
+              <Link
+                href={`/blog/${post.slug}`}
+                className="absolute inset-0 z-10"
+                aria-label={`Read blog post: ${post.title}`}
+              />
+              {/* <td className="py-3 px-4 text-sm text-muted-foreground">here</td> */}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
