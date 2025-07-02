@@ -173,7 +173,7 @@ export default async function Page({
   const headings = extractHeadings(content);
 
   return (
-    <main className="container relative">
+    <main className="px-8 pt-8 border-t border-dashed">
       <div className="relative">
         {/* Main article with right margin on large screens */}
         <article>

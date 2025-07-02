@@ -54,12 +54,8 @@ export default function BlogPage() {
   const posts = getBlogPosts();
 
   return (
-    <div>
-      <div className="relative">
-        <NotebookPen
-          strokeWidth={1.75}
-          className="text-muted w-14 h-14 absolute -z-10 -top-8 -left-10"
-        />
+    <main className="p-8 border-t border-dashed">
+      <div>
         <h1 className="text-4xl font-medium tracking-tight">Blog</h1>
         <p className="text-muted-foreground mt-2">
           A collection of articles and thoughts on software development and who
@@ -109,6 +105,6 @@ export default function BlogPage() {
           ))}
         </tbody>
       </table>
-    </div>
+    </main>
   );
 }

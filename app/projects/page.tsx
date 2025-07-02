@@ -5,12 +5,8 @@ import Link from "next/link";
 
 export default function ProjectsPage() {
   return (
-    <main>
-      <div className="relative">
-        <FolderGit2
-          strokeWidth={1.75}
-          className="text-muted w-14 h-14 absolute -z-10 -top-8 -left-10"
-        />
+    <main className="px-8 pt-8 border-t border-dashed">
+      <div>
         <h1 className="text-4xl font-medium tracking-tight">Projects</h1>
         <p className=" text-muted-foreground mt-2">
           A collection of projects I've built throughout my journey as a

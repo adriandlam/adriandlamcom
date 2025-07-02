@@ -25,7 +25,7 @@ export default async function ProjectPage({
   }
 
   return (
-    <main>
+    <main className="px-8 pt-8 border-t border-dashed">
       {/* Project header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
@@ -36,7 +36,7 @@ export default async function ProjectPage({
         </div>
         <div className="flex flex-wrap gap-3">
           {project.githubUrl && (
-            <Button variant="outline">
+            <Button variant="outline" size="sm">
               <Link
                 href={project.githubUrl}
                 target="_blank"
@@ -211,7 +211,7 @@ export default async function ProjectPage({
               <Link
                 key={relatedProject.slug}
                 href={`/projects/${relatedProject.slug}`}
-                className="border rounded-lg p-4 hover:border-primary/25 ease-in-out transition-all duration-200"
+                className="border rounded-xl p-4 hover:bg-muted/25 ease-in-out transition-all duration-200"
               >
                 <h3 className="font-medium">{relatedProject.name}</h3>
                 <p className=" text-sm text-muted-foreground mt-1 line-clamp-2">

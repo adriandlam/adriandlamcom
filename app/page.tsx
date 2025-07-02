@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main>
       {/* Intro Section */}
-      <div className="flex items-center justify-between gap-6">
+      <div className="flex items-center justify-between gap-6 border-y border-dashed px-8 py-4">
         <div>
           <h1 className="text-4xl font-medium tracking-tight">{RESUME.name}</h1>
           <p className="mt-2 opacity-80">{RESUME.bio}</p>
@@ -24,7 +24,7 @@ export default function Home() {
       </div>
 
       {/* GitHub Recent Activity */}
-      <div className="mt-10">
+      <div className="p-8">
         <h2 className="text-2xl font-medium tracking-tight">
           Recent GitHub Activity
         </h2>
@@ -49,7 +49,7 @@ export default function Home() {
       </div>
 
       {/* About Me Section */}
-      <div className="mt-10">
+      <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">About Me</h2>
         <p className="mt-2 opacity-80">
           I'm a Mathematics student at the University of British Columbia, set
@@ -60,7 +60,7 @@ export default function Home() {
       </div>
 
       {/* Experience Section */}
-      <div className="mt-10">
+      <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">Experience</h2>
         <div className="mt-2">
           {RESUME.experience.map((experience) => (
@@ -94,7 +94,7 @@ export default function Home() {
       </div>
 
       {/* Education Section */}
-      <div className="mt-10">
+      <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">Education</h2>
         <div className="mt-2">
           <div className="flex justify-between items-end">
@@ -115,7 +115,7 @@ export default function Home() {
       </div>
 
       {/* Projects Section */}
-      <div className="mt-10">
+      <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">Projects</h2>
         <p className="mt-2 mb-6 opacity-80">
           Here are some of my notable projects that showcase my skills and

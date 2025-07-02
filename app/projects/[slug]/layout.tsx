@@ -9,13 +9,14 @@ export default function ProjectLayout({
 }) {
   return (
     <div>
-      <Button asChild variant="ghost" size="sm" className="mb-6">
-        <Link href="/projects">
-          <ChevronLeft className="h-4 w-4" />
-          Back to all projects
-        </Link>
-      </Button>
-
+      <div className="border-t border-dashed px-4 py-4 flex items-center">
+        <Button asChild variant="ghost" size="sm">
+          <Link href="/blog">
+            <ChevronLeft />
+            Back to all posts
+          </Link>
+        </Button>
+      </div>
       {children}
     </div>
   );
