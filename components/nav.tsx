@@ -56,9 +56,9 @@ export default function Nav() {
                       <Link
                         href={tab.href}
                         className={cn(
-                          "text-muted-foreground hover:text-foreground",
+                          "text-foreground opacity-35 hover:opacity-100",
                           activeTab === tab.name &&
-                            "text-cyan-500 hover:text-cyan-600"
+                            "text-primary bg-secondary opacity-100"
                         )}
                       >
                         {tab.icon}
@@ -81,7 +81,7 @@ export default function Nav() {
                     size="icon"
                     variant="ghost"
                     asChild
-                    className="text-muted-foreground"
+                    className="text-muted-foreground opacity-75 hover:opacity-100"
                   >
                     <Link href="mailto:me@adriandlam.com">
                       <Mail />
@@ -112,7 +112,7 @@ export default function Nav() {
                     size="icon"
                     variant="ghost"
                     asChild
-                    className="text-muted-foreground"
+                    className="text-muted-foreground opacity-75 hover:opacity-100"
                   >
                     <Link
                       href="https://www.github.com/adriandlam"

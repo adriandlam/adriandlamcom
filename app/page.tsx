@@ -12,7 +12,7 @@ export default function Home() {
       <div className="flex items-center justify-between gap-6">
         <div>
           <h1 className="text-4xl font-medium tracking-tight">{RESUME.name}</h1>
-          <p className="mt-2">{RESUME.bio}</p>
+          <p className="mt-2 opacity-80">{RESUME.bio}</p>
         </div>
         <Avatar className="w-28 h-28">
           <AvatarImage src={RESUME.avatar_path} alt="Avatar" />
@@ -38,12 +38,46 @@ export default function Home() {
       {/* About Me Section */}
       <div className="mt-10">
         <h2 className="text-2xl font-medium tracking-tight">About Me</h2>
-        <p className="mt-2">
+        <p className="mt-2 opacity-80">
           I'm a Mathematics student at the University of British Columbia, set
           to graduate in 2026. I have a strong background in software
           development, with experience in full-stack development, machine
           learning, and data analysis.
         </p>
+      </div>
+
+      {/* Experience Section */}
+      <div className="mt-10">
+        <h2 className="text-2xl font-medium tracking-tight">Experience</h2>
+        <div className="mt-2">
+          {RESUME.experience.map((experience) => (
+            <div key={experience.company} className="mt-2">
+              <div className="flex justify-between items-end">
+                <h3 className="font-medium tracking-tight">
+                  {experience.company}
+                </h3>
+                <p className="text-sm">
+                  {new Date(experience.start_date).toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })}{" "}
+                  -{" "}
+                  {new Date(experience.end_date).toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+              {/* <p className="text-sm mt-0.5 text-muted-foreground">
+                {experience.description}
+              </p> */}
+              <div className="flex justify-between items-end text-sm mt-0.5">
+                <span className="text-muted-foreground">{experience.role}</span>
+                <p className="text-muted-foreground">{experience.location}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Education Section */}
@@ -54,35 +88,33 @@ export default function Home() {
             <h3 className="font-medium tracking-tight">
               {RESUME.education.institution}
             </h3>
-            <p>
+            <p className="text-sm">
               {RESUME.education.start_year} - {RESUME.education.end_year}
             </p>
           </div>
-          <p className="text-sm mt-0.5 text-muted-foreground">
-            {RESUME.education.degree}
-          </p>
+          <div className="flex justify-between items-end text-sm mt-0.5">
+            <span className="text-muted-foreground">
+              {RESUME.education.degree}
+            </span>
+            <p className="text-muted-foreground">{RESUME.education.location}</p>
+          </div>
         </div>
       </div>
 
       {/* Projects Section */}
       <div className="mt-10">
         <h2 className="text-2xl font-medium tracking-tight">Projects</h2>
-        <p className="mt-2 mb-6">
+        <p className="mt-2 mb-6 opacity-80">
           Here are some of my notable projects that showcase my skills and
           interests:
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {RESUME.projects.slice(0, 4).map((project) => (
             <ProjectCard key={project.name} project={project} />
           ))}
         </div>
         <div className="mt-4 flex justify-center">
-          <Button
-            variant="link"
-            effect={"hoverUnderline"}
-            asChild
-            className="after:w-full px-0"
-          >
+          <Button variant="ghost" size="sm" asChild>
             <Link href="/projects">View All Projects</Link>
           </Button>
         </div>

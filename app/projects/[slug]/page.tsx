@@ -26,15 +26,6 @@ export default async function ProjectPage({
 
   return (
     <main>
-      {/* Back button */}
-      <Link
-        href="/projects"
-        className="inline-flex items-center text-sm font-medium text-cyan-500 hover:text-cyan-600 mb-6 transition-colors gap-1 no-underline"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to all projects
-      </Link>
-
       {/* Project header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
@@ -58,7 +49,7 @@ export default async function ProjectPage({
             </Button>
           )}
           {project.liveUrl && (
-            <Button variant="outline">
+            <Button variant="outline" size="sm">
               <Link
                 href={project.liveUrl}
                 target="_blank"
@@ -75,11 +66,11 @@ export default async function ProjectPage({
 
       {/* Project image */}
       {project.imagePath && (
-        <div className="mb-10 border rounded-md overflow-hidden shadow-xs">
+        <div className="mb-10 border overflow-hidden shadow-xs rounded-4xl">
           <img
             src={project.imagePath}
             alt={`${project.name} screenshot`}
-            className="w-full h-auto"
+            className="w-full h-auto rounded-3xl object-cover"
           />
         </div>
       )}
@@ -91,7 +82,9 @@ export default async function ProjectPage({
           <section>
             <h2 className="text-2xl font-medium mb-3">Overview</h2>
             <div className="space-y-4">
-              <p>{project.longDescription || project.description}</p>
+              <p className="opacity-80">
+                {project.longDescription || project.description}
+              </p>
             </div>
           </section>
 
@@ -100,7 +93,9 @@ export default async function ProjectPage({
               <h2 className="text-2xl font-medium mb-3">Key Features</h2>
               <ul className="list-disc list-inside space-y-2 pl-2">
                 {project.keyFeatures.map((feature: string) => (
-                  <li key={feature}>{feature}</li>
+                  <li key={feature} className="opacity-80">
+                    {feature}
+                  </li>
                 ))}
               </ul>
             </section>
@@ -136,7 +131,7 @@ export default async function ProjectPage({
           {project.awards && project.awards.length > 0 && (
             <section className="border rounded p-4">
               <h3 className="text-lg font-medium mb-3">Awards</h3>
-              <ul className="space-y-2">
+              <ul className="space-y-2 text-sm">
                 {project.awards.map((award: string) => (
                   <li key={award}>{award}</li>
                 ))}
@@ -180,7 +175,7 @@ export default async function ProjectPage({
                             href={collaborator.portfolio}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-cyan-500 hover:underline"
+                            className="text-xs underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors"
                           >
                             Portfolio
                           </Link>
@@ -190,7 +185,7 @@ export default async function ProjectPage({
                             href={collaborator.twitter}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-cyan-500 hover:underline"
+                            className="text-xs underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors"
                           >
                             Twitter
                           </Link>
@@ -216,7 +211,7 @@ export default async function ProjectPage({
               <Link
                 key={relatedProject.slug}
                 href={`/projects/${relatedProject.slug}`}
-                className="border rounded p-4 hover:shadow-md transition-all hover:border-cyan-900"
+                className="border rounded-lg p-4 hover:border-primary/25 ease-in-out transition-all duration-200"
               >
                 <h3 className="font-medium">{relatedProject.name}</h3>
                 <p className=" text-sm text-muted-foreground mt-1 line-clamp-2">
