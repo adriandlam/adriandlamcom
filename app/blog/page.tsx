@@ -71,7 +71,7 @@ export default function BlogPage() {
             <th className="text-left py-2 px-6 text-sm text-muted-foreground/65 font-normal">
               title
             </th>
-            <th className="text-left py-2 px-4 text-sm text-muted-foreground/65 font-normal">
+            <th className="text-left py-2 px-4 text-sm text-muted-foreground/65 font-normal hidden md:table-cell">
               summary
             </th>
             {/* TODO: add views */}
@@ -92,7 +92,7 @@ export default function BlogPage() {
               <td className="py-3 px-6">
                 <span className="line-clamp-1">{post.title}</span>
               </td>
-              <td className="py-3 px-4 text-sm text-muted-foreground">
+              <td className="py-3 px-4 text-sm text-muted-foreground hidden md:table-cell">
                 <span className="line-clamp-1">{post.summary}</span>
               </td>
               <Link
