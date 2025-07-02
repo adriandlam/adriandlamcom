@@ -11,9 +11,9 @@ export default function ProjectLayout({
     <div>
       <div className="border-t border-dashed px-4 py-4 flex items-center">
         <Button asChild variant="ghost" size="sm">
-          <Link href="/blog">
+          <Link href="/projects">
             <ChevronLeft />
-            Back to all posts
+            Back to all projects
           </Link>
         </Button>
       </div>

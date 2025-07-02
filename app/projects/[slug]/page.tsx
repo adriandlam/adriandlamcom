@@ -66,11 +66,11 @@ export default async function ProjectPage({
 
       {/* Project image */}
       {project.imagePath && (
-        <div className="mb-10 border overflow-hidden shadow-xs rounded-4xl">
+        <div className="mb-10 border overflow-hidden shadow-xs rounded-xl">
           <img
             src={project.imagePath}
             alt={`${project.name} screenshot`}
-            className="w-full h-auto rounded-3xl object-cover"
+            className="w-full h-auto rounded-xl object-cover"
           />
         </div>
       )}
@@ -115,7 +115,7 @@ export default async function ProjectPage({
 
         {/* Sidebar */}
         <div className="space-y-6">
-          <section className="border rounded p-4">
+          <section className="border rounded-md p-4 shadow-sm">
             <h3 className="text-lg font-medium mb-3">Status</h3>
             {project.inProgress ? (
               <Badge className="text-xs font-medium border-yellow-800/30 text-yellow-700 backdrop-blur bg-yellow-800/20 animate-pulse">
@@ -129,7 +129,7 @@ export default async function ProjectPage({
           </section>
 
           {project.awards && project.awards.length > 0 && (
-            <section className="border rounded p-4">
+            <section className="border rounded-md p-4 shadow-sm">
               <h3 className="text-lg font-medium mb-3">Awards</h3>
               <ul className="space-y-2 text-sm">
                 {project.awards.map((award: string) => (
@@ -139,7 +139,7 @@ export default async function ProjectPage({
             </section>
           )}
 
-          <section className="border rounded p-4">
+          <section className="border rounded-md p-4 shadow-sm">
             <h3 className="text-lg font-medium mb-3">Tech Stack</h3>
             <div className="flex flex-wrap gap-2">
               {project.stack.map((tech: string) => (
@@ -151,14 +151,14 @@ export default async function ProjectPage({
           </section>
 
           {project.year && (
-            <section className="border rounded p-4">
+            <section className="border rounded-md p-4 shadow-sm">
               <h3 className="text-lg font-medium mb-2">Year</h3>
               <p className="">{project.year}</p>
             </section>
           )}
 
           {project.collaborators && project.collaborators.length > 0 && (
-            <section className="border rounded p-4">
+            <section className="border rounded-md p-4 shadow-sm">
               <h3 className="text-lg font-medium mb-3">Collaborators</h3>
               <ul className="space-y-4">
                 {project.collaborators.map(
@@ -211,7 +211,7 @@ export default async function ProjectPage({
               <Link
                 key={relatedProject.slug}
                 href={`/projects/${relatedProject.slug}`}
-                className="border rounded-xl p-4 hover:bg-muted/25 ease-in-out transition-all duration-200"
+                className="border rounded-md p-4 hover:bg-muted/25 ease-in-out transition-all duration-200"
               >
                 <h3 className="font-medium">{relatedProject.name}</h3>
                 <p className=" text-sm text-muted-foreground mt-1 line-clamp-2">

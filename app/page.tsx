@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import ProjectCard from "@/components/project-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -12,15 +13,20 @@ export default function Home() {
   return (
     <main>
       {/* Intro Section */}
-      <div className="flex items-center justify-between gap-6 border-y border-dashed px-8 py-4">
+      <div className="flex items-center gap-6 border-y border-dashed p-8">
+        <Avatar className="size-16">
+          <AvatarImage src={RESUME.avatar_path} alt="Avatar" />
+          <AvatarFallback>
+            {RESUME.name
+              .split(" ")
+              .map((name) => name[0])
+              .join("")}
+          </AvatarFallback>
+        </Avatar>
         <div>
           <h1 className="text-4xl font-medium tracking-tight">{RESUME.name}</h1>
-          <p className="mt-2 opacity-80">{RESUME.bio}</p>
+          <p className="mt-1 opacity-80">{RESUME.bio}</p>
         </div>
-        <Avatar className="w-28 h-28">
-          <AvatarImage src={RESUME.avatar_path} alt="Avatar" />
-          <AvatarFallback>AL</AvatarFallback>
-        </Avatar>
       </div>
 
       {/* GitHub Recent Activity */}
@@ -51,9 +57,10 @@ export default function Home() {
       {/* About Me Section */}
       <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">About Me</h2>
-        <p className="mt-2 opacity-80">
-          I'm a Mathematics student at the University of British Columbia, set
-          to graduate in 2026. I have a strong background in software
+        <p className="mt-2.5 opacity-80">
+          I'm a {RESUME.education.major} student at the{" "}
+          {RESUME.education.institution}, set to graduate in{" "}
+          {RESUME.education.end_year}. I have a strong background in software
           development, with experience in full-stack development, machine
           learning, and data analysis.
         </p>
@@ -62,31 +69,51 @@ export default function Home() {
       {/* Experience Section */}
       <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">Experience</h2>
-        <div className="mt-2">
+        <div className="mt-2.5 space-y-4">
           {RESUME.experience.map((experience) => (
-            <div key={experience.company} className="mt-2">
-              <div className="flex justify-between items-end">
-                <h3 className="font-medium tracking-tight">
-                  {experience.company}
-                </h3>
-                <p className="text-sm">
-                  {new Date(experience.start_date).toLocaleDateString("en-US", {
-                    month: "short",
-                    year: "numeric",
-                  })}{" "}
-                  -{" "}
-                  {new Date(experience.end_date).toLocaleDateString("en-US", {
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
-              {/* <p className="text-sm mt-0.5 text-muted-foreground">
-                {experience.description}
-              </p> */}
-              <div className="flex justify-between items-end text-sm mt-0.5">
-                <span className="text-muted-foreground">{experience.role}</span>
-                <p className="text-muted-foreground">{experience.location}</p>
+            <div key={experience.company}>
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3.5">
+                  <Link
+                    href={experience.company_website}
+                    target="_blank"
+                    className="size-10 flex items-center justify-center bg-background border rounded-md p-2.5 flex-shrink-0 shadow-sm"
+                  >
+                    <div className="size-10 flex items-center justify-center bg-background border rounded-md p-2.5 flex-shrink-0 shadow-sm">
+                      <div className="w-full h-full [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain flex items-center justify-center">
+                        {experience.icon}
+                      </div>
+                    </div>
+                  </Link>
+                  <div>
+                    <h3 className="font-medium tracking-tight">
+                      {experience.company}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {experience.role}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right text-sm">
+                  <p>
+                    {new Date(
+                      experience.start_date + "T00:00:00"
+                    ).toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    })}{" "}
+                    -{" "}
+                    {new Date(
+                      experience.end_date + "T00:00:00"
+                    ).toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </p>
+                  <p className="text-muted-foreground mt-0.5">
+                    {experience.location}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
@@ -96,20 +123,28 @@ export default function Home() {
       {/* Education Section */}
       <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">Education</h2>
-        <div className="mt-2">
-          <div className="flex justify-between items-end">
-            <h3 className="font-medium tracking-tight">
-              {RESUME.education.institution}
-            </h3>
-            <p className="text-sm">
-              {RESUME.education.start_year} - {RESUME.education.end_year}
-            </p>
-          </div>
-          <div className="flex justify-between items-end text-sm mt-0.5">
-            <span className="text-muted-foreground">
-              {RESUME.education.degree}
-            </span>
-            <p className="text-muted-foreground">{RESUME.education.location}</p>
+        <div className="mt-2.5">
+          <div>
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-3.5">
+                <div>
+                  <h3 className="font-medium tracking-tight">
+                    {RESUME.education.institution}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {RESUME.education.degree}, {RESUME.education.major}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right text-sm">
+                <p>
+                  {RESUME.education.start_year} - {RESUME.education.end_year}
+                </p>
+                <p className="text-muted-foreground mt-0.5">
+                  {RESUME.education.location}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -117,7 +152,7 @@ export default function Home() {
       {/* Projects Section */}
       <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">Projects</h2>
-        <p className="mt-2 mb-6 opacity-80">
+        <p className="mt-2.5 mb-6 opacity-80">
           Here are some of my notable projects that showcase my skills and
           interests:
         </p>
@@ -126,7 +161,7 @@ export default function Home() {
             <ProjectCard key={project.name} project={project} />
           ))}
         </div>
-        <div className="mt-4 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/projects">
               View All Projects <ChevronRight />

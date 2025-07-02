@@ -4,17 +4,33 @@ const RESUME = {
   bio: "Math student at UBC. Passionate about building things and helping people.",
   experience: [
     {
+      icon: (
+        <svg
+          aria-label="Vercel logomark"
+          height="64"
+          role="img"
+          viewBox="0 0 74 64"
+          style={{ width: "auto", overflow: "visible" }}
+        >
+          <path
+            d="M37.5896 0.25L74.5396 64.25H0.639648L37.5896 0.25Z"
+            fill="white"
+          />
+        </svg>
+      ),
       company: "Vercel",
       role: "Software Engineer Intern",
       description: "",
       start_date: "2025-09-01",
       end_date: "2025-12-01",
       location: "San Francisco, CA",
+      company_website: "https://vercel.com",
     },
   ],
   education: {
     institution: "University of British Columbia",
-    degree: "Bachelor of Science, Mathematics",
+    degree: "Bachelor of Science",
+    major: "Mathematics",
     start_year: "2022",
     end_year: "2026",
     location: "Vancouver, BC",
