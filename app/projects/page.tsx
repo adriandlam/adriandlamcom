@@ -19,7 +19,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
         {RESUME.projects.map((project, index) => (
           <ProjectCard key={project.slug} project={project} />
         ))}

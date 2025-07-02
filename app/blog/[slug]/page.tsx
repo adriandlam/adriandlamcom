@@ -174,14 +174,6 @@ export default async function Page({
 
   return (
     <main className="container relative">
-      {/* Back button */}
-      <Link
-        href="/blog"
-        className="inline-flex items-center text-sm font-medium text-cyan-500 hover:text-cyan-600 mb-6 transition-colors gap-1 no-underline"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to all posts
-      </Link>
       <div className="relative">
         {/* Main article with right margin on large screens */}
         <article>
