@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import ProjectCard from "@/components/project-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,11 @@ import RESUME from "@/data/resume";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import GitHubCalendar, { Activity } from "react-github-calendar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Home() {
   return (
@@ -24,8 +28,8 @@ export default function Home() {
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-4xl font-medium tracking-tight">{RESUME.name}</h1>
-          <p className="mt-1 opacity-80">{RESUME.bio}</p>
+          <h1 className="text-3xl font-medium tracking-tight">{RESUME.name}</h1>
+          <p className="mt-1 opacity-80">{RESUME.bio.intro}</p>
         </div>
       </div>
 
@@ -49,7 +53,7 @@ export default function Home() {
             }}
           />
         </div>
-        <p className="mt-2.5 text-muted-foreground text-xs text-center">
+        <p className="mt-2.5 text-muted-foreground text-xs">
           Psssst, can you tell when my exams are?
         </p>
       </div>
@@ -57,13 +61,33 @@ export default function Home() {
       {/* About Me Section */}
       <div className="p-8 border-t border-dashed">
         <h2 className="text-2xl font-medium tracking-tight">About Me</h2>
-        <p className="mt-2.5 opacity-80">
-          I'm a {RESUME.education.major} student at the{" "}
-          {RESUME.education.institution}, set to graduate in{" "}
-          {RESUME.education.end_year}. I have a strong background in software
-          development, with experience in full-stack development, machine
-          learning, and data analysis.
-        </p>
+        <div className="mt-2.5 opacity-80 space-y-2">
+          <p>
+            I&apos;m super passionate about building stuff that either solves
+            real problems or helps me learn new concepts (super firm believer in
+            project-based learning).
+          </p>
+          <p>
+            I also enjoy reflecting deeply about society, one&apos;s place in
+            it, and where we&apos;re all heading. I think reflecting is a good
+            way to improve oneself since it&apos;s important to have an outlook
+            on life that isn&apos;t just about the present, but also considers
+            the bigger picture.
+          </p>
+          <p>
+            When I&apos;m not building or reflecting, I love venturing outdoors
+            (preferably roadtrips in the mountains with no plans). After doing a
+            bunch of these sidequests, I discovered that I really enjoy{" "}
+            <Link
+              href="/photos"
+              className="underline underline-offset-4 hover:opacity-100"
+            >
+              photography
+            </Link>
+            , it feels like a way to capture memories and share a glimpse of
+            what I felt in the moment with others.
+          </p>
+        </div>
       </div>
 
       {/* Experience Section */}

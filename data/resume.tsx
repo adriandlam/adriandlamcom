@@ -1,7 +1,10 @@
 const RESUME = {
   name: "Adrian Lam",
   avatar_path: "/me.jpg",
-  bio: "Math student at UBC. Passionate about building things and helping people.",
+  bio: {
+    intro: "Math student at UBC. I like AI, building, and learning.",
+    about: "TODO: move bio here",
+  },
   experience: [
     {
       icon: (
