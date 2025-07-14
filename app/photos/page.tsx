@@ -106,7 +106,7 @@ export default function PhotosPage() {
                   setCarouselOpen(true);
                   setCarouselIndex(i);
                 }}
-                className="hover:cursor-pointer transition-all duration-300 hover:brightness-100 brightness-50 relative aspect-square w-full overflow-hidden rounded-xl shadow-md ease-in-out"
+                className="hover:cursor-pointer relative aspect-square w-full overflow-hidden rounded-xl shadow-md"
               >
                 <Image
                   src={url}
