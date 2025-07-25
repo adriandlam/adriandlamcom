@@ -19,6 +19,7 @@ import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import remarkSmartyPants from "remark-smartypants";
 
 const components = {
   Callout,
@@ -173,7 +174,7 @@ export default async function Page({
   const headings = extractHeadings(content);
 
   return (
-    <main className="px-8 pt-8 border-t border-dashed">
+    <main className="px-8 pt-4">
       <div className="relative">
         {/* Main article with right margin on large screens */}
         <article>
@@ -251,7 +252,7 @@ export default async function Page({
               }}
               options={{
                 mdxOptions: {
-                  remarkPlugins: [remarkMath, remarkGfm],
+                  remarkPlugins: [remarkMath, remarkGfm, remarkSmartyPants],
                   rehypePlugins: [
                     rehypeKatex,
                     [rehypeHighlight, { detect: true }],
