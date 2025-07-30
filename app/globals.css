@@ -7,7 +7,7 @@
 
 @theme {
   --font-sans: var(--font-geist-sans);
-  --: var(--font-geist-mono);
+  --font-mono: var(--font-geist-mono);
 }
 
 :root {
