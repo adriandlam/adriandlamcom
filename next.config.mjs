@@ -6,9 +6,10 @@ const nextConfig = {
 	images: {
 		remotePatterns: [
 			{
-				hostname: "xtgldjqqtbxbbhefesyc.supabase.co",
+				hostname: "photos.adriandlam.com",
 			},
 		],
+		// formats: ['image/webp', 'image/avif'],
 	},
 	transpilePackages: ["next-mdx-remote"],
 };

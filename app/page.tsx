@@ -7,11 +7,6 @@ import RESUME from "@/data/resume";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import GitHubCalendar, { Activity } from "react-github-calendar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export default function Home() {
   return (

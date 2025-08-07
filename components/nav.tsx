@@ -43,6 +43,30 @@ export default function Nav() {
     if (tab) setActiveTab(tab.name);
   }, [pathname]);
 
+  // Prefetch photos data when the main page loads
+  useEffect(() => {
+    const prefetchPhotos = () => {
+      fetch("/api/photos")
+        .then((response) => response.json())
+        .then((data) => {
+          // Prefetch the first few images
+          if (data.photos?.length > 0) {
+            data.photos.slice(0, 6).forEach((photo: any) => {
+              const img = new Image();
+              img.src = photo.url;
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("Photo prefetch failed:", error);
+        });
+    };
+
+    // Prefetch after a short delay to not impact initial page load
+    const timer = setTimeout(prefetchPhotos, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <nav className="fixed left-0 bottom-4 px-4 w-full flex justify-center z-10">
       <TooltipProvider>
