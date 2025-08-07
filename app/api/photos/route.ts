@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { NextResponse } from "next/server";
+import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 export async function GET() {
   try {
@@ -9,13 +9,13 @@ export async function GET() {
 
     if (!accountId || !accessKeyId || !secretAccessKey) {
       return NextResponse.json(
-        { error: 'Missing R2 credentials' },
+        { error: "Missing R2 credentials" },
         { status: 500 }
       );
     }
 
     const s3Client = new S3Client({
-      region: 'auto',
+      region: "auto",
       endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
       credentials: {
         accessKeyId,
@@ -24,7 +24,7 @@ export async function GET() {
     });
 
     const command = new ListObjectsV2Command({
-      Bucket: 'photos',
+      Bucket: "photos",
     });
 
     const response = await s3Client.send(command);
@@ -33,8 +33,9 @@ export async function GET() {
       return NextResponse.json({ photos: [] });
     }
 
-    const photos = response.Contents
-      .filter((obj) => obj.Key && /\.(jpg|jpeg|png|gif|webp)$/i.test(obj.Key))
+    const photos = response.Contents.filter(
+      (obj) => obj.Key && /\.(jpg|jpeg|png|gif|webp)$/i.test(obj.Key)
+    )
       .sort((a, b) => {
         const aDate = a.LastModified ? new Date(a.LastModified).getTime() : 0;
         const bDate = b.LastModified ? new Date(b.LastModified).getTime() : 0;
@@ -42,16 +43,21 @@ export async function GET() {
       })
       .map((obj) => ({
         name: obj.Key!,
-        url: `https://photos.adriandlam.com/${obj.Key}`,
+        // Grid thumbnail - higher quality for sharp previews
+        thumbnail: `https://photos.adriandlam.com/cdn-cgi/image/width=800,quality=90,format=auto/${obj.Key}`,
+        // Full view (for carousel) - high quality
+        fullSize: `https://photos.adriandlam.com/cdn-cgi/image/width=1600,quality=95,format=auto/${obj.Key}`,
+        // Original for download
+        original: `https://photos.adriandlam.com/${obj.Key}`,
         lastModified: obj.LastModified?.toISOString(),
         size: obj.Size || 0,
       }));
 
     return NextResponse.json({ photos });
   } catch (error) {
-    console.error('Error fetching photos:', error);
+    console.error("Error fetching photos:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch photos' },
+      { error: "Failed to fetch photos" },
       { status: 500 }
     );
   }
