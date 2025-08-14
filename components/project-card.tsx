@@ -1,65 +1,65 @@
 "use client";
 
 import {
-  Check,
-  CircleDot,
-  ExternalLink,
-  Github,
-  Image as ImageIcon,
+	Check,
+	CircleDot,
+	ExternalLink,
+	Github,
+	Image as ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "./ui/badge";
 import Image from "next/image";
 
 interface Project {
-  name: string;
-  slug: string;
-  description: string;
-  stack: string[];
-  imagePath?: string;
-  githubUrl?: string;
-  liveUrl?: string;
-  inProgress?: boolean;
-  year: number;
+	name: string;
+	slug: string;
+	description: string;
+	stack: string[];
+	imagePath?: string;
+	githubUrl?: string;
+	liveUrl?: string;
+	inProgress?: boolean;
+	year: number;
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
-  return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className="cursor-pointer group border rounded-xl overflow-hidden hover:bg-muted/50 transition-all duration-200 ease-in-out shadow-sm"
-    >
-      <div className="p-4">
-        <div className="w-full h-48 overflow-hidden group-hover:brightness-100 transition-all brightness-65 rounded-lg ease-in-out duration-200">
-          {project.imagePath ? (
-            <Image
-              src={project.imagePath}
-              alt={`${project.name} screenshot`}
-              width={2000}
-              height={2000}
-              quality={100}
-              className="w-full h-full object-cover object-top"
-            />
-          ) : (
-            <div className="w-full h-48 bg-muted flex justify-center items-center">
-              <ImageIcon className="w-10 h-10 text-muted-foreground" />
-            </div>
-          )}
-        </div>
-        <div>
-          <div className="flex justify-between items-center mt-4">
-            <h3 className="font-medium tracking-tight text-lg">
-              {project.name}
-            </h3>
-            <Badge variant="secondary">{project.year}</Badge>
-          </div>
-          <p className="mt-2 text-sm flex-grow text-muted-foreground">
-            {project.description}
-          </p>
-        </div>
-      </div>
-    </Link>
-  );
+	return (
+		<Link
+			href={`/projects/${project.slug}`}
+			className="cursor-pointer group border rounded-xl overflow-hidden hover:bg-muted/50 transition-all duration-200 ease-in-out shadow-sm"
+		>
+			<div className="p-4">
+				<div className="w-full h-48 overflow-hidden group-hover:brightness-100 transition-all brightness-65 rounded-lg ease-in-out duration-200">
+					{project.imagePath ? (
+						<Image
+							src={project.imagePath}
+							alt={`${project.name} screenshot`}
+							width={2000}
+							height={2000}
+							quality={100}
+							className="w-full h-full object-cover object-top"
+						/>
+					) : (
+						<div className="w-full h-48 bg-muted flex justify-center items-center">
+							<ImageIcon className="w-10 h-10 text-muted-foreground" />
+						</div>
+					)}
+				</div>
+				<div>
+					<div className="flex justify-between items-center mt-4">
+						<h3 className="font-medium tracking-tight text-lg">
+							{project.name}
+						</h3>
+						<Badge variant="secondary">{project.year}</Badge>
+					</div>
+					<p className="mt-2 text-sm flex-grow text-muted-foreground">
+						{project.description}
+					</p>
+				</div>
+			</div>
+		</Link>
+	);
 }
 
 //         <div classname="flex items-center justify-between mt-3">
