@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import Nav from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
 import Script from "next/script";
+import RESUME from "@/data/resume";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -17,9 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Adrian Lam | Mathematics Student & Developer",
-	description:
-		"Portfolio of Adrian Lam, Mathematics student at UBC and software developer passionate about building meaningful projects.",
+	title: `${RESUME.name}`,
+	description: `${RESUME.bio.intro}`,
 };
 
 export default function RootLayout({
