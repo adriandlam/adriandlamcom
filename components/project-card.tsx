@@ -48,9 +48,7 @@ export default function ProjectCard({ project }: { project: Project }) {
 				</div>
 				<div>
 					<div className="flex justify-between items-center mt-4">
-						<h3 className="font-medium tracking-tight text-lg">
-							{project.name}
-						</h3>
+						<h3 className="text-lg">{project.name}</h3>
 						<Badge variant="secondary">{project.year}</Badge>
 					</div>
 					<p className="mt-2 text-sm flex-grow text-muted-foreground">

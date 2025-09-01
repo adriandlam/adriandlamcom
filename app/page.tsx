@@ -42,9 +42,9 @@ export default function Home() {
 						}}
 					/>
 				</div>
-				<p className="mt-2.5 text-muted-foreground text-xs">
+				{/* <p className="mt-2.5 text-muted-foreground text-xs">
 					Psssst, can you tell when my exams are?
-				</p>
+				</p> */}
 			</div>
 
 			{/* About Me Section */}
@@ -99,9 +99,7 @@ export default function Home() {
 										</div>
 									</Link>
 									<div>
-										<h3 className="font-medium tracking-tight">
-											{experience.company}
-										</h3>
+										<h3>{experience.company}</h3>
 										<p className="text-sm text-muted-foreground mt-0.5">
 											{experience.role}
 										</p>
@@ -141,9 +139,7 @@ export default function Home() {
 						<div className="flex justify-between items-start">
 							<div className="flex items-center gap-3.5">
 								<div>
-									<h3 className="font-medium tracking-tight">
-										{RESUME.education.institution}
-									</h3>
+									<h3>{RESUME.education.institution}</h3>
 									<p className="text-sm text-muted-foreground mt-0.5">
 										{RESUME.education.degree}, {RESUME.education.major}
 									</p>

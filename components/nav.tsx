@@ -37,7 +37,7 @@ const tabs: Tab[] = [
 
 export default function Nav() {
 	const pathname = usePathname();
-	const [activeTab, setActiveTab] = useState<string>(tabs[0].name);
+	const [activeTab, setActiveTab] = useState("");
 	const [hydrated, setHydrated] = useState(false);
 	const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 	const [hoverStyle, setHoverStyle] = useState({ left: 0, width: 0 });
@@ -50,7 +50,7 @@ export default function Nav() {
 	}, []);
 
 	useEffect(() => {
-		const tab = tabs.find((tab) => tab.href === pathname);
+		const tab = tabs.find((tab) => pathname.includes(tab.name));
 		if (tab) setActiveTab(tab.name);
 	}, [pathname]);
 
