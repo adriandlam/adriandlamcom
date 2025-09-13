@@ -1,14 +1,34 @@
-"use client";
-
 import ProjectCard from "@/components/project-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import GitHubCalendar, { Activity } from "react-github-calendar";
+import type { Activity } from "@/components/ui/kibo-ui/contribution-graph";
+import { unstable_cache } from "next/cache";
+import { Contributions } from "@/components/contributions";
 
-export default function Home() {
+const username = 'adriandlam';
+const getCachedContributions = unstable_cache(
+	async () => {
+		const url = new URL(`/v4/${username}`, 'https://github-contributions-api.jogruber.de');
+		const response = await fetch(url);
+		const data = (await response.json()) as { total: { [year: string]: number }; contributions: Activity[] };
+		const total = data.total[new Date().getFullYear()];
+		const TOTAL_SQUARES = 417;
+
+		const sortedData = data.contributions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+		return { contributions: sortedData.slice(0, TOTAL_SQUARES), total };
+	},
+	['github-contributions'],
+	{ revalidate: 60 * 60 * 24 },
+);
+
+export default async function Home() {
+	const { contributions, total } = await getCachedContributions();
+
+	console.log(contributions);
+
 	return (
 		<main>
 			{/* Intro Section */}
@@ -28,19 +48,7 @@ export default function Home() {
 			<div className="p-8">
 				<h2 className="text-lg">Recent GitHub Activity</h2>
 				<div className="mt-4">
-					<GitHubCalendar
-						username="adriandlam"
-						colorScheme="dark"
-						transformData={(data) => selectLastNMonths(data, 10)}
-						labels={{
-							totalCount: "{{count}} contributions in the last 10 months",
-						}}
-						fontSize={14}
-						errorMessage="Error loading GitHub contributions"
-						theme={{
-							dark: ["#262626", "#0d4429", "#016d32", "#26a641", "#3ad353"],
-						}}
-					/>
+					<Contributions data={contributions} />
 				</div>
 				{/* <p className="mt-2.5 text-muted-foreground text-xs">
 					Psssst, can you tell when my exams are?
@@ -190,14 +198,3 @@ export default function Home() {
 		</main>
 	);
 }
-
-const selectLastNMonths = (contributions: Activity[], n: number) => {
-	const now = new Date();
-	const cutoffDate = new Date(now);
-	cutoffDate.setMonth(now.getMonth() - n);
-
-	return contributions.filter((activity) => {
-		const activityDate = new Date(activity.date);
-		return activityDate >= cutoffDate && activityDate <= now;
-	});
-};
