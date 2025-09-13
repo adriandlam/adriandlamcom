@@ -17,7 +17,7 @@ type ContributionsProps = {
 
 export const Contributions = ({ data }: ContributionsProps) => (
   <ContributionGraph data={data}>
-    <ContributionGraphCalendar>
+    <ContributionGraphCalendar className="overflow-hidden">
       {({ activity, dayIndex, weekIndex }) => (
         <ContributionGraphBlock
           activity={activity}
