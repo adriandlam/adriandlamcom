@@ -17,6 +17,7 @@
 		"@radix-ui/react-tooltip": "^1.2.7",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
+		"date-fns": "^4.1.0",
 		"framer-motion": "^12.23.9",
 		"gray-matter": "^4.0.3",
 		"highlight.js": "^11.11.1",
