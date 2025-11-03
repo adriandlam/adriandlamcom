@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { cn } from "@/lib/utils";
 import matter from "gray-matter";
-import { NotebookPen } from "lucide-react";
 import Link from "next/link";
 
 // Format date helper function
@@ -54,10 +52,10 @@ export default function BlogPage() {
 	const posts = getBlogPosts();
 
 	return (
-		<main className="p-8 border-t border-dashed">
+		<main className="container mx-auto">
 			<div>
-				<h1 className="text-3xl tracking-tight">Blog</h1>
-				<p className="text-muted-foreground mt-2 text-lg">
+				<h1 className="text-xl tracking-tight font-medium">Blog</h1>
+				<p className="mt-2">
 					A collection of articles and thoughts on software development and who
 					I am as a person.
 				</p>

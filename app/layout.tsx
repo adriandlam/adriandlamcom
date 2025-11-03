@@ -4,8 +4,8 @@ import "./globals.css";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
-import Script from "next/script";
 import RESUME from "@/data/resume";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -29,25 +29,20 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-			<Script
-				defer
-				src="https://cloud.umami.is/script.js"
-				data-website-id="5457805a-0169-41e3-b6ce-6ca2025c6dac"
-			/>
 			<body className="antialiased">
 				<ThemeProvider
 					attribute="class"
-					defaultTheme="dark"
-					forcedTheme="dark"
+					forcedTheme="light"
 					disableTransitionOnChange
 				>
-					<div className="max-w-screen-md mx-auto pt-10 md:pt-20 border-x border-dashed">
+					<div className="max-w-screen-md mx-auto pt-10 md:pt-16">
 						{/* <div className="max-w-screen-md mx-auto pt-10 md:pt-20 px-4 sm:px-6 lg:px-8 border-x border-dashed"> */}
 						<Nav />
 						{children}
 						<Footer />
 					</div>
 				</ThemeProvider>
+				<Analytics />
 			</body>
 		</html>
 	);

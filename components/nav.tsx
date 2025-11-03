@@ -73,7 +73,6 @@ export default function Nav() {
 
 	return (
 		<>
-			<div className="fixed left-0 bottom-0 w-full h-20 from-background via-background/75 to-transparent bg-gradient-to-t z-10" />
 			{hydrated && (
 				<nav className="fixed left-0 bottom-3 px-4 w-full flex justify-center z-10">
 					<TooltipProvider>

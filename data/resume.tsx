@@ -1,8 +1,8 @@
 const RESUME = {
 	name: "Adrian Lam",
-	avatar_path: "/me.jpg",
+	avatar_path: "/me.jpeg",
 	bio: {
-		intro: "math student at ubc, software engineer.",
+		intro: "intern @ vercel, math student @ ubc.",
 		about: "TODO: move bio here",
 	},
 	experience: [
@@ -40,10 +40,10 @@ const RESUME = {
 	},
 	projects: [
 		{
+			featured: true,
 			slug: "spec2mcp",
 			name: "Spec2MCP",
-			description:
-				"Turn any API docs (OpenAPI) into ready-to-use MCP server schemas—no deep technical setup needed. 🏆 Top 3 at YC MCP Hackathon.",
+			description: "Convert OpenAPI specs to MCP server schemas instantly.",
 			longDescription:
 				"Spec2MCP converts API docs (OpenAPI) into ready-to-use MCP server schemas in seconds, letting anyone build MCP tools without manual setup. Built with Next.js, TypeScript, TailwindCSS, Supabase, and FastAPI, it won top 3 at the Y Combinator MCP Hackathon. Users can upload/paste OpenAPI specs, preview live MCP schemas, and export instantly—abstracting technical details for a streamlined developer experience.",
 			imagePath: "/projects/spec2mcp.png",
@@ -138,10 +138,11 @@ const RESUME = {
 			year: 2025,
 		},
 		{
+			featured: true,
 			slug: "ubc-purity-test",
 			name: "UBC Purity Test",
 			description:
-				"A fun platform that allows UBC students to test their innocence level with custom surveys for different faculties.",
+				"Fun survey platform for UBC students to test their innocence.",
 			longDescription:
 				"The UBC Purity Test is a fun self-graded survey platform that assesses how 'pure' or innocent a student's university experience has been. It features specialized versions for different faculties including the classic general test, a Business UBC Test for Sauder students, and a Sciences UBC Test for science majors and pre-med students. Scores range from 100% (completely pure) to 0% (not pure at all), calculated based on experiences the student has had during their time at UBC.",
 			githubUrl: "https://github.com/adriandlam/ubc-purity-test",
@@ -160,10 +161,11 @@ const RESUME = {
 			year: 2025,
 		},
 		{
+			featured: true,
 			slug: "heida",
 			name: "Heida",
 			description:
-				"An AI command center that unifies 220+ AI models with your own API keys, featuring document intelligence, interactive tools, and persistent knowledge graphs.",
+				"Unified interface for 220+ AI models, document intelligence, and knowledge graphs.",
 			longDescription:
 				"Heida is a comprehensive AI interface designed for professionals to interact with multiple AI models through one elegant platform. It supports connection to 220+ AI models including OpenRouter models, Claude, and GPT-4 while allowing users to use their own API keys for cost control. The platform features document intelligence for analyzing PDFs and spreadsheets, interactive tools for visualizations and code execution, AI augmentation with web search capabilities, and a knowledge graph for persistent memory across conversations. Built with enterprise-grade security including end-to-end encryption.",
 			imagePath: "/projects/heida.png",
@@ -192,10 +194,11 @@ const RESUME = {
 			year: 2025,
 		},
 		{
+			featured: true,
 			slug: "mnist-digit-classifier",
 			name: "MNIST Digit Classifier",
 			description:
-				"Neural network implementation from scratch with 98.32% accuracy on the MNIST handwritten digit dataset.",
+				"Neural network built from scratch achieving 98.32% accuracy on MNIST.",
 			longDescription:
 				"This project implements a neural network from scratch using only NumPy and PyTorch (for matrix operations), achieving 98.32% accuracy on the MNIST handwritten digit classification task. I built the entire network architecture including forward propagation, backpropagation, and various optimization algorithms to understand the fundamental concepts behind neural networks before using higher-level frameworks.",
 			githubUrl: "https://github.com/adriandlam/mnist-classifier",

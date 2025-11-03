@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
@@ -136,19 +135,19 @@ export default function PhotosPage() {
 	}, [photos.length, startLoadingImage]);
 
 	return (
-		<main className="px-8 pt-8 border-t border-dashed">
-			<div className="mb-8">
-				<h1 className="text-4xl font-medium tracking-tight">Photos</h1>
-				<p className=" text-muted-foreground mt-2">
+		<main className="container mx-auto">
+			<div className="mb-4 space-y-4">
+				<h1 className="text-xl tracking-tight font-medium">Photos</h1>
+				<p>
 					A collection of photos I've taken over the years. I'm not a
 					professional photographer, but I enjoy capturing moments.
 				</p>
+				<p>
+					My photos are taken with a Panasonic Lumix G85 with a Panasonic Lumix
+					G 25mm F1.7. lens but I've also recently upgraded to a Panasonic Lumix
+					G Vario 12-60mm f/3.5-5.6.
+				</p>
 			</div>
-			<p className="text-sm opacity-80 mb-8">
-				My photos are taken with a Panasonic Lumix G85 with a Panasonic Lumix G
-				25mm F1.7. lens but I've also recently upgraded to a Panasonic Lumix G
-				Vario 12-60mm f/3.5-5.6.
-			</p>
 
 			{/* Photo Grid */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">

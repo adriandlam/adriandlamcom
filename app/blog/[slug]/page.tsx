@@ -174,7 +174,7 @@ export default async function Page({
 	const headings = extractHeadings(content);
 
 	return (
-		<main className="px-8 pt-4">
+		<main>
 			<div className="relative">
 				{/* Main article with right margin on large screens */}
 				<article>
@@ -197,11 +197,10 @@ export default async function Page({
 								{metadata.excerpt}
 							</p>
 						)}
-						<div className="flex items-center text-muted-foreground text-sm">
-							{metadata.author && (
-								<span className="mr-4">By {metadata.author}</span>
-							)}
-							<time dateTime={metadata.publishedAt}>{formattedDate}</time>
+						<div className="flex items-center text-muted-foreground text-sm mt-2">
+							<time dateTime={metadata.publishedAt} className="font-mono">
+								{formattedDate}
+							</time>
 							{metadata.readingTime && (
 								<span className="ml-4">{metadata.readingTime} min read</span>
 							)}

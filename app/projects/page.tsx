@@ -1,14 +1,13 @@
 import ProjectCard from "@/components/project-card";
 import RESUME from "@/data/resume";
-import { FolderGit2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ProjectsPage() {
 	return (
-		<main className="px-8 pt-8 border-t border-dashed">
+		<main className="container mx-auto">
 			<div>
-				<h1 className="text-4xl font-medium tracking-tight">Projects</h1>
-				<p className=" text-muted-foreground mt-2">
+				<h1 className="text-xl tracking-tight font-medium">Projects</h1>
+				<p className="mt-2">
 					A collection of projects I've built throughout my journey as a
 					developer and hobbyist.
 				</p>
