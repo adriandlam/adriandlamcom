@@ -6,6 +6,8 @@ import Nav from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
 import RESUME from "@/data/resume";
 import { Analytics } from "@vercel/analytics/next";
+import Sidebar from "@/components/sidebar";
+import ThemeToggle from "@/components/theme-toggle";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -32,12 +34,13 @@ export default function RootLayout({
 			<body className="antialiased">
 				<ThemeProvider
 					attribute="class"
-					forcedTheme="light"
+					defaultTheme="light"
 					disableTransitionOnChange
 				>
+					<Nav />
+					<ThemeToggle />
 					<div className="max-w-screen-md mx-auto pt-10 md:pt-16">
 						{/* <div className="max-w-screen-md mx-auto pt-10 md:pt-20 px-4 sm:px-6 lg:px-8 border-x border-dashed"> */}
-						<Nav />
 						{children}
 						<Footer />
 					</div>

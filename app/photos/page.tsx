@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 
@@ -150,7 +150,7 @@ export default function PhotosPage() {
 			</div>
 
 			{/* Photo Grid */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 				{isLoading || error
 					? Array.from({ length: 10 }).map((_, i) => (
 							<div
@@ -180,7 +180,7 @@ export default function PhotosPage() {
 										setCarouselOpen(true);
 										setCarouselIndex(i);
 									}}
-									className="hover:cursor-pointer relative aspect-square w-full overflow-hidden rounded-xl bg-muted"
+									className="hover:cursor-pointer relative w-full overflow-hidden"
 									data-index={i}
 								>
 									{status !== "loaded" && (

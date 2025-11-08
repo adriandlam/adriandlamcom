@@ -8,7 +8,7 @@ export default function Footer() {
 					<span className="opacity-75">Adrian Lam (</span>
 					<Link
 						href="https://x.com/adriandlam_"
-						className="underline underline-offset-4 transition"
+						className="link"
 					>
 						@adriandlam_
 					</Link>
@@ -16,7 +16,7 @@ export default function Footer() {
 				</p>
 				<Link
 					href="https://github.com/adriandlam/adriandlamcom"
-					className="underline underline-offset-4"
+					className="link"
 				>
 					Source
 				</Link>

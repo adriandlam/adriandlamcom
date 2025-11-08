@@ -150,3 +150,7 @@
 html {
 	scroll-behavior: smooth;
 }
+
+.link {
+	@apply cursor-pointer decoration-border underline-offset-4 underline hover:decoration-primary transition-all duration-200 ease-out;
+}

@@ -26,7 +26,7 @@ export default async function Home() {
 						Big fan of venturing outdoors into the unknown (I like mountains).
 						After doing a bunch of these sidequests, I discovered that I really
 						enjoy{" "}
-						<Link href="/photos" className="underline underline-offset-4">
+						<Link href="/photos" className="link">
 							photography
 						</Link>
 						.
@@ -37,15 +37,12 @@ export default async function Home() {
 			{/* Projects Section */}
 			<div className="mt-8">
 				<h2>Some cool projects I've worked on:</h2>
-				<ul className="list-disc list-inside mt-4 ml-4">
+				<ul className="list-disc list-inside mt-4 ml-4 space-y-0.5">
 					{RESUME.projects
 						.filter((project) => project.featured)
 						.map((project) => (
 							<li key={project.name}>
-								<Link
-									href={`/projects/${project.slug}`}
-									className="underline underline-offset-4"
-								>
+								<Link href={`/projects/${project.slug}`} className="link">
 									{project.name}
 								</Link>{" "}
 								– {project.description}
@@ -54,7 +51,7 @@ export default async function Home() {
 				</ul>
 				<p className="mt-4">
 					You can view all my projects{" "}
-					<Link href="/projects" className="underline underline-offset-4">
+					<Link href="/projects" className="link">
 						here
 					</Link>
 					.

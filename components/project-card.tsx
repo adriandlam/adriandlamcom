@@ -27,10 +27,10 @@ export default function ProjectCard({ project }: { project: Project }) {
 	return (
 		<Link
 			href={`/projects/${project.slug}`}
-			className="cursor-pointer group border rounded-xl overflow-hidden hover:bg-muted/50 transition-all duration-200 ease-in-out shadow-sm"
+			className="cursor-pointer group border overflow-hidden hover:bg-muted/50 transition-all duration-200 ease-in-out"
 		>
 			<div className="p-4">
-				<div className="w-full h-48 overflow-hidden group-hover:brightness-100 transition-all brightness-65 rounded-lg ease-in-out duration-200">
+				<div className="w-full h-48 overflow-hidden group-hover:brightness-100 transition-all brightness-65 ease-in-out duration-200">
 					{project.imagePath ? (
 						<Image
 							src={project.imagePath}
