@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
-import { HotkeysProvider } from "react-hotkeys-hook";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";

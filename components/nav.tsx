@@ -3,7 +3,7 @@
 import { ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { preload } from "swr";
@@ -16,12 +16,11 @@ import { Separator } from "./ui/separator";
 interface Tab {
 	name: string;
 	href: string;
-	shortcut?: string;
 	children?: Tab[];
 }
 
 const tabs: Tab[] = [
-	{ name: "home", href: "/", shortcut: "h" },
+	{ name: "home", href: "/" },
 	{
 		name: "blog",
 		href: "/blog",
@@ -31,7 +30,6 @@ const tabs: Tab[] = [
 				href: `/blog/${post.slug}`,
 			})),
 		],
-		shortcut: "b",
 	},
 	{
 		name: "projects",
@@ -238,6 +236,7 @@ const tabs: Tab[] = [
 // }
 
 export default function Nav() {
+	const router = useRouter();
 	const pathname = usePathname();
 	const [activeParentTab, setActiveParentTab] = useState<Tab | null>(null);
 
@@ -245,13 +244,32 @@ export default function Nav() {
 		preload("/api/photos", fetcher);
 	}, []);
 
-	useHotkeys(
-		"h",
-		() => {
-			window.location.href = "/";
-		},
-		{ enabled: pathname === "/" },
-	);
+	// j/k navigation through tabs
+	useHotkeys("j", () => {
+		// Find current tab index
+		const currentIndex = tabs.findIndex(
+			(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
+		);
+		// Go to next tab, stop at the end
+		if (currentIndex >= 0 && currentIndex < tabs.length - 1) {
+			router.push(tabs[currentIndex + 1].href);
+		}
+	});
+
+	useHotkeys("k", () => {
+		// Find current tab index
+		const currentIndex = tabs.findIndex(
+			(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
+		);
+		// Go to previous tab, stop at the beginning
+		if (currentIndex > 0) {
+			router.push(tabs[currentIndex - 1].href);
+		}
+	});
+
+	useHotkeys("g", () => {
+		window.open("https://github.com/adriandlam", "_blank");
+	});
 
 	useEffect(() => {
 		// Check if we're on a child page
@@ -319,8 +337,20 @@ export default function Nav() {
 						exit={{ opacity: 0, translateX: -20 }}
 						transition={{ duration: 0.15, ease: "easeOut" }}
 					>
-						{tabs.map((tab) => {
-							const isActive = pathname === tab.href;
+						{tabs.map((tab, index) => {
+							const isActive =
+								pathname === tab.href || pathname.startsWith(tab.href + "/");
+							const activeIndex = tabs.findIndex(
+								(t) => pathname === t.href || pathname.startsWith(t.href + "/"),
+							);
+
+							// Show 'k' on item above active, 'j' on item below active
+							let shortcut: string | undefined;
+							if (activeIndex >= 0) {
+								if (index === activeIndex - 1) shortcut = "k";
+								else if (index === activeIndex + 1) shortcut = "j";
+							}
+
 							return (
 								<li
 									key={tab.name}
@@ -336,7 +366,7 @@ export default function Nav() {
 										className="flex items-center justify-between w-full"
 									>
 										{tab.name}
-										{tab.shortcut && <Kbd>{tab.shortcut}</Kbd>}
+										{shortcut && <Kbd>{shortcut}</Kbd>}
 									</Link>
 								</li>
 							);
