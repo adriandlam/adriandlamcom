@@ -164,8 +164,8 @@ ul li::marker, ol li::marker {
 	line-height: 1;
 }
 
-ul li, ol li {
-	padding-inline-start: 0.5em;
+.list {
+	@apply list-disc list-inside pl-4 space-y-0.5;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -18,9 +18,15 @@ export default async function Home() {
 						learn new concepts.
 					</p>
 					<p>
-						Currently, I&apos;m interning at Vercel as a core maintainer of the
-						{" "}<Link href="https://useworkflow.dev" target="_blank" className="link">Workflow DevKit</Link> and I'm studying Mathematics at the University of
-						British Columbia.
+						Currently, I&apos;m interning at Vercel as a core maintainer of the{" "}
+						<Link
+							href="https://useworkflow.dev"
+							target="_blank"
+							className="link"
+						>
+							Workflow DevKit
+						</Link>{" "}
+						and I'm studying Mathematics at the University of British Columbia.
 					</p>
 					<p>
 						Big fan of venturing outdoors into the unknown (I like mountains).
@@ -37,7 +43,7 @@ export default async function Home() {
 			{/* Projects Section */}
 			<div className="mt-8">
 				<p>Some cool projects I've worked on:</p>
-				<ul className="list-disc list-inside mt-4 ml-4 space-y-0.5">
+				<ul className="mt-4 list">
 					{RESUME.projects
 						.filter((project) => project.featured)
 						.map((project) => (

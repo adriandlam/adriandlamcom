@@ -285,7 +285,7 @@ export default function Nav() {
 	});
 
 	const tabClassname =
-		"line-clamp-1 font-mono text-[15px] px-2 py-1 transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
+		"line-clamp-1 font-mono text-[15px] transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
 
 	return (
 		<nav className="fixed right-0 left-0 m-8 inline z-10 w-48 overflow-hidden">
@@ -302,7 +302,7 @@ export default function Nav() {
 						<li className={cn(tabClassname, "text-muted-foreground")}>
 							<Link
 								href={activeParentTab.href}
-								className="inline-flex items-center gap-1 w-full"
+								className="inline-flex items-center gap-1 w-full py-1 px-2"
 							>
 								<ChevronLeft className="size-4" />
 								back to {activeParentTab.name}
@@ -319,7 +319,7 @@ export default function Nav() {
 										: "text-muted-foreground",
 								)}
 							>
-								<Link href={child.href} className="block">
+								<Link href={child.href} className="block py-1 px-2">
 									{child.name}
 								</Link>
 							</li>
@@ -360,7 +360,7 @@ export default function Nav() {
 								>
 									<Link
 										href={tab.href}
-										className="flex items-center justify-between w-full"
+										className="flex items-center justify-between w-full py-1 px-2"
 									>
 										{tab.name}
 										{shortcut && <Kbd>{shortcut}</Kbd>}
@@ -373,7 +373,7 @@ export default function Nav() {
 							<Link
 								href="https://github.com/adriandlam"
 								target="_blank"
-								className="flex items-center justify-between w-full"
+								className="flex items-center justify-between w-full py-1 px-2"
 							>
 								github
 								<Kbd>g</Kbd>
