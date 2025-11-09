@@ -12,7 +12,7 @@ export default function ProjectsPage() {
 				</p>
 			</div>
 			<div className="mt-8">
-				<ul className="list-disc ml-4 space-y-0.5">
+				<ul className="list">
 					{RESUME.projects.map((project) => (
 						<li key={project.name}>
 							<Link href={`/projects/${project.slug}`} className="link">

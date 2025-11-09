@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
-import {
-	ExternalLink,
-	Github,
-} from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -70,39 +67,35 @@ export default async function ProjectPage({
 			)}
 
 			{/* Project details */}
-				{/* Main content */}
-				<div className="md:col-span-2 space-y-6">
+			{/* Main content */}
+			<div className="md:col-span-2 space-y-6">
+				<section>
+					<h2 className="text-2xl mb-3">Overview</h2>
+					<div className="space-y-4">
+						<p>{project.longDescription || project.description}</p>
+					</div>
+				</section>
+
+				{project.keyFeatures && (
 					<section>
-						<h2 className="text-2xl mb-3">Overview</h2>
-						<div className="space-y-4">
-							<p className="opacity-80">
-								{project.longDescription || project.description}
-							</p>
+						<h2 className="text-2xl mb-3">Key Features</h2>
+						<ul className="list">
+							{project.keyFeatures.map((feature: string) => (
+								<li key={feature}>{feature}</li>
+							))}
+						</ul>
+					</section>
+				)}
+
+				{project.challenges && (
+					<section>
+						<h2 className="text-2xl mb-3">Challenges & Solutions</h2>
+						<div>
+							<p>{project.challenges}</p>
 						</div>
 					</section>
-
-					{project.keyFeatures && (
-						<section>
-							<h2 className="text-2xl mb-3">Key Features</h2>
-							<ul className="list-disc list-inside space-y-2 pl-2">
-								{project.keyFeatures.map((feature: string) => (
-									<li key={feature} className="opacity-80">
-										{feature}
-									</li>
-								))}
-							</ul>
-						</section>
-					)}
-
-					{project.challenges && (
-						<section>
-							<h2 className="text-2xl mb-3">Challenges & Solutions</h2>
-							<div>
-								<p>{project.challenges}</p>
-							</div>
-						</section>
-					)}
-				</div>
+				)}
+			</div>
 		</main>
 	);
 }
