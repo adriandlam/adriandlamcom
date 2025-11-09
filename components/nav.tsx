@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { preload } from "swr";
 import { BLOG_POSTS } from "@/data/blog-posts";
@@ -238,7 +238,20 @@ const tabs: Tab[] = [
 export default function Nav() {
 	const router = useRouter();
 	const pathname = usePathname();
-	const [activeParentTab, setActiveParentTab] = useState<Tab | null>(null);
+
+	// Calculate activeParentTab immediately during render to avoid flash
+	let activeParentTab: Tab | null = null;
+	for (const tab of tabs) {
+		if (tab.children) {
+			const isOnChildPage = tab.children.some(
+				(child) => pathname === child.href,
+			);
+			if (isOnChildPage) {
+				activeParentTab = tab;
+				break;
+			}
+		}
+	}
 
 	useEffect(() => {
 		preload("/api/photos", fetcher);
@@ -271,22 +284,6 @@ export default function Nav() {
 		window.open("https://github.com/adriandlam", "_blank");
 	});
 
-	useEffect(() => {
-		// Check if we're on a child page
-		for (const tab of tabs) {
-			if (tab.children) {
-				const isOnChildPage = tab.children.some(
-					(child) => pathname === child.href,
-				);
-				if (isOnChildPage) {
-					setActiveParentTab(tab);
-					return;
-				}
-			}
-		}
-		setActiveParentTab(null);
-	}, [pathname]);
-
 	const tabClassname =
 		"line-clamp-1 font-mono text-[15px] px-2 py-1 transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
 
@@ -305,7 +302,7 @@ export default function Nav() {
 						<li className={cn(tabClassname, "text-muted-foreground")}>
 							<Link
 								href={activeParentTab.href}
-								className="inline-flex items-center gap-1"
+								className="inline-flex items-center gap-1 w-full"
 							>
 								<ChevronLeft className="size-4" />
 								back to {activeParentTab.name}
