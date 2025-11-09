@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
+import { HotkeysProvider } from "react-hotkeys-hook";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
-import RESUME from "@/data/resume";
-import { Analytics } from "@vercel/analytics/next";
-import Sidebar from "@/components/sidebar";
 import ThemeToggle from "@/components/theme-toggle";
+import RESUME from "@/data/resume";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",

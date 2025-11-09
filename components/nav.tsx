@@ -1,24 +1,27 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
-import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Separator } from "./ui/separator";
-import { cn } from "@/lib/utils";
-import RESUME from "@/data/resume";
+import { useHotkeys } from "react-hotkeys-hook";
+import { preload } from "swr";
 import { BLOG_POSTS } from "@/data/blog-posts";
-import { AnimatePresence } from "motion/react";
-import { ChevronLeft } from "lucide-react";
+import RESUME from "@/data/resume";
+import { cn, fetcher } from "@/lib/utils";
+import { Kbd } from "./ui/kbd";
+import { Separator } from "./ui/separator";
 
 interface Tab {
 	name: string;
 	href: string;
+	shortcut?: string;
 	children?: Tab[];
 }
 
 const tabs: Tab[] = [
-	{ name: "home", href: "/" },
+	{ name: "home", href: "/", shortcut: "h" },
 	{
 		name: "blog",
 		href: "/blog",
@@ -28,6 +31,7 @@ const tabs: Tab[] = [
 				href: `/blog/${post.slug}`,
 			})),
 		],
+		shortcut: "b",
 	},
 	{
 		name: "projects",
@@ -238,6 +242,18 @@ export default function Nav() {
 	const [activeParentTab, setActiveParentTab] = useState<Tab | null>(null);
 
 	useEffect(() => {
+		preload("/api/photos", fetcher);
+	}, []);
+
+	useHotkeys(
+		"h",
+		() => {
+			window.location.href = "/";
+		},
+		{ enabled: pathname === "/" },
+	);
+
+	useEffect(() => {
 		// Check if we're on a child page
 		for (const tab of tabs) {
 			if (tab.children) {
@@ -260,7 +276,14 @@ export default function Nav() {
 		<nav className="fixed right-0 left-0 m-8 inline z-10 w-48 overflow-hidden">
 			<AnimatePresence mode="popLayout" initial={false}>
 				{activeParentTab ? (
-					<motion.ul key="children-tabs" className="space-y-0.5" initial={{ opacity: 0, translateX: 20 }} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0, translateX: 20 }} transition={{ duration: 0.15, ease: "easeOut" }}>
+					<motion.ul
+						key="children-tabs"
+						className="space-y-0.5"
+						initial={{ opacity: 0, translateX: 20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: 20 }}
+						transition={{ duration: 0.15, ease: "easeOut" }}
+					>
 						<li className={cn(tabClassname, "text-muted-foreground")}>
 							<Link
 								href={activeParentTab.href}
@@ -288,7 +311,14 @@ export default function Nav() {
 						))}
 					</motion.ul>
 				) : (
-					<motion.ul key="parent-tabs" className="space-y-0.5" initial={{ opacity: 0, translateX: -20}} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0, translateX: -20 }} transition={{ duration: 0.15, ease: "easeOut" }}>
+					<motion.ul
+						key="parent-tabs"
+						className="space-y-0.5"
+						initial={{ opacity: 0, translateX: -20 }}
+						animate={{ opacity: 1, translateX: 0 }}
+						exit={{ opacity: 0, translateX: -20 }}
+						transition={{ duration: 0.15, ease: "easeOut" }}
+					>
 						{tabs.map((tab) => {
 							const isActive = pathname === tab.href;
 							return (
@@ -301,16 +331,25 @@ export default function Nav() {
 											: "text-muted-foreground",
 									)}
 								>
-									<Link href={tab.href} className="block">
+									<Link
+										href={tab.href}
+										className="flex items-center justify-between w-full"
+									>
 										{tab.name}
+										{tab.shortcut && <Kbd>{tab.shortcut}</Kbd>}
 									</Link>
 								</li>
 							);
 						})}
 						<Separator className="mx-0.5 my-1.5" />
-						<li className={cn(tabClassname, "text-muted-foreground")}>
-							<Link href="https://github.com/adriandlam" target="_blank">
+						<li className={cn(tabClassname, "text-muted-foreground w-full")}>
+							<Link
+								href="https://github.com/adriandlam"
+								target="_blank"
+								className="flex items-center justify-between w-full"
+							>
 								github
+								<Kbd>g</Kbd>
 							</Link>
 						</li>
 					</motion.ul>
