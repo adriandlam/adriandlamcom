@@ -1,12 +1,12 @@
 "use client";
 
-import { useHotkeys } from "react-hotkeys-hook";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "motion/react";
+import { useHotkeys } from "react-hotkeys-hook";
 import useSWR from "swr";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { fetcher } from "@/lib/utils";
 
 type ImageStatus = "idle" | "loading" | "loaded" | "error";
@@ -207,7 +207,7 @@ export default function PhotosPage() {
 							);
 						})}
 			</div>
-			<AnimatePresence mode="popLayout">
+			<AnimatePresence mode="popLayout" initial={false}>
 				{carouselOpen && (
 					<motion.div
 						className="fixed inset-0 z-50"
