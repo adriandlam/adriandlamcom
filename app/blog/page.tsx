@@ -1,7 +1,5 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import Link from "next/link";
+import { getBlogPosts } from "@/lib/blog";
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -11,50 +9,13 @@ function formatDate(dateString: string) {
 	});
 }
 
-// Type for blog post metadata
-type PostMetadata = {
-	title: string;
-	publishedAt: string;
-	summary: string;
-	slug: string;
-};
-
-// Function to get all blog posts
-function getBlogPosts(): PostMetadata[] {
-	// Get all files from the blog directory
-	const blogDirectory = path.join(process.cwd(), "content/blog");
-	const filenames = fs.readdirSync(blogDirectory);
-
-	// Get the frontmatter from each file
-	const posts = filenames
-		.filter((filename) => filename.endsWith(".mdx"))
-		.map((filename) => {
-			const filePath = path.join(blogDirectory, filename);
-			const fileContent = fs.readFileSync(filePath, "utf8");
-			const { data } = matter(fileContent);
-			if (data.private) return undefined;
-			return {
-				title: data.title,
-				publishedAt: data.publishedAt,
-				summary: data.summary,
-				slug: filename.replace(/\.mdx$/, ""),
-			};
-		})
-		.filter(Boolean) as PostMetadata[];
-
-	return posts.sort(
-		(a, b) =>
-			new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-	);
-}
-
 export default function BlogPage() {
 	const posts = getBlogPosts();
 
 	return (
 		<main className="container mx-auto">
 			<div>
-				<h1 className="text-xl tracking-tight font-medium">Blog</h1>
+				<h1>Blog</h1>
 				<p className="mt-2">
 					A collection of articles and thoughts on software development and who
 					I am as a person.

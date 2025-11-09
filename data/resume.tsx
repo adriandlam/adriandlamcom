@@ -41,6 +41,38 @@ const RESUME = {
 	projects: [
 		{
 			featured: true,
+			slug: "workflow-devkit",
+			name: "Workflow DevKit",
+			description: "Open source TypeScript framework for durable execution.",
+			longDescription:
+				"Workflow DevKit (WDK) is an open source TypeScript framework that transforms ordinary async functions into durable workflows with built-in reliability, observability, and state persistence. Using simple 'use workflow' and 'use step' directives, developers can build long-running processes that survive deployments, crashes, and can pause for minutes or months without consuming resources. The framework automatically handles retry logic, persistence layers, and message queues—infrastructure that traditionally requires days to implement. WDK includes webhook support for external event triggers, comprehensive observability through CLI and Web UI, and runs anywhere with the Worlds architecture (local, Vercel, or custom cloud providers). Built for AI agents, data pipelines, and complex async workflows that need intelligence and dependability.",
+			imagePath: "/projects/workflow-devkit.png",
+			liveUrl: "https://workflow.dev",
+			githubUrl: "https://github.com/vercel/workflow",
+			stack: [
+				"TypeScript",
+				"Next.js",
+				"Node.js",
+				"Distributed Systems",
+				"Event Sourcing",
+				"PostgreSQL",
+			],
+			keyFeatures: [
+				"Durable workflows with 'use workflow' and 'use step' directives",
+				"Automatic retry logic and state persistence",
+				"Webhook support for external event resumption",
+				"Built-in observability with CLI and Web UI",
+				"Framework-agnostic (Next.js, Hono, Nitro, Nuxt, SvelteKit)",
+				"Portable execution with Worlds architecture",
+				"Zero-config reliability with no queues or schedulers needed",
+			],
+			challenges:
+				"The main challenge was implementing deterministic replay of workflow execution across failures and deployments. This required building an event sourcing system that could accurately reconstruct workflow state from event logs while maintaining JavaScript semantics. We achieved this through sandboxed execution environments that fix non-deterministic operations like Date and Math.random, ensuring workflows resume exactly where they stopped.",
+			inProgress: false,
+			year: 2025,
+		},
+		{
+			featured: true,
 			slug: "spec2mcp",
 			name: "Spec2MCP",
 			description: "Convert OpenAPI specs to MCP server schemas instantly.",

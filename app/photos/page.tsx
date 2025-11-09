@@ -136,8 +136,8 @@ export default function PhotosPage() {
 
 	return (
 		<main className="container mx-auto">
-			<div className="mb-4 space-y-4">
-				<h1 className="text-xl tracking-tight font-medium">Photos</h1>
+			<div className="space-y-4">
+				<h1>Photos</h1>
 				<p>
 					A collection of photos I've taken over the years. I'm not a
 					professional photographer, but I enjoy capturing moments.
@@ -150,7 +150,7 @@ export default function PhotosPage() {
 			</div>
 
 			{/* Photo Grid */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
 				{isLoading || error
 					? Array.from({ length: 10 }).map((_, i) => (
 							<div

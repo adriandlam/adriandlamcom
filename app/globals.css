@@ -154,3 +154,45 @@ html {
 .link {
 	@apply cursor-pointer decoration-border underline-offset-4 underline hover:decoration-primary transition-all duration-200 ease-out;
 }
+
+/* Fix list marker alignment */
+ul, ol {
+	list-style-position: outside;
+}
+
+ul li::marker, ol li::marker {
+	line-height: 1;
+}
+
+ul li, ol li {
+	padding-inline-start: 0.5em;
+}
+
+h2, h3, h4, h5, h6 {
+	margin-top: 2rem;
+	@apply tracking-tight text-foreground font-normal;
+}
+
+h1 {
+	@apply text-3xl;
+}
+
+h2 {
+	@apply text-xl;
+}
+
+h3 {
+	@apply text-lg;
+}
+
+h4 {
+	@apply text-base;
+}
+
+h5 {
+	@apply text-sm;
+}
+
+h6 {
+	@apply text-xs;
+}

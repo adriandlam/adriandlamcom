@@ -7,7 +7,7 @@ export default async function Home() {
 			{/* Intro Section */}
 			<div className="flex items-center gap-6">
 				<img src="/me.jpeg" alt="Avatar" className="size-14 rounded-full" />
-				<h1 className="text-3xl tracking-tight font-medium">Adrian Lam</h1>
+				<h1>Adrian Lam</h1>
 			</div>
 
 			{/* About Me Section */}
@@ -19,7 +19,7 @@ export default async function Home() {
 					</p>
 					<p>
 						Currently, I&apos;m interning at Vercel as a core maintainer of the
-						Workflow DevKit and I'm studying Mathematics at the University of
+						{" "}<Link href="https://useworkflow.dev" target="_blank" className="link">Workflow DevKit</Link> and I'm studying Mathematics at the University of
 						British Columbia.
 					</p>
 					<p>
@@ -36,7 +36,7 @@ export default async function Home() {
 
 			{/* Projects Section */}
 			<div className="mt-8">
-				<h2>Some cool projects I've worked on:</h2>
+				<p>Some cool projects I've worked on:</p>
 				<ul className="list-disc list-inside mt-4 ml-4 space-y-0.5">
 					{RESUME.projects
 						.filter((project) => project.featured)

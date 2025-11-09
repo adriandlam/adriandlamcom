@@ -1,28 +1,44 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
-import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "./ui/tooltip";
-import { cn, fetcher } from "@/lib/utils";
-import { preload } from "swr";
+import { cn } from "@/lib/utils";
+import RESUME from "@/data/resume";
+import { BLOG_POSTS } from "@/data/blog-posts";
+import { AnimatePresence } from "motion/react";
+import { ChevronLeft } from "lucide-react";
 
 interface Tab {
 	name: string;
 	href: string;
+	children?: Tab[];
 }
 
 const tabs: Tab[] = [
 	{ name: "home", href: "/" },
-	{ name: "blog", href: "/blog" },
-	{ name: "projects", href: "/projects" },
+	{
+		name: "blog",
+		href: "/blog",
+		children: [
+			...BLOG_POSTS.map((post) => ({
+				name: post.title,
+				href: `/blog/${post.slug}`,
+			})),
+		],
+	},
+	{
+		name: "projects",
+		href: "/projects",
+		children: [
+			...RESUME.projects.map((project) => ({
+				name: project.name,
+				href: `/projects/${project.slug}`,
+			})),
+		],
+	},
 	{ name: "photos", href: "/photos" },
 ];
 
@@ -219,35 +235,87 @@ const tabs: Tab[] = [
 
 export default function Nav() {
 	const pathname = usePathname();
-	const [activeTab, setActiveTab] = useState("");
+	const [activeParentTab, setActiveParentTab] = useState<Tab | null>(null);
 
 	useEffect(() => {
-		const tab = tabs.find((tab) => pathname === tab.href);
-		if (activeTab === tab?.name) return;
-		if (tab) setActiveTab(tab.name);
-	}, [pathname, activeTab]);
+		// Check if we're on a child page
+		for (const tab of tabs) {
+			if (tab.children) {
+				const isOnChildPage = tab.children.some(
+					(child) => pathname === child.href,
+				);
+				if (isOnChildPage) {
+					setActiveParentTab(tab);
+					return;
+				}
+			}
+		}
+		setActiveParentTab(null);
+	}, [pathname]);
 
-	const handleTabClick = (tab: Tab) => {
-		setActiveTab(tab.name);
-	};
-
-	const tabClassname = "font-mono text-[15px] px-2 py-1 transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
+	const tabClassname =
+		"line-clamp-1 font-mono text-[15px] px-2 py-1 transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
 
 	return (
-		<nav className="fixed right-0 left-0 m-8 inline z-10 w-32">
-			<ul className="space-y-0.5">
-				{tabs.map((tab) => (
-					<li key={tab.name} className={cn(tabClassname, activeTab === tab.name ? "text-primary bg-secondary" : "text-muted-foreground")}>
-						<Link href={tab.href} className="block" onClick={() => handleTabClick(tab)}>{tab.name}</Link>
-					</li>
-				))}
-				<Separator className="mx-0.5 my-1.5" />
-				<li className={cn(tabClassname, "text-muted-foreground")}>
-					<Link href="https://github.com/adriandlam" target="_blank">
-						github
-					</Link>
-				</li>
-			</ul>
+		<nav className="fixed right-0 left-0 m-8 inline z-10 w-48 overflow-hidden">
+			<AnimatePresence mode="popLayout" initial={false}>
+				{activeParentTab ? (
+					<motion.ul key="children-tabs" className="space-y-0.5" initial={{ opacity: 0, translateX: 20 }} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0, translateX: 20 }} transition={{ duration: 0.15, ease: "easeOut" }}>
+						<li className={cn(tabClassname, "text-muted-foreground")}>
+							<Link
+								href={activeParentTab.href}
+								className="inline-flex items-center gap-1"
+							>
+								<ChevronLeft className="size-4" />
+								back to {activeParentTab.name}
+							</Link>
+						</li>
+						<Separator className="mx-0.5 my-1.5" />
+						{activeParentTab.children?.map((child) => (
+							<li
+								key={child.name}
+								className={cn(
+									tabClassname,
+									pathname === child.href
+										? "text-primary bg-secondary"
+										: "text-muted-foreground",
+								)}
+							>
+								<Link href={child.href} className="block">
+									{child.name}
+								</Link>
+							</li>
+						))}
+					</motion.ul>
+				) : (
+					<motion.ul key="parent-tabs" className="space-y-0.5" initial={{ opacity: 0, translateX: -20}} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0, translateX: -20 }} transition={{ duration: 0.15, ease: "easeOut" }}>
+						{tabs.map((tab) => {
+							const isActive = pathname === tab.href;
+							return (
+								<li
+									key={tab.name}
+									className={cn(
+										tabClassname,
+										isActive
+											? "text-primary bg-secondary"
+											: "text-muted-foreground",
+									)}
+								>
+									<Link href={tab.href} className="block">
+										{tab.name}
+									</Link>
+								</li>
+							);
+						})}
+						<Separator className="mx-0.5 my-1.5" />
+						<li className={cn(tabClassname, "text-muted-foreground")}>
+							<Link href="https://github.com/adriandlam" target="_blank">
+								github
+							</Link>
+						</li>
+					</motion.ul>
+				)}
+			</AnimatePresence>
 		</nav>
 	);
 }
