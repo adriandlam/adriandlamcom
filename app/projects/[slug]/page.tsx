@@ -29,31 +29,15 @@ export default async function ProjectPage({
 					<p className=" text-muted-foreground mt-2">{project.description}</p>
 				</div>
 				<div className="flex flex-wrap gap-3">
-					{project.githubUrl && (
-						<Button variant="outline" size="sm">
-							<Link
-								href={project.githubUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-2"
-							>
-								<Github size={18} />
-								<span>GitHub</span>
-							</Link>
-						</Button>
-					)}
-					{project.liveUrl && (
-						<Button variant="outline" size="sm">
-							<Link
-								href={project.liveUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center gap-2"
-							>
-								<ExternalLink size={18} />
-								<span>Live Demo</span>
-							</Link>
-						</Button>
+					{project.url && (
+						<Link
+							href={project.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="link"
+						>
+							<span>View</span>
+						</Link>
 					)}
 				</div>
 			</div>
@@ -75,15 +59,6 @@ export default async function ProjectPage({
 								<li key={feature}>{feature}</li>
 							))}
 						</ul>
-					</section>
-				)}
-
-				{project.challenges && (
-					<section>
-						<h2 className="text-2xl mb-3">Challenges & Solutions</h2>
-						<div>
-							<p>{project.challenges}</p>
-						</div>
 					</section>
 				)}
 			</div>
