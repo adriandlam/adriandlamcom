@@ -179,6 +179,9 @@ export default async function Page({
 				{/* Main article with right margin on large screens */}
 				<article>
 					<header className="mb-8">
+						<span className="uppercase font-mono text-accent-foreground text-xs tracking-wider">
+							Blog
+						</span>
 						{metadata.coverImage && (
 							<div className="mb-6">
 								<Image
@@ -191,7 +194,7 @@ export default async function Page({
 								/>
 							</div>
 						)}
-						<h1 className="text-3xl font-bold mb-2">{metadata.title}</h1>
+						<h1 className="text-3xl mt-1.5 font-bold mb-2">{metadata.title}</h1>
 						{metadata.excerpt && (
 							<p className="text-xl text-muted-foreground mb-4">
 								{metadata.excerpt}

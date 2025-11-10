@@ -22,7 +22,10 @@ export default async function ProjectPage({
 			{/* Project header */}
 			<div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
 				<div>
-					<h1 className="text-4xl">{project.name}</h1>
+					<span className="uppercase font-mono text-accent-foreground text-xs tracking-wider">
+						Project
+					</span>
+					<h1 className="text-4xl mt-1.5">{project.name}</h1>
 					<p className=" text-muted-foreground mt-2">{project.description}</p>
 				</div>
 				<div className="flex flex-wrap gap-3">
@@ -55,18 +58,6 @@ export default async function ProjectPage({
 				</div>
 			</div>
 
-			{/* Project image */}
-			{project.imagePath && (
-				<div className="mb-10 border overflow-hidden shadow-xs rounded-xl">
-					<img
-						src={project.imagePath}
-						alt={`${project.name} screenshot`}
-						className="w-full h-auto rounded-xl object-cover"
-					/>
-				</div>
-			)}
-
-			{/* Project details */}
 			{/* Main content */}
 			<div className="md:col-span-2 space-y-6">
 				<section>
