@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default async function Home() {
 	return (
-		<main className="container mx-auto">
+		<main>
 			{/* Intro Section */}
 			<div className="flex items-center gap-6">
 				<img src="/me.jpeg" alt="Avatar" className="size-14 rounded-full" />

@@ -36,11 +36,10 @@ export default function RootLayout({
 					defaultTheme="light"
 					disableTransitionOnChange
 				>
-					<Nav />
 					<ThemeToggle />
-					<div className="max-w-3xl mx-auto pt-10 md:pt-16 px-4">
-						{/* <div className="max-w-screen-md mx-auto pt-10 md:pt-20 px-4 sm:px-6 lg:px-8 border-x border-dashed"> */}
-						{children}
+					<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
+						<Nav />
+						<div className="pt-12 md:pt-16 lg:pt-10">{children}</div>
 						<Footer />
 					</div>
 				</ThemeProvider>

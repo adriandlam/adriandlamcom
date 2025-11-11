@@ -17,8 +17,8 @@ export default function ThemeToggle() {
 		"font-mono text-sm px-2 py-1 transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50 text-muted-foreground";
 
 	return (
-		<div className="fixed top-0 right-0 m-4">
-			<div className="flex items-center space-x-0.5 mt-0.5">
+		<div className="fixed bottom-0 right-0 md:top-0 md:right-0 m-4 border md:border-none p-0.5 bg-background">
+			<div className="flex items-center space-x-0.5">
 				<button
 					onClick={() => setTheme("light")}
 					type="button"
@@ -29,7 +29,7 @@ export default function ThemeToggle() {
 				>
 					light
 				</button>
-				<span className="text-muted-foreground"> / </span>
+				<span className="text-muted-foreground hidden md:inline"> / </span>
 				<button
 					onClick={() => setTheme("dark")}
 					type="button"
