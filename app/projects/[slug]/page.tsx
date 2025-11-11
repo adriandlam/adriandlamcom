@@ -20,7 +20,7 @@ export default async function ProjectPage({
 			{/* Project header */}
 			<div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
 				<div>
-					<span className="uppercase font-mono text-accent-foreground text-xs tracking-wider">
+					<span className="uppercase font-mono text-accent-foreground text-xs tracking-widest">
 						Project
 					</span>
 					<h1 className="text-4xl mt-1.5">{project.name}</h1>

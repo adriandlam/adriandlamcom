@@ -165,7 +165,11 @@ ul li::marker, ol li::marker {
 }
 
 .list {
-	@apply list-disc list-inside pl-4 space-y-0.5;
+	@apply list-disc list-outside pl-8 space-y-0.5 my-4;
+}
+
+.list li {
+	@apply pl-1.5;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -174,6 +178,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h2, h3, h4, h5, h6 {
 	margin-top: 2rem;
+	@apply mb-4
 }
 
 h1 {
@@ -181,21 +186,25 @@ h1 {
 }
 
 h2 {
-	@apply text-xl;
+	@apply text-2xl;
 }
 
 h3 {
-	@apply text-lg;
+	@apply text-xl;
 }
 
 h4 {
-	@apply text-base;
+	@apply text-lg;
 }
 
 h5 {
-	@apply text-sm;
+	@apply text-base;
 }
 
-h6 {
-	@apply text-xs;
+strong {
+	@apply font-medium;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	@apply no-underline! text-inherit!;
 }

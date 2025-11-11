@@ -20,38 +20,33 @@ export function Callout({
 		info: {
 			icon: InfoIcon,
 			className:
-				"bg-blue-500/15 backdrop-blur border-blue-500/25 prose-h5:text-blue-500 [&_p]:text-blue-500",
+				"bg-blue-500/15 border-blue-500/25 [&_h5]:text-blue-500 [&_p]:text-blue-500 dark:[&_p]:text-blue-400",
 			iconClassName: "text-blue-500",
 		},
 		warning: {
 			icon: AlertTriangleIcon,
 			className:
-				"bg-yellow-500/15 backdrop-blur border-yellow-500/25 prose-h5:text-yellow-500  [&_p]:text-yellow-500",
+				"bg-yellow-500/15 border-yellow-500/25 [&_h5]:text-yellow-500  [&_p]:text-yellow-500 dark:[&_p]:text-yellow-400",
 			iconClassName: "text-yellow-500",
 		},
 		error: {
 			icon: XCircleIcon,
 			className:
-				"bg-rose-500/15 backdrop-blur border-rose-500/25 prose-h5:text-rose-500 [&_p]:text-rose-500",
+				"bg-rose-500/15 border-rose-500/25 [&_h5]:text-rose-500 [&_p]:text-rose-500 dark:[&_p]:text-rose-400",
 			iconClassName: "text-rose-500",
 		},
 		success: {
 			icon: CheckCircleIcon,
 			className:
-				"bg-green-500/15 backdrop-blur border-green-500/25 prose-h5:text-green-500 [&_p]:text-green-500",
+				"bg-green-500/15 border-green-500/25 [&_h5]:text-green-500 [&_p]:text-green-500 dark:[&_p]:text-green-400",
 			iconClassName: "text-green-500",
 		},
 	};
 	const { icon: Icon, className, iconClassName } = variantMap[variant];
 	return (
-		<div
-			className={cn(
-				"relative w-full border rounded-xl p-4 my-10 shadow",
-				className,
-			)}
-		>
+		<div className={cn("relative w-full border px-4 py-4.5 my-4", className)}>
 			<div className="flex gap-3">
-				<Icon className={cn("h-4 w-4 flex-shrink-0", iconClassName)} />
+				<Icon className={cn("h-4 w-4 shrink-0", iconClassName)} />
 				<div className="flex-1">{children}</div>
 			</div>
 		</div>

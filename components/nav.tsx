@@ -125,7 +125,7 @@ export default function Nav() {
 							className="space-y-0.5"
 							initial={{ opacity: 0, translateX: 20 }}
 							animate={{ opacity: 1, translateX: 0 }}
-							exit={{ opacity: 0, translateX: 20 }}
+							exit={{ opacity: 0, translateX: 20, filter: "blur(10px)" }}
 							transition={{ duration: 0.15, ease: "easeOut" }}
 						>
 							<li className={cn(tabClassname, "text-muted-foreground")}>
@@ -160,7 +160,7 @@ export default function Nav() {
 							className="space-y-0.5"
 							initial={{ opacity: 0, translateX: -20 }}
 							animate={{ opacity: 1, translateX: 0 }}
-							exit={{ opacity: 0, translateX: -20 }}
+							exit={{ opacity: 0, translateX: -20, filter: "blur(10px)" }}
 							transition={{ duration: 0.15, ease: "easeOut" }}
 						>
 							{tabs.map((tab, index) => {

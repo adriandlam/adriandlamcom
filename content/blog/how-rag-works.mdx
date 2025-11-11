@@ -6,7 +6,7 @@ summary: "An introduction into RAG pipelines, and their (common) components."
 
 In my opinion, RAG is probably one of the most used words when it comes to AI/LLMs. It also seems like one of the most jankiest solutions for reducing LLM hallucinations.
 
-{/* ![](/blog-assets/rag/) */}
+{/*![](/blog-assets/rag/)*/}
 
 ## Core Idea Behind RAG
 
@@ -27,7 +27,6 @@ It depends. The problem with just using more context is that it's not always pos
 </CalloutDescription>
 </Callout>
 
-
 ## How RAG Works
 
 For larger knowledge bases that exceed the model's context window, RAG is usually the industry solution. RAG typically works by preprocessing a knowledge base through some steps:
@@ -40,7 +39,7 @@ For larger knowledge bases that exceed the model's context window, RAG is usuall
 
 The problem is that embedding models capture semantic meaning and miss exact keyword matches. Usually, embedding models are combined with BM25.
 
-## BM25: The Secret Sauce
+## BM25
 
 BM25 (Best Matching 25) is a ranking function that uses lexical matching to find precise word or phrase matches. It's effective for queries that include unique identifiers or technical terms. For example, if a user queries "HTTP 200" in a technical support database, BM25 can find the exact "HTTP 200" match.
 
@@ -58,7 +57,7 @@ The way it usually works is:
 
 **TLDR:** You have two people, one understands meaning, the other is extremely good at spotting exact word matches. Together, they catch what the other might miss.
 
-## Reranking (The Cherry on Top)
+## Reranking
 
 Reranking is a technique that further improves retrieval accuracy. It's like having a third person who's really good at picking out the best chunks from the top results (a meta-model). Here's how it works:
 
@@ -84,7 +83,7 @@ There are some practical considerations for RAG:
 
 ## Conclusion
 
-Honestly, I think RAG is still pretty janky as a solution, there's alot of moving parts. But it's commonly used since it reduces LLM hallucination rates. 
+Honestly, I think RAG is still pretty janky as a solution, there's alot of moving parts. But it's commonly used since it reduces LLM hallucination rates.
 
 I'd like to also note that many companies are scaling up their model's context window, which might make RAG less useful in the future (ex. Google's Gemini 2.0 Flash Lite model has a context window of 1m tokens)
 

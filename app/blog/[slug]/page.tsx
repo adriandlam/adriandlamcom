@@ -4,27 +4,22 @@ import matter from "gray-matter";
 import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
-import Link from "next/link";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/vs2015.css";
-import {
-	Callout,
-	CalloutDescription,
-	CalloutTitle,
-} from "@/components/callout";
+import * as CalloutComponents from "@/components/callout";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import remarkSmartyPants from "remark-smartypants";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
+import Link from "next/link";
 
 const components = {
-	Callout,
-	CalloutTitle,
-	CalloutDescription,
+	...CalloutComponents,
 	// Add this custom img component
 	img: ({ src, alt, ...props }: any) => {
 		// Handle both absolute and relative image paths
@@ -51,28 +46,40 @@ const components = {
 			</div>
 		);
 	},
+	a: ({ children, href }: { children: React.ReactNode; href: string }) => (
+		<Link href={href} className="link inline-flex gap-0.5">
+			{children}
+			{!(href.startsWith("/") || href.startsWith("#")) && (
+				<svg
+					className="mt-1 size-3"
+					viewBox="0 0 12 12"
+					fill="currentColor"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<title>External link</title>
+					<path
+						d="M3.5 3C3.22386 3 3 3.22386 3 3.5C3 3.77614 3.22386 4 3.5 4V3ZM8.5 3.5H9C9 3.22386 8.77614 3 8.5 3V3.5ZM8 8.5C8 8.77614 8.22386 9 8.5 9C8.77614 9 9 8.77614 9 8.5H8ZM2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L2.64645 8.64645ZM3.5 4H8.5V3H3.5V4ZM8 3.5V8.5H9V3.5H8ZM8.14645 3.14645L2.64645 8.64645L3.35355 9.35355L8.85355 3.85355L8.14645 3.14645Z"
+						fill="var(--grey1)"
+					></path>
+				</svg>
+			)}
+		</Link>
+	),
+	ul: ({ children }: { children: React.ReactNode }) => (
+		<ul className="list">{children}</ul>
+	),
+	ol: ({ children }: { children: React.ReactNode }) => (
+		<ol className="list">{children}</ol>
+	),
+	p: ({ children }: { children: React.ReactNode }) => (
+		<p className="text-foreground leading-relaxed mb-4">{children}</p>
+	),
+	blockquote: ({ children }: { children: React.ReactNode }) => (
+		<blockquote className="border-l-2 border-accent-foreground pl-4.5 pr-4 py-4 my-4 [&>p]:mb-0 bg-muted dark:bg-muted/20 [&>p]:opacity-75 [&>p]:text-[15px]">
+			{children}
+		</blockquote>
+	),
 };
-
-function extractHeadings(content: string) {
-	const headingRegex = /^#{1,6}\s+(.+)$/gm;
-	const headings = [];
-	let match;
-
-	while ((match = headingRegex.exec(content)) !== null) {
-		const text = match[1];
-		const level = match[0].split("#").length - 1;
-
-		// Match the exact ID format that the browser is creating
-		// Replace non-alphanumeric characters with hyphens and preserve trailing hyphens
-		const slug = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-		// Importantly, do NOT trim trailing hyphens as they're preserved in the browser IDs
-		//.replace(/(^-|-$)/g, '');
-
-		headings.push({ text, level, slug });
-	}
-
-	return headings;
-}
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -95,7 +102,7 @@ async function getBlogPost(slug: string) {
 		// Filter out unpublished posts and private posts (for backward compatibility)
 		if (metadata.private || metadata.published === false) return null;
 		return { metadata, content };
-	} catch (error) {
+	} catch {
 		return null;
 	}
 }
@@ -171,7 +178,6 @@ export default async function Page({
 
 	const { metadata, content } = post;
 	const formattedDate = formatDate(metadata.publishedAt);
-	const headings = extractHeadings(content);
 
 	return (
 		<main>
@@ -179,7 +185,7 @@ export default async function Page({
 				{/* Main article with right margin on large screens */}
 				<article>
 					<header className="mb-8">
-						<span className="uppercase font-mono text-accent-foreground text-xs tracking-wider">
+						<span className="uppercase font-mono text-accent-foreground text-xs tracking-widest">
 							Blog
 						</span>
 						{metadata.coverImage && (
@@ -194,7 +200,7 @@ export default async function Page({
 								/>
 							</div>
 						)}
-						<h1 className="text-3xl mt-1.5 font-bold mb-2">{metadata.title}</h1>
+						<h1 className="mt-1.5 mb-2">{metadata.title}</h1>
 						{metadata.excerpt && (
 							<p className="text-xl text-muted-foreground mb-4">
 								{metadata.excerpt}
@@ -216,53 +222,21 @@ export default async function Page({
 							</div>
 						)}
 					</header>
-					<div className="prose max-w-none">
-						<MDXRemote
-							source={content}
-							components={{
-								...components,
-								h1: ({ children }) => (
-									<h1
-										id={children
-											?.toString()
-											.toLowerCase()
-											.replace(/[^a-z0-9]+/g, "-")}
-									>
-										{children}
-									</h1>
-								),
-								h2: ({ children }) => (
-									<h2
-										id={children
-											?.toString()
-											.toLowerCase()
-											.replace(/[^a-z0-9]+/g, "-")}
-									>
-										{children}
-									</h2>
-								),
-								h3: ({ children }) => (
-									<h3
-										id={children
-											?.toString()
-											.toLowerCase()
-											.replace(/[^a-z0-9]+/g, "-")}
-									>
-										{children}
-									</h3>
-								),
-							}}
-							options={{
-								mdxOptions: {
-									remarkPlugins: [remarkMath, remarkGfm, remarkSmartyPants],
-									rehypePlugins: [
-										rehypeKatex,
-										[rehypeHighlight, { detect: true }],
-									],
-								},
-							}}
-						/>
-					</div>
+					<MDXRemote
+						source={content}
+						components={components}
+						options={{
+							mdxOptions: {
+								remarkPlugins: [remarkMath, remarkGfm, remarkSmartyPants],
+								rehypePlugins: [
+									rehypeKatex,
+									[rehypeHighlight, { detect: true }],
+									rehypeSlug,
+									[rehypeAutolinkHeadings, { behavior: "wrap" }],
+								],
+							},
+						}}
+					/>
 				</article>
 			</div>
 		</main>

@@ -43,7 +43,7 @@ export default async function Home() {
 			{/* Projects Section */}
 			<div className="mt-8">
 				<p>Some cool projects I've worked on:</p>
-				<ul className="mt-4 list">
+				<ul className="list">
 					{RESUME.projects
 						.filter((project) => project.featured)
 						.map((project) => (
@@ -55,7 +55,7 @@ export default async function Home() {
 							</li>
 						))}
 				</ul>
-				<p className="mt-4">
+				<p>
 					You can view all my projects{" "}
 					<Link href="/projects" className="link">
 						here
