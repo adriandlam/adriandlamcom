@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import RESUME from "@/data/resume";
-import { ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 

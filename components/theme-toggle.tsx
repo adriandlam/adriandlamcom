@@ -2,9 +2,16 @@
 
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
+	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme } = useTheme();
+
+	// Only render after mounting to avoid hydration mismatch
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	const buttonClassname =
 		"font-mono text-sm px-2 py-1 transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50 text-muted-foreground";
@@ -17,7 +24,7 @@ export default function ThemeToggle() {
 					type="button"
 					className={cn(
 						buttonClassname,
-						theme === "light" && "text-primary bg-secondary",
+						mounted && theme === "light" && "text-primary bg-secondary",
 					)}
 				>
 					light
@@ -28,7 +35,7 @@ export default function ThemeToggle() {
 					type="button"
 					className={cn(
 						buttonClassname,
-						theme === "dark" && "text-primary bg-secondary",
+						mounted && theme === "dark" && "text-primary bg-secondary",
 					)}
 				>
 					dark

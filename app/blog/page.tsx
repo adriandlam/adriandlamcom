@@ -24,13 +24,13 @@ export default function BlogPage() {
 			<table className="mt-8 w-full">
 				<thead>
 					<tr className="border-b border-border">
-						<th className="text-left py-2 px-0 text-sm text-muted-foreground/65 font-normal">
+						<th className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide">
 							date
 						</th>
-						<th className="text-left py-2 px-6 text-sm text-muted-foreground/65 font-normal">
+						<th className="text-left py-2 px-6 text-xs text-muted-foreground font-normal font-mono tracking-wide">
 							title
 						</th>
-						<th className="text-left py-2 px-4 text-sm text-muted-foreground/65 font-normal hidden md:table-cell">
+						<th className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide">
 							summary
 						</th>
 						{/* TODO: add views */}
