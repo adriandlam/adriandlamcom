@@ -6,7 +6,7 @@ const nextConfig = {
 	images: {
 		remotePatterns: [
 			{
-				hostname: "photos.adriandlam.com",
+				hostname: "**.blob.vercel-storage.com",
 			},
 		],
 		// formats: ['image/webp', 'image/avif'],
