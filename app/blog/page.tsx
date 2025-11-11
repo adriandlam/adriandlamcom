@@ -16,7 +16,7 @@ export default function BlogPage() {
 		<main className="container mx-auto">
 			<div>
 				<h1>Blog</h1>
-				<p className="mt-2">
+				<p className="mt-2 text-muted-foreground">
 					A collection of articles and thoughts on software development and who
 					I am as a person.
 				</p>

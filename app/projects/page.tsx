@@ -6,7 +6,7 @@ export default function ProjectsPage() {
 		<main className="container mx-auto">
 			<div>
 				<h1 className="text-xl tracking-tight font-medium">Projects</h1>
-				<p className="mt-2">
+				<p className="mt-2 text-muted-foreground">
 					A collection of projects I've built throughout my journey as a
 					developer and hobbyist.
 				</p>

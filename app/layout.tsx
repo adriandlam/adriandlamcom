@@ -39,7 +39,7 @@ export default function RootLayout({
 					<ThemeToggle />
 					<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
 						<Nav />
-						<div className="pt-12 md:pt-16 lg:pt-10">{children}</div>
+						<div className="pt-12 md:pt-18 lg:pt-20">{children}</div>
 						<Footer />
 					</div>
 				</ThemeProvider>

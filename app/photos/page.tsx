@@ -6,13 +6,13 @@ export default async function PhotosPage() {
 
 	return (
 		<main className="container mx-auto">
-			<div className="space-y-4">
+			<div>
 				<h1>Photos</h1>
-				<p>
+				<p className="text-muted-foreground mt-2">
 					A collection of photos I've taken over the years. I'm not a
 					professional photographer, but I enjoy capturing moments.
 				</p>
-				<p>
+				<p className="mt-4">
 					My photos are taken with a Panasonic Lumix G85 with a Panasonic Lumix
 					G 25mm F1.7. lens but I've also recently upgraded to a Panasonic Lumix
 					G Vario 12-60mm f/3.5-5.6.
