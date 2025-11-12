@@ -36,6 +36,11 @@ export default function RootLayout({
 					defaultTheme="light"
 					disableTransitionOnChange
 				>
+					<div className="px-4 py-2.5 border relative">
+						<p className="text-center text-accent-foreground text-sm font-mono">
+							The projects page is a work in progress.
+						</p>
+					</div>
 					<ThemeToggle />
 					<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
 						<Nav />
