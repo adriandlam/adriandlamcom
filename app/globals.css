@@ -235,16 +235,15 @@ figure[data-rehype-pretty-code-figure] {
 	@apply mt-6 mb-4;
 }
 
-
 /* Syntax highlighting for multiple themes (rehype-pretty-code) */
-code[data-theme*=" "],
-code[data-theme*=" "] span {
+code[data-theme],
+code[data-theme] span {
 	color: var(--shiki-light);
 	@apply text-sm;
 }
 
-.dark code[data-theme*=" "],
-.dark code[data-theme*=" "] span {
+.dark code[data-theme],
+.dark code[data-theme] span {
 	color: var(--shiki-dark);
 	@apply text-sm;
 }
