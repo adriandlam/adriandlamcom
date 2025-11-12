@@ -27,8 +27,8 @@ const RESUME = {
 	projects: [
 		{
 			featured: true,
-			slug: "workflow-devkit",
-			name: "Workflow DevKit",
+			slug: "vercel-workflow-devkit",
+			name: "Vercel Workflow DevKit",
 			description: "Open source TypeScript framework for durable execution.",
 			notes: [
 				"Founding member and core contributor of the Workflow Development Kit",

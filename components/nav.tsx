@@ -1,15 +1,13 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { preload } from "swr";
 import { BLOG_POSTS } from "@/data/blog-posts";
 import RESUME from "@/data/resume";
-import { cn, fetcher } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
 
@@ -64,30 +62,85 @@ export default function Nav() {
 
 	// j/k navigation through tabs
 	useHotkeys("j", () => {
-		// Find current tab index
-		const currentIndex = tabs.findIndex(
-			(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
-		);
-		// Go to next tab, stop at the end
-		if (currentIndex >= 0 && currentIndex < tabs.length - 1) {
-			router.push(tabs[currentIndex + 1].href);
+		if (activeParentTab) {
+			// Navigate through child tabs
+			const children = activeParentTab.children || [];
+			const currentIndex = children.findIndex(
+				(child) => pathname === child.href,
+			);
+			if (currentIndex >= 0 && currentIndex < children.length - 1) {
+				router.push(children[currentIndex + 1].href);
+			}
+		} else {
+			// Navigate through parent tabs
+			const currentIndex = tabs.findIndex(
+				(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
+			);
+			if (currentIndex >= 0 && currentIndex < tabs.length - 1) {
+				router.push(tabs[currentIndex + 1].href);
+			}
 		}
 	});
 
 	useHotkeys("k", () => {
-		// Find current tab index
-		const currentIndex = tabs.findIndex(
-			(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
-		);
-		// Go to previous tab, stop at the beginning
-		if (currentIndex > 0) {
-			router.push(tabs[currentIndex - 1].href);
+		if (activeParentTab) {
+			// Navigate through child tabs
+			const children = activeParentTab.children || [];
+			const currentIndex = children.findIndex(
+				(child) => pathname === child.href,
+			);
+			if (currentIndex > 0) {
+				router.push(children[currentIndex - 1].href);
+			}
+		} else {
+			// Navigate through parent tabs
+			const currentIndex = tabs.findIndex(
+				(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
+			);
+			if (currentIndex > 0) {
+				router.push(tabs[currentIndex - 1].href);
+			}
 		}
 	});
 
-	useHotkeys("g", () => {
-		window.open("https://github.com/adriandlam", "_blank");
-	});
+	// h to go back to parent tab when on a child tab
+	useHotkeys(
+		"h",
+		() => {
+			if (activeParentTab) {
+				router.push(activeParentTab.href);
+			}
+		},
+		{
+			enabled: activeParentTab !== null,
+		},
+	);
+
+	// l to navigate into children tabs from parent tab
+	useHotkeys(
+		"l",
+		() => {
+			// Find current parent tab
+			const currentTab = tabs.find((tab) => pathname === tab.href);
+			// If on a parent tab with children, navigate to first child
+			if (currentTab?.children && currentTab.children.length > 0) {
+				router.push(currentTab.children[0].href);
+			}
+		},
+		{
+			enabled: activeParentTab === null,
+		},
+	);
+
+	useHotkeys(
+		"g",
+		() => {
+			window.open("https://github.com/adriandlam", "_blank");
+		},
+		{
+			enabled: activeParentTab === null,
+		},
+	);
 
 	const tabClassname =
 		"line-clamp-1 font-mono text-[15px] transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
@@ -117,7 +170,12 @@ export default function Nav() {
 					})}
 				</ul>
 			</div>
-			<div className="fixed right-0 left-0 m-8 z-10 w-32 hidden lg:inline lg:w-48 overflow-hidden">
+			<div
+				className={cn(
+					"fixed right-0 left-0 m-8 z-10 w-32 hidden lg:inline lg:w-48 overflow-hidden transition-all duration-200 ease-out",
+					activeParentTab ? "lg:w-54" : "",
+				)}
+			>
 				<AnimatePresence mode="popLayout" initial={false}>
 					{activeParentTab ? (
 						<motion.ul
@@ -131,28 +189,51 @@ export default function Nav() {
 							<li className={cn(tabClassname, "text-muted-foreground")}>
 								<Link
 									href={activeParentTab.href}
-									className="inline-flex items-center gap-1 w-full py-1 px-2"
+									className="flex items-center justify-between w-full py-1 px-2 gap-2"
 								>
-									<ChevronLeft className="size-4" />
-									back to {activeParentTab.name}
+									<span className="inline-flex items-center gap-1 line-clamp-1">
+										<ChevronLeft className="size-4 shrink-0" />
+										<span className="line-clamp-1">
+											back to {activeParentTab.name}
+										</span>
+									</span>
+									<Kbd>h</Kbd>
 								</Link>
 							</li>
 							<Separator className="mx-0.5 my-1.5" />
-							{activeParentTab.children?.map((child) => (
-								<li
-									key={child.name}
-									className={cn(
-										tabClassname,
-										pathname === child.href
-											? "text-primary bg-secondary"
-											: "text-muted-foreground",
-									)}
-								>
-									<Link href={child.href} className="block py-1 px-2">
-										{child.name}
-									</Link>
-								</li>
-							))}
+							{activeParentTab.children?.map((child, index) => {
+								const children = activeParentTab.children || [];
+								const activeIndex = children.findIndex(
+									(c) => pathname === c.href,
+								);
+
+								// Show 'k' on item above active, 'j' on item below active
+								let shortcut: string | undefined;
+								if (activeIndex >= 0) {
+									if (index === activeIndex - 1) shortcut = "k";
+									else if (index === activeIndex + 1) shortcut = "j";
+								}
+
+								return (
+									<li
+										key={child.name}
+										className={cn(
+											tabClassname,
+											pathname === child.href
+												? "text-primary bg-secondary"
+												: "text-muted-foreground",
+										)}
+									>
+										<Link
+											href={child.href}
+											className="flex items-center justify-between w-full py-1 px-2 gap-2"
+										>
+											<span className="line-clamp-1">{child.name}</span>
+											{shortcut && <Kbd>{shortcut}</Kbd>}
+										</Link>
+									</li>
+								);
+							})}
 						</motion.ul>
 					) : (
 						<motion.ul
@@ -171,11 +252,22 @@ export default function Nav() {
 										pathname === t.href || pathname.startsWith(t.href + "/"),
 								);
 
-								// Show 'k' on item above active, 'j' on item below active
+								// Show 'k' on item above active, 'j' on item below active, 'l' on active with children
 								let shortcut: string | undefined;
 								if (activeIndex >= 0) {
-									if (index === activeIndex - 1) shortcut = "k";
-									else if (index === activeIndex + 1) shortcut = "j";
+									if (
+										index === activeIndex &&
+										isActive &&
+										pathname === tab.href &&
+										tab.children &&
+										tab.children.length > 0
+									) {
+										shortcut = "l";
+									} else if (index === activeIndex - 1) {
+										shortcut = "k";
+									} else if (index === activeIndex + 1) {
+										shortcut = "j";
+									}
 								}
 
 								return (
@@ -190,10 +282,15 @@ export default function Nav() {
 									>
 										<Link
 											href={tab.href}
-											className="flex items-center justify-between w-full py-1 px-2"
+											className="flex items-center justify-between w-full py-1 px-2 gap-2"
 										>
-											{tab.name}
-											{shortcut && <Kbd>{shortcut}</Kbd>}
+											<span className="line-clamp-1">{tab.name}</span>
+											<span className="flex items-center">
+												{shortcut === "l" && (
+													<ChevronRight className="size-3.5" />
+												)}
+												{shortcut && <Kbd>{shortcut}</Kbd>}
+											</span>
 										</Link>
 									</li>
 								);
@@ -203,7 +300,7 @@ export default function Nav() {
 								<Link
 									href="https://github.com/adriandlam"
 									target="_blank"
-									className="flex items-center justify-between w-full py-1 px-2"
+									className="flex items-center justify-between w-full py-1 px-2 gap-2"
 								>
 									<span className="flex gap-0.5">
 										github
