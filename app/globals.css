@@ -165,7 +165,7 @@ ul li::marker, ol li::marker {
 }
 
 .list {
-	@apply list-disc list-outside pl-8 space-y-0.5 my-4;
+	@apply list-disc list-outside pl-8 space-y-1 my-4;
 }
 
 .list li {
