@@ -178,7 +178,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h2, h3, h4, h5, h6 {
 	margin-top: 2rem;
-	@apply mb-4
+	@apply mb-4;
 }
 
 h1 {
@@ -220,7 +220,7 @@ code:not([data-line-numbers]) {
 }
 
 figcaption[data-rehype-pretty-code-title] {
-	@apply px-3 text-muted-foreground border-b py-2 text-sm
+	@apply px-3 text-muted-foreground border-b py-2 text-sm;
 }
 
 span[data-highlighted-line] {
