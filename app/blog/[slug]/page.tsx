@@ -12,6 +12,9 @@ import { Badge } from "@/components/ui/badge";
 import { notFound } from "next/navigation";
 import remarkGfm from "remark-gfm";
 import remarkSmartyPants from "remark-smartypants";
+import remarkDirective from "remark-directive";
+import remarkGemoji from "remark-gemoji";
+import remarkRemoveComments from "remark-remove-comments";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -21,7 +24,6 @@ import Link from "next/link";
 
 const components = {
 	...CalloutComponents,
-	// Add this custom img component
 	img: ({ src, alt, ...props }: any) => {
 		// Handle both absolute and relative image paths
 		const imageSrc = src?.startsWith("/") ? src : `/${src}`;
@@ -226,7 +228,14 @@ export default async function Page({
 						components={components}
 						options={{
 							mdxOptions: {
-								remarkPlugins: [remarkMath, remarkGfm, remarkSmartyPants],
+								remarkPlugins: [
+									remarkMath,
+									remarkGfm,
+									remarkSmartyPants,
+									remarkDirective,
+									remarkGemoji,
+									remarkRemoveComments,
+								],
 								rehypePlugins: [
 									rehypeKatex,
 									rehypeSlug,

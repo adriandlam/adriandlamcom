@@ -209,61 +209,70 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 	@apply no-underline! text-inherit!;
 }
 
-/* rehype-pretty-code styles */
-code {
-	counter-reset: line;
+/* Remark pretty code stuff */
+[data-rehype-pretty-code-figure] {
+	@apply border;
 }
 
-code[data-theme*=" "],
-code[data-theme*=" "] span {
-	color: var(--shiki-light);
-	background-color: var(--shiki-light-bg);
+/* Inline code (not code blocks) */
+code:not([data-line-numbers]) {
+	@apply bg-muted px-0.5 rounded;
 }
 
-@media (prefers-color-scheme: dark) {
-	code[data-theme*=" "],
-	code[data-theme*=" "] span {
-		color: var(--shiki-dark);
-		background-color: var(--shiki-dark-bg);
-	}
+figcaption[data-rehype-pretty-code-title] {
+	@apply px-3 text-muted-foreground border-b py-2 text-sm
 }
 
-pre {
-	@apply rounded-lg px-0 py-4 my-6 overflow-x-auto;
-	background-color: rgb(246, 248, 250);
-}
-
-@media (prefers-color-scheme: dark) {
-	pre {
-		background-color: rgb(13, 17, 23);
-	}
-}
-
-pre > code {
-	@apply grid;
-	background: transparent !important;
+span[data-highlighted-line] {
+	@apply bg-accent-foreground/5 -mx-3 pl-2.5 border-l-2 border-accent-foreground;
 }
 
 code[data-line-numbers] {
-	counter-reset: line;
+	@apply m-3;
+}
+
+figure[data-rehype-pretty-code-figure] {
+	@apply mt-6 mb-4;
+}
+
+
+/* Syntax highlighting for multiple themes (rehype-pretty-code) */
+code[data-theme*=" "],
+code[data-theme*=" "] span {
+	color: var(--shiki-light);
+	@apply text-sm;
+}
+
+.dark code[data-theme*=" "],
+.dark code[data-theme*=" "] span {
+	color: var(--shiki-dark);
+	@apply text-sm;
+}
+
+code[data-line-numbers] {
+  counter-reset: line;
 }
 
 code[data-line-numbers] > [data-line]::before {
-	counter-increment: line;
-	content: counter(line);
-	@apply inline-block w-4 mr-4 text-right text-gray-500;
+  counter-increment: line;
+  content: counter(line);
+
+  /* Other styling */
+  display: inline-block;
+  width: 0.75rem;
+  margin-right: 2rem;
+  text-align: right;
+  @apply text-muted-foreground text-sm;
 }
 
-code [data-line] {
-	@apply px-4 border-l-2 border-l-transparent;
+code[data-line-numbers-max-digits="2"] > [data-line]::before {
+  width: 1.25rem;
 }
 
-code [data-highlighted-line] {
-	@apply bg-gray-100 border-l-blue-400;
+code[data-line-numbers-max-digits="3"] > [data-line]::before {
+  width: 1.75rem;
 }
 
-@media (prefers-color-scheme: dark) {
-	code [data-highlighted-line] {
-		@apply bg-gray-800 border-l-blue-400;
-	}
+code[data-line-numbers-max-digits="4"] > [data-line]::before {
+  width: 2.25rem;
 }
