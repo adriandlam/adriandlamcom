@@ -46,6 +46,7 @@ const components = {
 			</div>
 		);
 	},
+	hr: () => <hr className="my-8 border-border" />,
 	a: ({ children, href }: { children: React.ReactNode; href: string }) => (
 		<Link href={href} className="link inline-flex gap-0.5">
 			{children}

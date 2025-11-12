@@ -6,8 +6,13 @@ export default async function Home() {
 		<main>
 			{/* Intro Section */}
 			<div className="flex items-center gap-6">
-				<img src="/me.jpeg" alt="Avatar" className="size-14 rounded-full" />
-				<h1>Adrian Lam</h1>
+				<img src="/me.jpeg" alt="Avatar" className="size-16 rounded-full" />
+				<div>
+					<h1>Adrian Lam</h1>
+					<p className="text-muted-foreground font-mono text-sm">
+						vancouver, bc
+					</p>
+				</div>
 			</div>
 
 			{/* About Me Section */}
