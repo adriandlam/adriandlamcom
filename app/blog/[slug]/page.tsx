@@ -7,15 +7,16 @@ import Image from "next/image";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
-import "highlight.js/styles/vs2015.css";
 import * as CalloutComponents from "@/components/callout";
 import { Badge } from "@/components/ui/badge";
 import { notFound } from "next/navigation";
-import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import remarkSmartyPants from "remark-smartypants";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeExternalLinks from "rehype-external-links";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import Link from "next/link";
 
 const components = {
@@ -211,9 +212,6 @@ export default async function Page({
 							<time dateTime={metadata.publishedAt} className="font-mono">
 								{formattedDate}
 							</time>
-							{metadata.readingTime && (
-								<span className="ml-4">{metadata.readingTime} min read</span>
-							)}
 						</div>
 						{metadata.tags && metadata.tags.length > 0 && (
 							<div className="mt-4 flex flex-wrap gap-2">
@@ -231,9 +229,26 @@ export default async function Page({
 								remarkPlugins: [remarkMath, remarkGfm, remarkSmartyPants],
 								rehypePlugins: [
 									rehypeKatex,
-									[rehypeHighlight, { detect: true }],
 									rehypeSlug,
 									[rehypeAutolinkHeadings, { behavior: "wrap" }],
+									[
+										rehypePrettyCode,
+										{
+											theme: {
+												dark: "github-dark",
+												light: "github-light",
+											},
+											keepBackground: false,
+										},
+									],
+									[
+										rehypeExternalLinks,
+										{
+											target: "_blank",
+											rel: ["noopener", "noreferrer"],
+										},
+									],
+									rehypeUnwrapImages,
 								],
 							},
 						}}

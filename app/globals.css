@@ -208,3 +208,62 @@ strong {
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 	@apply no-underline! text-inherit!;
 }
+
+/* rehype-pretty-code styles */
+code {
+	counter-reset: line;
+}
+
+code[data-theme*=" "],
+code[data-theme*=" "] span {
+	color: var(--shiki-light);
+	background-color: var(--shiki-light-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+	code[data-theme*=" "],
+	code[data-theme*=" "] span {
+		color: var(--shiki-dark);
+		background-color: var(--shiki-dark-bg);
+	}
+}
+
+pre {
+	@apply rounded-lg px-0 py-4 my-6 overflow-x-auto;
+	background-color: rgb(246, 248, 250);
+}
+
+@media (prefers-color-scheme: dark) {
+	pre {
+		background-color: rgb(13, 17, 23);
+	}
+}
+
+pre > code {
+	@apply grid;
+	background: transparent !important;
+}
+
+code[data-line-numbers] {
+	counter-reset: line;
+}
+
+code[data-line-numbers] > [data-line]::before {
+	counter-increment: line;
+	content: counter(line);
+	@apply inline-block w-4 mr-4 text-right text-gray-500;
+}
+
+code [data-line] {
+	@apply px-4 border-l-2 border-l-transparent;
+}
+
+code [data-highlighted-line] {
+	@apply bg-gray-100 border-l-blue-400;
+}
+
+@media (prefers-color-scheme: dark) {
+	code [data-highlighted-line] {
+		@apply bg-gray-800 border-l-blue-400;
+	}
+}
