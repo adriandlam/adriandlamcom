@@ -3,29 +3,32 @@
 import { list, type ListBlobResult } from "@vercel/blob";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
+const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
+const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
+
+if (!accountId || !accessKeyId || !secretAccessKey) {
+	throw new Error("Missing R2 credentials");
+}
+
+const s3Client = new S3Client({
+	region: "auto",
+	endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+	credentials: {
+		accessKeyId,
+		secretAccessKey,
+	},
+	requestHandler: {
+		requestTimeout: 5000, // 5 second timeout
+	},
+});
+
+const command = new ListObjectsV2Command({
+	Bucket: "photos",
+});
+
 export async function getPhotos() {
 	try {
-		const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-		const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
-		const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
-
-		if (!accountId || !accessKeyId || !secretAccessKey) {
-			return [];
-		}
-
-		const s3Client = new S3Client({
-			region: "auto",
-			endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-			credentials: {
-				accessKeyId,
-				secretAccessKey,
-			},
-		});
-
-		const command = new ListObjectsV2Command({
-			Bucket: "photos",
-		});
-
 		const response = await s3Client.send(command);
 
 		if (!response.Contents) {
