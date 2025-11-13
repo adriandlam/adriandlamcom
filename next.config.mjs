@@ -4,6 +4,7 @@ const nextConfig = {
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 	// Optionally, add any other Next.js config below
 	images: {
+		minimumCacheTTL: 1209600,
 		remotePatterns: [
 			{
 				hostname: "**.blob.vercel-storage.com",
@@ -12,17 +13,8 @@ const nextConfig = {
 				hostname: "photos.adriandlam.com",
 			},
 		],
-		// formats: ['image/webp', 'image/avif'],
 	},
 	transpilePackages: ["next-mdx-remote"],
 };
 
 export default nextConfig;
-
-// const withMDX = createMDX({
-// 	extension: /\.mdx?$/,
-// 	// Add markdown plugins here, as desired
-// });
-
-// // Merge MDX config with Next.js config
-// export default withMDX(nextConfig);

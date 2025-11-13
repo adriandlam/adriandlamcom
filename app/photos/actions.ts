@@ -45,7 +45,7 @@ export const getPhotos = unstable_cache(
 					return bDate - aDate;
 				})
 				.map((obj) => ({
-					name: obj.Key!,
+					name: obj.Key,
 					url: `https://photos.adriandlam.com/${obj.Key}`,
 					lastModified: obj.LastModified?.toISOString(),
 					size: obj.Size,
