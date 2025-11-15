@@ -104,7 +104,7 @@ async function getBlogPost(slug: string) {
 		const fileContent = fs.readFileSync(filePath, "utf8");
 		const { data: metadata, content } = matter(fileContent);
 		// Filter out unpublished posts and private posts (for backward compatibility)
-		if (metadata.private || metadata.published === false) return null;
+		if (metadata.private) return null;
 		return { metadata, content };
 	} catch {
 		return null;
@@ -279,7 +279,7 @@ export async function generateStaticParams() {
 			const fileContent = fs.readFileSync(filePath, "utf8");
 			const { data } = matter(fileContent);
 			// Only generate static paths for published posts
-			if (data.private || data.published === false) return null;
+			if (data.private) return null;
 			return filename.replace(/\.mdx$/, "");
 		})
 		.filter(Boolean) as string[];

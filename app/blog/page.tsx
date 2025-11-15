@@ -45,13 +45,13 @@ export default function BlogPage() {
 							key={post.slug}
 							className="hover:bg-muted/50 transition-colors relative group"
 						>
-							<td className="py-3 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono">
+							<td className="py-2.5 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono">
 								{formatDate(post.publishedAt)}
 							</td>
-							<td className="py-3 px-6">
-								<span className="line-clamp-1">{post.title}</span>
+							<td className="py-2.5 px-6">
+								<span className="line-clamp-1 w-38">{post.title}</span>
 							</td>
-							<td className="py-3 px-4 text-sm text-muted-foreground hidden md:table-cell">
+							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell">
 								<span className="line-clamp-1">{post.summary}</span>
 							</td>
 							<Link
@@ -59,7 +59,6 @@ export default function BlogPage() {
 								className="absolute inset-0 z-10"
 								aria-label={`Read blog post: ${post.title}`}
 							/>
-							{/* <td className="py-3 px-4 text-sm text-muted-foreground">here</td> */}
 						</tr>
 					))}
 				</tbody>
