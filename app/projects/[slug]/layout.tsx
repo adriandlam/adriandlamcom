@@ -3,9 +3,5 @@ export default function ProjectLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return (
-		<div className="container mx-auto space-y-4">
-			{children}
-		</div>
-	);
+	return <div className="container mx-auto space-y-4">{children}</div>;
 }

@@ -11,10 +11,6 @@ export const BLOG_POSTS = [
 		title: "What is RAG?",
 	},
 	{
-		slug: "my-home-lab",
-		title: "My Home Lab",
-	},
-	{
 		slug: "welcome-to-my-blog",
 		title: "Welcome to my Blog",
 	},

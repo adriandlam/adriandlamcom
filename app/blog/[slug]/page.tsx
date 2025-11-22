@@ -37,7 +37,7 @@ const components = {
 					height={500}
 					className="rounded-lg mx-auto"
 					sizes="(max-width: 768px) 100vw, 800px"
-					priority={true}
+					// priority={true}
 					quality={85}
 					{...props}
 				/>
