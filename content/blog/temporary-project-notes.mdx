@@ -1,0 +1,128 @@
+---
+title: "Fast Semantic Search Brain Dump"
+publishedAt: "2025-11-22"
+---
+
+Some temporary project notes until I know what to do with this. I'll turn this into a proper blog post soon.
+
+## How to Efficiently Search Vectors
+
+### Embedding Model
+
+- Probably something like `all-MiniLM-L6-v2`
+- Load into memory quantized maybe to `int8` $\rightarrow$ low memory overhead and no cold starts
+- Model has 22.7M parameters
+- Model size with `int8` quantization:
+
+$$
+22.7\times 10^6 \times 1 \text{ byte} = 22.7\text{ megabytes}
+$$
+
+That seems very very good for an in-memory embedding model.
+
+
+### `pgvector` stuff
+
+`pgvector` uses two primary indexing strategies:
+
+1. HNSW (Hierarchical Navigable Small World - Graph Theory and Small World Networks)
+2. IVFFlat (Inverted File with Flat Compression)
+
+Probably best to benchmark the two methods.
+
+#### HNSW
+
+> **Key Idea**: Graph-based indexing that relies on "small world networks", where most nodes can be reached from any other node by traversing a small number of edges. HSNW expands on this by using a hierarchical structure to improve search efficiency.
+
+NSW (Navigable Small World)
+
+- Nodes are connected by edges. Each neighboring node is called a *friend*
+- When querying: start at random entrypoint and greedily traverse the graph to find the closest nodes to the query vector
+
+HSNW is like combining probability skip lists with NSW.
+
+Layers (top to bottom)
+
+- Layer $x$ (entry layer): Nodes with the longest edges $\rightarrow$ similar to skip lists. Each node more likely to be higher degree because it has the longest edges.
+- Layer $x-1$: Nodes with the second longest edges $\rightarrow$ similar to skip lists. Each node more likely to be higher degree because it has the second longest edges.
+- Layer 0: All vectors in dataset, highly connected graph. Each node is connected to its nearest neighbors by Euclidean distance.
+
+Traverse each edge in a layer greedily, calculating the distance between query vector and each node. If its a local minima, traverse the next layer.
+
+Each layer gives us a new local minima, so a search in a new layer has an entrypoint of the closest node to the query vector based on the previous layer. Worst case is we hit layer 0.
+
+Higher memory overhead because we need to store the graph structure for each layer (e.g. links, distance, etc.)
+
+#### IVFFlat
+
+- Uses $k$-means clustering to divide vectors into clusters (aka Voronoi cells)
+- "Inverted File": Each cluster's centroid maps back to the vectors it contains
+- Quantization-based indexing ("buckets" of vectors): Suppose vector is 1536 dimensions, DB doesn't need to compare all dimensions, only the quantized/discretized values $\rightarrow$ cheaper lookups
+- **Search**: Embed the query $\rightarrow$ cosine similarity on the quantized values (e.g. centroids) $\rightarrow$ cheaper lookups, faster retrieval:
+    - Using $k$-means: lookups are $k \times d$
+    - Looking up every vector: $n \times d$
+    - Way faster if $k < n$, which is very likely
+
+
+**Thoughts:**
+
+- $k$-means is non-parametric so insertions have a huge memory footprint that scales with data $\rightarrow$ good for static data
+
+Side note:
+
+- `pgvector` uses `fp32`, maybe use `halfvec` type for `fp16`. Compare benchmark storage footprints here?
+
+### Matryoshka Representation Learning (MRL)
+
+[Source](https://arxiv.org/abs/2205.13147)
+
+- Most semantic info encoded in first few dimensions, becoming more granular as we go deeper (kinda similar to SVD expansions)
+- Instead of indexing full dimension of vector, create index of "slice" of vector (sub-vector)
+- Index by these sub-vector $\rightarrow$ can use top $k$ vectors so that search is significantly faster
+
+### Binary Quantization
+
+- Map components of each vector to either $0$ (negative values) or $1$ (positive values)
+- Seems pretty extreme since just a XOR operation
+- Use hamming distance to search: number of components that differ between query vector and other vectors
+- To search, take $k$ with lowest hamming distance
+- Good for 2-stage retrievals:
+
+1. Approximate using binary quantization of top $k$ vectors
+2. Re-rank using cosine similarity between query vector and $k$ vectors
+
+### Roofline Model
+
+Model to represent theoretical limit of achievable performance within a computer system between CPU speeds and memory bandwidth, represented by:
+
+$$
+\text{Arithmetic intensity} = \frac{\text{number of ops (e.g. FLOPs)}}{\text{memory bytes transferred}}
+$$
+
+- If AI is high $\implies$ more compute for less memory bandwidth transferred (compute-bound)
+- If AI is low $\implies$ more memory bandwidth transferred for less compute (memory-bound)
+
+Suppose embedding model is 22.7 megabytes, after using `int8` quantization.
+
+The model is loaded into memory and so the time it takes to load the model is:
+
+$$
+\text{Time} = \frac{\text{Size of model}}{\text{Memory bandwidth}}
+$$
+
+Using a MacBook Pro with an M4 Pro has memory speeds of: $\approx 273 \text{ GB/s}$
+
+[Source](https://support.apple.com/en-us/121553)
+
+Then time to load the model is:
+
+$$
+\text{Time} = \frac{22.7 \text{ MB}}{273 \text{ GB/s}} = \frac{22.7 \times 10^6 \text{ bytes}}{273 \times 10^9 \text{ bytes/s}} = 8.3 \times 10^{-5} \text{ s} = 0.08 \text{ ms}
+$$
+
+So loading the model should only take $0.08$ milliseconds 🤯 if using bare metal or C++.
+
+Maybe hit Amdahl's Law. Binary quantization with 2 step retrieval actually takes longer than embedding + keyword search with rrf.
+
+
+~11ms roughly embedding and query table on db (no fastapi)
