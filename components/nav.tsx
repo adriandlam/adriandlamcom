@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
@@ -43,6 +44,8 @@ const tabs: Tab[] = [
 ];
 
 export default function Nav() {
+	const [hoverTab, setHoverTab] = useState<string | null>(null);
+
 	const router = useRouter();
 	const pathname = usePathname();
 
