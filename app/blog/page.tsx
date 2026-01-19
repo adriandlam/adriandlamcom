@@ -49,16 +49,16 @@ export default function BlogPage() {
 								{formatDate(post.publishedAt)}
 							</td>
 							<td className="py-2.5 px-6">
+								<Link
+									href={`/blog/${post.slug}`}
+									className="absolute inset-0 z-10"
+									aria-label={`Read blog post: ${post.title}`}
+								/>
 								<span className="line-clamp-1 w-38">{post.title}</span>
 							</td>
 							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell">
 								<span className="line-clamp-1">{post.summary}</span>
 							</td>
-							<Link
-								href={`/blog/${post.slug}`}
-								className="absolute inset-0 z-10"
-								aria-label={`Read blog post: ${post.title}`}
-							/>
 						</tr>
 					))}
 				</tbody>
