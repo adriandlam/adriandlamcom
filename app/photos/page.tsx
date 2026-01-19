@@ -23,14 +23,13 @@ export default async function PhotosPage() {
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
 				{photos.map((photo, i) => (
 					<Image
-						preload
-						loading="eager"
-						width={1200}
-						height={1600}
 						key={photo.url}
 						src={photo.url}
 						alt={`Photo ${i + 1}`}
+						width={1200}
+						height={1600}
 						className="object-cover w-full h-full"
+						preload={i < 2}
 					/>
 				))}
 			</div>
