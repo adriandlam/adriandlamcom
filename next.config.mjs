@@ -4,6 +4,15 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 const nextConfig = {
 	// Configure `pageExtensions` to include markdown and MDX files
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+	// Optimize package imports for faster builds and smaller bundles
+	experimental: {
+		optimizePackageImports: [
+			"@aws-sdk/client-s3",
+			"lucide-react",
+			"motion",
+			"@radix-ui/react-tooltip",
+		],
+	},
 	// Optionally, add any other Next.js config below
 	images: {
 		minimumCacheTTL: 1209600,

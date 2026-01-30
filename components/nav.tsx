@@ -1,44 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useHotkeys } from "react-hotkeys-hook";
-import { BLOG_POSTS } from "@/data/blog-posts";
-import RESUME from "@/data/resume";
 import { cn } from "@/lib/utils";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
 
-interface Tab {
+interface NavItem {
 	name: string;
-	href: string;
-	children?: Tab[];
+	slug: string;
 }
 
-const tabs: Tab[] = [
+interface NavTab {
+	name: string;
+	href: string;
+	children?: { name: string; href: string }[];
+}
+
+// Minimal navigation data - only what's needed for the nav
+// Full data is fetched server-side to keep client bundle small
+const BLOG_POSTS: NavItem[] = [
+	{ slug: "have-faith", name: "You just need a little bit of faith..." },
+	{ slug: "how-rag-works", name: "What is RAG?" },
+	{ slug: "welcome-to-my-blog", name: "Welcome to my Blog" },
+];
+
+const PROJECTS: NavItem[] = [
+	{ slug: "blocksmith", name: "Blocksmith - An Open-Source DNS Adblocker" },
+	{ slug: "vercel-workflow-devkit", name: "Vercel Workflow DevKit" },
+	{ slug: "ubc-webring", name: "UBC Webring" },
+	{ slug: "spec2mcp", name: "Spec2MCP" },
+	{ slug: "obsidian-vercel", name: "Obsidian Vercel" },
+	{ slug: "ubc-purity-test", name: "UBC Purity Test" },
+	{ slug: "heida", name: "Heida" },
+	{ slug: "mnist-digit-classifier", name: "MNIST Digit Classifier" },
+	{ slug: "contextual-retrieval", name: "Contextual Retrieval System" },
+	{ slug: "ubc-metrics", name: "UBC Metrics" },
+	{ slug: "wellbeing-analyzer", name: "Wellbeing Analyzer" },
+	{ slug: "chess-engine-cpp", name: "Chess Engine C++" },
+];
+
+const tabs: NavTab[] = [
 	{ name: "home", href: "/" },
 	{
 		name: "blog",
 		href: "/blog",
-		children: [
-			...BLOG_POSTS.map((post) => ({
-				name: post.title,
-				href: `/blog/${post.slug}`,
-			})),
-		],
+		children: BLOG_POSTS.map((post) => ({
+			name: post.name,
+			href: `/blog/${post.slug}`,
+		})),
 	},
 	{
 		name: "projects",
 		href: "/projects",
-		children: [
-			...RESUME.projects.map((project) => ({
-				name: project.name,
-				href: `/projects/${project.slug}`,
-			})),
-		],
+		children: PROJECTS.map((project) => ({
+			name: project.name,
+			href: `/projects/${project.slug}`,
+		})),
 	},
 	{ name: "photos", href: "/photos" },
 ];
@@ -50,18 +72,19 @@ export default function Nav() {
 	const pathname = usePathname();
 
 	// Calculate activeParentTab immediately during render to avoid flash
-	let activeParentTab: Tab | null = null;
-	for (const tab of tabs) {
-		if (tab.children) {
-			const isOnChildPage = tab.children.some(
-				(child) => pathname === child.href,
-			);
-			if (isOnChildPage) {
-				activeParentTab = tab;
-				break;
+	const activeParentTab = useMemo(() => {
+		for (const tab of tabs) {
+			if (tab.children) {
+				const isOnChildPage = tab.children.some(
+					(child) => pathname === child.href,
+				);
+				if (isOnChildPage) {
+					return tab;
+				}
 			}
 		}
-	}
+		return null;
+	}, [pathname]);
 
 	// j/k navigation through tabs
 	useHotkeys("j", () => {

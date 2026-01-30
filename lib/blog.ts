@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { unstable_cache } from "next/cache";
 
 export type BlogPost = {
 	title: string;
@@ -9,7 +10,8 @@ export type BlogPost = {
 	slug: string;
 };
 
-export function getBlogPosts(): BlogPost[] {
+// Cache blog posts for 1 hour in development, forever in production until revalidated
+const getBlogPostsUncached = async (): Promise<BlogPost[]> => {
 	const blogDirectory = path.join(process.cwd(), "content/blog");
 	const filenames = fs.readdirSync(blogDirectory);
 
@@ -33,4 +35,50 @@ export function getBlogPosts(): BlogPost[] {
 		(a, b) =>
 			new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
 	);
-}
+};
+
+// Cached version for production - also export the type for convenience
+export const getBlogPosts = unstable_cache(
+	getBlogPostsUncached,
+	["blog-posts"],
+	{
+		revalidate: 3600, // 1 hour
+		tags: ["blog"],
+	},
+);
+
+// Get a single blog post with metadata and content
+export type BlogPostWithContent = {
+	metadata: {
+		title: string;
+		publishedAt: string;
+		summary?: string;
+		excerpt?: string;
+		tags?: string[];
+		author?: string;
+		coverImage?: string;
+		images?: string[];
+		private?: boolean;
+	};
+	content: string;
+};
+
+export const getBlogPost = unstable_cache(
+	async (slug: string): Promise<BlogPostWithContent | null> => {
+		const filePath = path.join(process.cwd(), `content/blog/${slug}.mdx`);
+
+		try {
+			const fileContent = fs.readFileSync(filePath, "utf8");
+			const { data: metadata, content } = matter(fileContent);
+			if (metadata.private) return null;
+			return { metadata, content } as BlogPostWithContent;
+		} catch {
+			return null;
+		}
+	},
+	["blog-post"],
+	{
+		revalidate: 3600,
+		tags: ["blog"],
+	},
+);

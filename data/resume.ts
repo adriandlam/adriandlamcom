@@ -2,7 +2,7 @@ const RESUME = {
 	name: "Adrian Lam",
 	avatar_path: "/me.jpeg",
 	bio: {
-		intro: "intern @ vercel, math student @ ubc.",
+		intro: "math student @ ubc, prev software intern @ vercel",
 		about: "TODO: move bio here",
 	},
 	experience: [
@@ -10,8 +10,8 @@ const RESUME = {
 			company: "Vercel",
 			role: "Software Engineer Intern",
 			description: "",
-			start_date: "2025-09-01",
-			end_date: "2025-12-01",
+			start_date: "2025-09-02",
+			end_date: "2025-12-19",
 			location: "San Francisco, CA",
 			company_website: "https://vercel.com",
 		},
@@ -21,10 +21,19 @@ const RESUME = {
 		degree: "Bachelor of Science",
 		major: "Mathematics",
 		start_year: "2022",
-		end_year: "2026",
+		end_year: "2027",
 		location: "Vancouver, BC",
 	},
 	projects: [
+		{
+			featured: true,
+			slug: "blocksmith",
+			name: "Blocksmith - An Open-Source DNS Adblocker",
+			description: "A fast, private DNS adblocker that respects your privacy.",
+			url: "https://github.com/adriandlam/blocksmith",
+			inProgress: false,
+			year: 2026,
+		},
 		{
 			featured: true,
 			slug: "vercel-workflow-devkit",

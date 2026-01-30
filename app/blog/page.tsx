@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getBlogPosts } from "@/lib/blog";
+import { getBlogPosts, type BlogPost } from "@/lib/blog";
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -9,8 +9,8 @@ function formatDate(dateString: string) {
 	});
 }
 
-export default function BlogPage() {
-	const posts = getBlogPosts();
+export default async function BlogPage() {
+	const posts = await getBlogPosts();
 
 	return (
 		<main className="container mx-auto">
@@ -40,7 +40,7 @@ export default function BlogPage() {
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-border">
-					{posts.map((post) => (
+					{posts.map((post: BlogPost) => (
 						<tr
 							key={post.slug}
 							className="hover:bg-muted/50 transition-colors relative group"

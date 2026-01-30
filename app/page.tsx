@@ -2,7 +2,7 @@ import RESUME from "@/data/resume";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Home() {
+export default function Home() {
 	return (
 		<main>
 			{/* Intro Section */}

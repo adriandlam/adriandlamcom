@@ -1,7 +1,5 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import type { Metadata } from "next";
+import { getBlogPost, getBlogPosts } from "@/lib/blog";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import rehypeKatex from "rehype-katex";
@@ -95,21 +93,8 @@ function formatDate(dateString: string) {
 	});
 }
 
-// Get blog post by slug
-async function getBlogPost(slug: string) {
-	const filePath = path.join(process.cwd(), `content/blog/${slug}.mdx`);
-
-	// Check if file exists
-	try {
-		const fileContent = fs.readFileSync(filePath, "utf8");
-		const { data: metadata, content } = matter(fileContent);
-		// Filter out unpublished posts and private posts (for backward compatibility)
-		if (metadata.private) return null;
-		return { metadata, content };
-	} catch {
-		return null;
-	}
-}
+// Re-export for backward compatibility
+export { getBlogPost };
 
 // Generate metadata for the page
 export async function generateMetadata({
@@ -270,21 +255,8 @@ export default async function Page({
 
 // This generates the static paths at build time
 export async function generateStaticParams() {
-	const blogDirectory = path.join(process.cwd(), "content/blog");
-	const filenames = fs.readdirSync(blogDirectory);
-	const slugs = filenames
-		.filter((filename) => filename.endsWith(".mdx"))
-		.map((filename) => {
-			const filePath = path.join(blogDirectory, filename);
-			const fileContent = fs.readFileSync(filePath, "utf8");
-			const { data } = matter(fileContent);
-			// Only generate static paths for published posts
-			if (data.private) return null;
-			return filename.replace(/\.mdx$/, "");
-		})
-		.filter(Boolean) as string[];
-
-	return slugs.map((slug) => ({ slug }));
+	const posts = await getBlogPosts();
+	return posts.map((post: { slug: string }) => ({ slug: post.slug }));
 }
 
 export const dynamicParams = false;

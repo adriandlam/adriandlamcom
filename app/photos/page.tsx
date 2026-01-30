@@ -29,7 +29,8 @@ export default async function PhotosPage() {
 						width={1200}
 						height={1600}
 						className="object-cover w-full h-full"
-						preload={i < 2}
+						priority={i < 2}
+						sizes="(max-width: 640px) 100vw, 50vw"
 					/>
 				))}
 			</div>
