@@ -24,6 +24,7 @@
 		"gray-matter": "^4.0.3",
 		"katex": "^0.16.27",
 		"lucide-react": "^0.553.0",
+		"mapbox-gl": "^3.18.0",
 		"motion": "^12.27.1",
 		"next": "16.0.7",
 		"next-mdx-remote": "^5.0.0",

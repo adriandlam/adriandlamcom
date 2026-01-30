@@ -44,8 +44,6 @@ const tabs: Tab[] = [
 ];
 
 export default function Nav() {
-	const [hoverTab, setHoverTab] = useState<string | null>(null);
-
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -144,6 +142,7 @@ export default function Nav() {
 			enabled: activeParentTab === null,
 		},
 	);
+	if (pathname.includes("trails")) return;
 
 	const tabClassname =
 		"line-clamp-1 font-mono text-[15px] transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
