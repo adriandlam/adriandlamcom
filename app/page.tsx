@@ -31,7 +31,9 @@ export default async function Home() {
 						learn new concepts.
 					</p>
 					<p>
-						Currently, I&apos;m interning at Vercel as a core maintainer of the{" "}
+						Currently, I'm studying Mathematics at the University of British
+						Columbia. Previously, I was an intern at Vercel as a core maintainer
+						of the{" "}
 						<Link
 							href="https://useworkflow.dev"
 							target="_blank"
@@ -39,7 +41,7 @@ export default async function Home() {
 						>
 							Workflow DevKit
 						</Link>{" "}
-						and I'm studying Mathematics at the University of British Columbia.
+						.
 					</p>
 					<p>
 						Big fan of venturing outdoors into the unknown (I like mountains).
