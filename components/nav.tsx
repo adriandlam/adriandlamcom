@@ -1,11 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useHotkeys } from "react-hotkeys-hook";
 import { cn } from "@/lib/utils";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
@@ -65,8 +64,29 @@ const tabs: NavTab[] = [
 	{ name: "photos", href: "/photos" },
 ];
 
+// Prefetch all sibling pages for instant navigation
+function usePrefetchSiblings(activeParentTab: NavTab | null, pathname: string) {
+	const router = useRouter();
+
+	useEffect(() => {
+		// Prefetch parent tabs when on main navigation
+		if (!activeParentTab) {
+			for (const tab of tabs) {
+				router.prefetch(tab.href);
+			}
+		} else {
+			// Prefetch sibling pages when in a child section
+			for (const child of activeParentTab.children || []) {
+				router.prefetch(child.href);
+			}
+			// Also prefetch parent
+			router.prefetch(activeParentTab.href);
+		}
+	}, [router, activeParentTab, pathname]);
+}
+
 export default function Nav() {
-	const [hoverTab, setHoverTab] = useState<string | null>(null);
+	const [, setHoverTab] = useState<string | null>(null);
 
 	const router = useRouter();
 	const pathname = usePathname();
@@ -86,87 +106,91 @@ export default function Nav() {
 		return null;
 	}, [pathname]);
 
-	// j/k navigation through tabs
-	useHotkeys("j", () => {
-		if (activeParentTab) {
-			// Navigate through child tabs
-			const children = activeParentTab.children || [];
-			const currentIndex = children.findIndex(
-				(child) => pathname === child.href,
-			);
-			if (currentIndex >= 0 && currentIndex < children.length - 1) {
-				router.push(children[currentIndex + 1].href);
-			}
-		} else {
-			// Navigate through parent tabs
-			const currentIndex = tabs.findIndex(
-				(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
-			);
-			if (currentIndex >= 0 && currentIndex < tabs.length - 1) {
-				router.push(tabs[currentIndex + 1].href);
-			}
-		}
-	});
+	// Prefetch adjacent pages for instant keyboard navigation
+	usePrefetchSiblings(activeParentTab, pathname);
 
-	useHotkeys("k", () => {
-		if (activeParentTab) {
-			// Navigate through child tabs
-			const children = activeParentTab.children || [];
-			const currentIndex = children.findIndex(
-				(child) => pathname === child.href,
-			);
-			if (currentIndex > 0) {
-				router.push(children[currentIndex - 1].href);
+	// Optimized keyboard navigation using native keydown with useCallback
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent) => {
+			// Ignore if user is typing in an input or textarea
+			if (
+				event.target instanceof HTMLInputElement ||
+				event.target instanceof HTMLTextAreaElement ||
+				event.target instanceof HTMLSelectElement
+			) {
+				return;
 			}
-		} else {
-			// Navigate through parent tabs
-			const currentIndex = tabs.findIndex(
-				(tab) => pathname === tab.href || pathname.startsWith(tab.href + "/"),
-			);
-			if (currentIndex > 0) {
-				router.push(tabs[currentIndex - 1].href);
-			}
-		}
-	});
 
-	// h to go back to parent tab when on a child tab
-	useHotkeys(
-		"h",
-		() => {
-			if (activeParentTab) {
+			const key = event.key;
+
+			// j/k navigation through tabs
+			if (key === "j" || key === "k") {
+				event.preventDefault();
+				const isNext = key === "j";
+
+				if (activeParentTab) {
+					// Navigate through child tabs
+					const children = activeParentTab.children || [];
+					const currentIndex = children.findIndex(
+						(child) => pathname === child.href,
+					);
+					const newIndex = isNext ? currentIndex + 1 : currentIndex - 1;
+
+					if (newIndex >= 0 && newIndex < children.length) {
+						router.push(children[newIndex].href);
+					}
+				} else {
+					// Navigate through parent tabs
+					const currentIndex = tabs.findIndex(
+						(tab) =>
+							pathname === tab.href || pathname.startsWith(tab.href + "/"),
+					);
+					const newIndex = isNext ? currentIndex + 1 : currentIndex - 1;
+
+					if (newIndex >= 0 && newIndex < tabs.length) {
+						router.push(tabs[newIndex].href);
+					}
+				}
+				return;
+			}
+
+			// h to go back to parent tab when on a child tab
+			if (key === "h" && activeParentTab) {
+				event.preventDefault();
 				router.push(activeParentTab.href);
+				return;
+			}
+
+			// l to navigate into children tabs from parent tab
+			if (key === "l" && !activeParentTab) {
+				const currentTab = tabs.find((tab) => pathname === tab.href);
+				if (currentTab?.children && currentTab.children.length > 0) {
+					event.preventDefault();
+					router.push(currentTab.children[0].href);
+				}
+				return;
+			}
+
+			// g to open GitHub
+			if (key === "g" && !activeParentTab) {
+				event.preventDefault();
+				window.open(
+					"https://github.com/adriandlam",
+					"_blank",
+					"noopener,noreferrer",
+				);
+				return;
 			}
 		},
-		{
-			enabled: activeParentTab !== null,
-		},
+		[activeParentTab, pathname, router],
 	);
 
-	// l to navigate into children tabs from parent tab
-	useHotkeys(
-		"l",
-		() => {
-			// Find current parent tab
-			const currentTab = tabs.find((tab) => pathname === tab.href);
-			// If on a parent tab with children, navigate to first child
-			if (currentTab?.children && currentTab.children.length > 0) {
-				router.push(currentTab.children[0].href);
-			}
-		},
-		{
-			enabled: activeParentTab === null,
-		},
-	);
-
-	useHotkeys(
-		"g",
-		() => {
-			window.open("https://github.com/adriandlam", "_blank");
-		},
-		{
-			enabled: activeParentTab === null,
-		},
-	);
+	// Use native keydown event for minimal latency
+	// Use capture phase (third arg = true) to ensure handler runs before any element can stop propagation
+	useEffect(() => {
+		document.addEventListener("keydown", handleKeyDown, true);
+		return () => document.removeEventListener("keydown", handleKeyDown, true);
+	}, [handleKeyDown]);
 
 	const tabClassname =
 		"line-clamp-1 font-mono text-[15px] transition-all duration-200 ease-out hover:text-primary hover:bg-secondary/50";
@@ -202,15 +226,15 @@ export default function Nav() {
 					activeParentTab ? "lg:w-54" : "",
 				)}
 			>
-				<AnimatePresence mode="popLayout" initial={false}>
+				<AnimatePresence mode="wait" initial={false}>
 					{activeParentTab ? (
 						<motion.ul
 							key="children-tabs"
 							className="space-y-0.5"
 							initial={{ opacity: 0, translateX: 20 }}
 							animate={{ opacity: 1, translateX: 0 }}
-							exit={{ opacity: 0, translateX: 20, filter: "blur(10px)" }}
-							transition={{ duration: 0.15, ease: "easeOut" }}
+							exit={{ opacity: 0, translateX: -20 }}
+							transition={{ duration: 0.1, ease: "easeOut" }}
 						>
 							<li className={cn(tabClassname, "text-muted-foreground")}>
 								<Link
@@ -267,8 +291,8 @@ export default function Nav() {
 							className="space-y-0.5"
 							initial={{ opacity: 0, translateX: -20 }}
 							animate={{ opacity: 1, translateX: 0 }}
-							exit={{ opacity: 0, translateX: -20, filter: "blur(10px)" }}
-							transition={{ duration: 0.15, ease: "easeOut" }}
+							exit={{ opacity: 0, translateX: 20 }}
+							transition={{ duration: 0.1, ease: "easeOut" }}
 						>
 							{tabs.map((tab, index) => {
 								const isActive =
