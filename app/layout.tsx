@@ -7,6 +7,8 @@ import Nav from "@/components/nav";
 import RESUME from "@/data/resume";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ViewTransitions } from "next-view-transitions";
+import { getBlogPostsForNav } from "@/lib/blog";
+import { getProjectsForNav } from "@/lib/projects";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -28,17 +30,20 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const blogPosts = await getBlogPostsForNav();
+	const projects = await getProjectsForNav();
+
 	return (
 		<ViewTransitions>
 			<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
 				<body className="antialiased">
 					<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
-						<Nav />
+						<Nav blogPosts={blogPosts} projects={projects} />
 						<div
 							className="pt-12 md:pt-18 lg:pt-20"
 							style={{ viewTransitionName: "page-content" }}

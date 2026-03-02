@@ -9,6 +9,8 @@ export type BlogPost = {
 	publishedAt: string;
 	summary: string;
 	slug: string;
+	draft?: boolean;
+	showInNav?: boolean;
 };
 
 // Cache blog posts for 1 hour in development, forever in production until revalidated
@@ -22,12 +24,15 @@ const getBlogPostsUncached = async (): Promise<BlogPost[]> => {
 			const filePath = path.join(blogDirectory, filename);
 			const fileContent = fs.readFileSync(filePath, "utf8");
 			const { data } = matter(fileContent);
+			if (data.draft) return undefined;
 			if (data.private) return undefined;
 			return {
 				title: data.title,
 				publishedAt: data.publishedAt,
 				summary: data.summary,
 				slug: filename.replace(/\.mdx$/, ""),
+				draft: data.draft,
+				showInNav: data.showInNav,
 			};
 		})
 		.filter(Boolean) as BlogPost[];
@@ -48,6 +53,42 @@ export const getBlogPosts = unstable_cache(
 	},
 );
 
+// Lightweight function for navbar - only returns slug and title, filtered for nav
+const getBlogPostsForNavUncached = async (): Promise<
+	{ slug: string; title: string }[]
+> => {
+	const blogDirectory = path.join(process.cwd(), "content/blog");
+	const filenames = fs.readdirSync(blogDirectory);
+
+	const posts = filenames
+		.filter((filename) => filename.endsWith(".mdx"))
+		.map((filename) => {
+			const filePath = path.join(blogDirectory, filename);
+			const fileContent = fs.readFileSync(filePath, "utf8");
+			const { data } = matter(fileContent);
+			// Filter out draft, private, or explicitly hidden from nav
+			if (data.draft) return undefined;
+			if (data.private) return undefined;
+			if (data.showInNav === false) return undefined;
+			return {
+				slug: filename.replace(/\.mdx$/, ""),
+				title: data.title,
+			};
+		})
+		.filter(Boolean) as { slug: string; title: string }[];
+
+	return posts.sort((a, b) => a.title.localeCompare(b.title));
+};
+
+export const getBlogPostsForNav = unstable_cache(
+	getBlogPostsForNavUncached,
+	["blog-posts-for-nav"],
+	{
+		revalidate: false,
+		tags: ["blog"],
+	},
+);
+
 // Get a single blog post with metadata and content
 export type BlogPostWithContent = {
 	metadata: {
@@ -60,6 +101,8 @@ export type BlogPostWithContent = {
 		coverImage?: string;
 		images?: string[];
 		private?: boolean;
+		draft?: boolean;
+		showInNav?: boolean;
 	};
 	content: string;
 	readingTime: number;
@@ -88,6 +131,7 @@ const getBlogPostCached = unstable_cache(
 		try {
 			const fileContent = fs.readFileSync(filePath, "utf8");
 			const { data: metadata, content } = matter(fileContent);
+			if (metadata.draft) return null;
 			if (metadata.private) return null;
 			return {
 				metadata,

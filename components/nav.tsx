@@ -78,43 +78,28 @@ interface NavTab {
 	children?: { name: string; href: string }[];
 }
 
-// Minimal navigation data - only what's needed for the nav
-// Full data is fetched server-side to keep client bundle small
-const BLOG_POSTS: NavItem[] = [
-	{ slug: "have-faith", name: "You just need a little bit of faith..." },
-	{ slug: "how-rag-works", name: "What is RAG?" },
-	{ slug: "welcome-to-my-blog", name: "Welcome to my Blog" },
-];
+interface NavProps {
+	blogPosts: { slug: string; title: string }[];
+	projects: NavItem[];
+}
 
-const PROJECTS: NavItem[] = [
-	{ slug: "blocksmith", name: "Blocksmith - An Open-Source DNS Adblocker" },
-	{ slug: "vercel-workflow-devkit", name: "Vercel Workflow DevKit" },
-	{ slug: "ubc-webring", name: "UBC Webring" },
-	{ slug: "spec2mcp", name: "Spec2MCP" },
-	{ slug: "obsidian-vercel", name: "Obsidian Vercel" },
-	{ slug: "ubc-purity-test", name: "UBC Purity Test" },
-	{ slug: "heida", name: "Heida" },
-	{ slug: "mnist-digit-classifier", name: "MNIST Digit Classifier" },
-	{ slug: "contextual-retrieval", name: "Contextual Retrieval System" },
-	{ slug: "ubc-metrics", name: "UBC Metrics" },
-	{ slug: "wellbeing-analyzer", name: "Wellbeing Analyzer" },
-	{ slug: "chess-engine-cpp", name: "Chess Engine C++" },
-];
-
-const tabs: NavTab[] = [
+const getTabs = (
+	blogPosts: { slug: string; title: string }[],
+	projects: NavItem[],
+): NavTab[] => [
 	{ name: "home", href: "/" },
 	{
 		name: "blog",
 		href: "/blog",
-		children: BLOG_POSTS.map((post) => ({
-			name: post.name,
+		children: blogPosts.map((post) => ({
+			name: post.title,
 			href: `/blog/${post.slug}`,
 		})),
 	},
 	{
 		name: "projects",
 		href: "/projects",
-		children: PROJECTS.map((project) => ({
+		children: projects.map((project) => ({
 			name: project.name,
 			href: `/projects/${project.slug}`,
 		})),
@@ -123,7 +108,11 @@ const tabs: NavTab[] = [
 ];
 
 // Prefetch adjacent pages for instant j/k/h navigation
-function usePrefetchSiblings(activeParentTab: NavTab | null, pathname: string) {
+function usePrefetchSiblings(
+	activeParentTab: NavTab | null,
+	pathname: string,
+	tabs: NavTab[],
+) {
 	const router = useTransitionRouter();
 
 	useEffect(() => {
@@ -146,12 +135,17 @@ function usePrefetchSiblings(activeParentTab: NavTab | null, pathname: string) {
 			}
 			router.prefetch(activeParentTab.href);
 		}
-	}, [router, activeParentTab, pathname]);
+	}, [router, activeParentTab, pathname, tabs]);
 }
 
-export default function Nav() {
+export default function Nav({ blogPosts, projects }: NavProps) {
 	const router = useTransitionRouter();
 	const pathname = usePathname();
+
+	const tabs = useMemo(
+		() => getTabs(blogPosts, projects),
+		[blogPosts, projects],
+	);
 
 	// Calculate activeParentTab immediately during render to avoid flash
 	const activeParentTab = useMemo(() => {
@@ -166,10 +160,10 @@ export default function Nav() {
 			}
 		}
 		return null;
-	}, [pathname]);
+	}, [pathname, tabs]);
 
 	// Prefetch adjacent pages for instant keyboard navigation
-	usePrefetchSiblings(activeParentTab, pathname);
+	usePrefetchSiblings(activeParentTab, pathname, tabs);
 
 	// Optimized keyboard navigation using native keydown with useCallback
 	const handleKeyDown = useCallback(
@@ -250,7 +244,7 @@ export default function Nav() {
 				return;
 			}
 		},
-		[activeParentTab, pathname, router],
+		[activeParentTab, pathname, router, tabs],
 	);
 
 	// Use native keydown event for minimal latency
