@@ -12,7 +12,9 @@ export default function ProjectsPage() {
 				</p>
 			</div>
 			<div className="mt-8">
-				<p className="mb-10">These pages are a work in progress.</p>
+				<p className="mb-10 text-muted-foreground text-sm font-mono">
+					This page is a work in progress.
+				</p>
 				<ul className="list">
 					{RESUME.projects.map((project) => (
 						<li key={project.name}>

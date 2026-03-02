@@ -1,6 +1,7 @@
 import RESUME from "@/data/resume";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ExternalLinkIcon } from "@/components/external-link-icon";
 
 export async function generateStaticParams() {
 	return RESUME.projects.map((p) => ({ slug: p.slug }));
@@ -38,9 +39,10 @@ export default async function ProjectPage({
 							href={project.url}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="link"
+							className="link inline-flex gap-0.5"
 						>
-							<span>View</span>
+							View
+							<ExternalLinkIcon />
 						</Link>
 					)}
 				</div>

@@ -289,5 +289,23 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 }
 
 code[data-line-numbers-max-digits="4"] > [data-line]::before {
-    width: 2.25rem;
+	width: 2.25rem;
+}
+
+/* ── Page transition animations ── */
+
+/* Disable the default root crossfade so only page-content animates */
+::view-transition-old(root) {
+	animation: none;
+}
+::view-transition-new(root) {
+	animation: none;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(page-content),
+	::view-transition-new(page-content) {
+		animation: none !important;
+	}
 }

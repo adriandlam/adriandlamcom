@@ -6,6 +6,7 @@ function formatDate(dateString: string) {
 	const date = new Date(dateString);
 	return date.toLocaleDateString("en-US", {
 		year: "numeric",
+		month: "short",
 	});
 }
 
@@ -54,7 +55,7 @@ export default async function BlogPage() {
 									className="absolute inset-0 z-10"
 									aria-label={`Read blog post: ${post.title}`}
 								/>
-								<span className="line-clamp-1 w-38">{post.title}</span>
+								<span className="line-clamp-1">{post.title}</span>
 							</td>
 							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell">
 								<span className="line-clamp-1">{post.summary}</span>

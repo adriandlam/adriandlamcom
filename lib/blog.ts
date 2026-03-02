@@ -62,7 +62,24 @@ export type BlogPostWithContent = {
 		private?: boolean;
 	};
 	content: string;
+	readingTime: number;
 };
+
+/** Estimate reading time in minutes from raw MDX content */
+function estimateReadingTime(content: string): number {
+	// Strip MDX/JSX components, frontmatter, code blocks, and HTML tags
+	const text = content
+		.replace(/```[\s\S]*?```/g, "") // code blocks
+		.replace(/<[^>]+>/g, "") // HTML/JSX tags
+		.replace(/\{[^}]*\}/g, "") // JSX expressions
+		.replace(/import\s+.*$/gm, "") // import statements
+		.replace(/!\[.*?\]\(.*?\)/g, "") // images
+		.replace(/\[([^\]]+)\]\(.*?\)/g, "$1") // links (keep text)
+		.replace(/[#*_~`>|-]/g, "") // markdown syntax
+		.trim();
+	const words = text.split(/\s+/).filter(Boolean).length;
+	return Math.max(1, Math.round(words / 230));
+}
 
 const getBlogPostCached = unstable_cache(
 	async (slug: string): Promise<BlogPostWithContent | null> => {
@@ -72,7 +89,11 @@ const getBlogPostCached = unstable_cache(
 			const fileContent = fs.readFileSync(filePath, "utf8");
 			const { data: metadata, content } = matter(fileContent);
 			if (metadata.private) return null;
-			return { metadata, content } as BlogPostWithContent;
+			return {
+				metadata,
+				content,
+				readingTime: estimateReadingTime(content),
+			} as BlogPostWithContent;
 		} catch {
 			return null;
 		}

@@ -1,6 +1,7 @@
 import RESUME from "@/data/resume";
 import Image from "next/image";
 import Link from "next/link";
+import { ExternalLinkIcon } from "@/components/external-link-icon";
 
 export default function Home() {
 	return (
@@ -18,6 +19,9 @@ export default function Home() {
 				<div>
 					<h1>Adrian Lam</h1>
 					<p className="text-muted-foreground font-mono text-sm">
+						software engineer
+					</p>
+					<p className="text-muted-foreground font-mono text-sm">
 						vancouver, bc
 					</p>
 				</div>
@@ -27,33 +31,31 @@ export default function Home() {
 			<div className="mt-8">
 				<div className="space-y-4">
 					<p>
-						Currently, I'm studying Math at the University of British Columbia.
-						This May, I'm joining{" "}
+						Previously, I worked as an intern at Vercel as one of the core
+						maintainers of the{" "}
+						<Link
+							href="https://useworkflow.dev"
+							target="_blank"
+							className="link inline-flex gap-0.5"
+						>
+							Workflow DevKit
+							<ExternalLinkIcon />
+						</Link>
+						. This May, I'm joining{" "}
 						<Link
 							href="https://cloudflare.com"
 							target="_blank"
-							className="link"
+							className="link inline-flex gap-0.5"
 						>
 							Cloudflare
+							<ExternalLinkIcon />
 						</Link>{" "}
 						as a software intern in Austin, TX.
 					</p>
 					<p>
-						Previously, I worked as an intern at Vercel as one of the core
-						maintainer of the{" "}
-						<Link
-							href="https://useworkflow.dev"
-							target="_blank"
-							className="link"
-						>
-							Workflow DevKit
-						</Link>
-						.
-					</p>
-					<p>
-						Big fan of venturing outdoors into the unknown (I like mountains).
-						After doing a bunch of these sidequests, I discovered that I really
-						enjoy{" "}
+						I'm studying Math at the University of British Columbia. Big fan of
+						venturing outdoors into the unknown (I like mountains). After doing
+						a bunch of these sidequests, I discovered that I really enjoy{" "}
 						<Link href="/photos" className="link">
 							photography
 						</Link>
@@ -73,7 +75,7 @@ export default function Home() {
 								<Link href={`/projects/${project.slug}`} className="link">
 									{project.name}
 								</Link>{" "}
-								– {project.description}
+								– {project.shortDescription || project.description}
 							</li>
 						))}
 				</ul>

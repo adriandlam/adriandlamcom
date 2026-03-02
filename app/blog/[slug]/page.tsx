@@ -65,7 +65,7 @@ const components = {
 		<p className="text-foreground leading-relaxed mb-4">{children}</p>
 	),
 	blockquote: ({ children }: { children: React.ReactNode }) => (
-		<blockquote className="border-l-2 border-accent-foreground pl-4.5 pr-4 py-4 my-4 [&>p]:mb-0 bg-muted/20 [&>p]:opacity-75 [&>p]:text-[15px]">
+		<blockquote className="border-l-2 border-accent-foreground pl-4.5 pr-4 py-4 my-4 [&>p]:mb-0 [&>p]:text-muted-foreground [&>p]:text-[15px]">
 			{children}
 		</blockquote>
 	),
@@ -147,21 +147,30 @@ export default async function Page({
 	const { slug } = await params;
 
 	// Read the file content with gray-matter
-	const post = await getBlogPost(slug);
+	const [post, allPosts] = await Promise.all([
+		getBlogPost(slug),
+		getBlogPosts(),
+	]);
 
 	if (!post) {
 		notFound();
 	}
 
-	const { metadata, content } = post;
+	const { metadata, content, readingTime } = post;
 	const formattedDate = formatDate(metadata.publishedAt);
+
+	// Find adjacent posts (sorted newest-first)
+	const currentIndex = allPosts.findIndex((p) => p.slug === slug);
+	const newerPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+	const olderPost =
+		currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
 	return (
 		<main>
 			<div className="relative">
 				{/* Main article with right margin on large screens */}
 				<article>
-					<header className="mb-8">
+					<header className="mb-12">
 						<span className="uppercase font-mono text-accent-foreground text-xs tracking-widest">
 							Blog
 						</span>
@@ -184,10 +193,12 @@ export default async function Page({
 								{metadata.excerpt}
 							</p>
 						)}
-						<div className="flex items-center text-muted-foreground text-sm mt-2">
+						<div className="flex items-center text-muted-foreground text-sm mt-2 gap-2">
 							<time dateTime={metadata.publishedAt} className="font-mono">
 								{formattedDate}
 							</time>
+							<span className="">&middot;</span>
+							<span className="font-mono">{readingTime} min read</span>
 						</div>
 						{metadata.tags && metadata.tags.length > 0 && (
 							<div className="mt-4 flex flex-wrap gap-2">
@@ -234,6 +245,44 @@ export default async function Page({
 						}}
 					/>
 				</article>
+
+				{/* Post navigation */}
+				<nav className="mt-16 border-t border-border pt-8">
+					{/* Back to blog — mobile only */}
+					<Link
+						href="/blog"
+						className="link text-sm text-muted-foreground font-mono mb-8 inline-block lg:hidden"
+					>
+						← Back to blog
+					</Link>
+
+					<div className="flex justify-between items-start gap-8">
+						<div className="flex-1 min-w-0">
+							{olderPost && (
+								<Link href={`/blog/${olderPost.slug}`} className="group block">
+									<span className="text-xs font-mono text-muted-foreground tracking-wide">
+										← Older
+									</span>
+									<p className="text-sm mt-1 text-foreground group-hover:text-accent-interactive transition-colors truncate">
+										{olderPost.title}
+									</p>
+								</Link>
+							)}
+						</div>
+						<div className="flex-1 min-w-0 text-right">
+							{newerPost && (
+								<Link href={`/blog/${newerPost.slug}`} className="group block">
+									<span className="text-xs font-mono text-muted-foreground tracking-wide">
+										Newer →
+									</span>
+									<p className="text-sm mt-1 text-foreground group-hover:text-accent-interactive transition-colors truncate">
+										{newerPost.title}
+									</p>
+								</Link>
+							)}
+						</div>
+					</div>
+				</nav>
 			</div>
 		</main>
 	);

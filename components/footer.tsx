@@ -16,13 +16,18 @@ export default function Footer() {
 					</Link>
 					<span className="opacity-75">)</span>
 				</p>
-				<Link
-					href="https://github.com/adriandlam/adriandlamcom"
-					className="link inline-flex gap-0.5"
-				>
-					Source
-					<ExternalLinkIcon className="mt-0.5 size-3" />
-				</Link>
+				<div className="flex items-center gap-2">
+					<Link href="/feed" className="link font-mono">
+						RSS
+					</Link>
+					<Link
+						href="https://github.com/adriandlam/adriandlamcom"
+						className="link inline-flex gap-0.5"
+					>
+						Source
+						<ExternalLinkIcon className="mt-0.5 size-3" />
+					</Link>
+				</div>
 			</div>
 		</footer>
 	);

@@ -29,6 +29,7 @@ const RESUME = {
 			featured: true,
 			slug: "blocksmith",
 			name: "Blocksmith - An Open-Source DNS Adblocker",
+			shortDescription: "A private DNS adblocker.",
 			description: "A fast, private DNS adblocker that respects your privacy.",
 			url: "https://github.com/adriandlam/blocksmith",
 			inProgress: false,
@@ -38,6 +39,7 @@ const RESUME = {
 			featured: true,
 			slug: "vercel-workflow-devkit",
 			name: "Vercel Workflow DevKit",
+			shortDescription: "TypeScript framework for durable execution.",
 			description: "Open source TypeScript framework for durable execution.",
 			notes: [
 				"Founding member and core contributor of the Workflow Development Kit",
@@ -64,6 +66,7 @@ const RESUME = {
 			featured: true,
 			slug: "spec2mcp",
 			name: "Spec2MCP",
+			shortDescription: "OpenAPI to MCP server schemas.",
 			description: "Convert OpenAPI specs to MCP server schemas instantly.",
 			notes: [
 				"Converts API documentation to MCP schemas in seconds",
@@ -91,6 +94,7 @@ const RESUME = {
 			featured: true,
 			slug: "ubc-purity-test",
 			name: "UBC Purity Test",
+			shortDescription: "Viral survey platform for UBC students.",
 			description:
 				"Fun survey platform for UBC students to test their innocence.",
 			notes: [
@@ -109,6 +113,7 @@ const RESUME = {
 			featured: true,
 			slug: "heida",
 			name: "Heida",
+			shortDescription: "Unified interface for 220+ AI models.",
 			description:
 				"Unified interface for 220+ AI models, document intelligence, and knowledge graphs.",
 			notes: [
@@ -130,6 +135,7 @@ const RESUME = {
 			featured: true,
 			slug: "mnist-digit-classifier",
 			name: "MNIST Digit Classifier",
+			shortDescription: "Neural network from scratch, 98.32% accuracy.",
 			description:
 				"Neural network built from scratch achieving 98.32% accuracy on MNIST.",
 			notes: [
