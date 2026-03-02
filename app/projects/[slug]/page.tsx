@@ -50,13 +50,6 @@ export default async function ProjectPage({
 
 			{/* Main content */}
 			<div className="md:col-span-2 space-y-6">
-				<section>
-					<h2 className="text-2xl mb-3">Overview</h2>
-					<div className="space-y-4">
-						<p>{project.longDescription || project.description}</p>
-					</div>
-				</section>
-
 				{project.keyFeatures && (
 					<section>
 						<h2 className="text-2xl mb-3">Key Features</h2>
