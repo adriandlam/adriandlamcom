@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
 import RESUME from "@/data/resume";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
 					<Footer />
 				</div>
 				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);
