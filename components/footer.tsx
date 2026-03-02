@@ -1,5 +1,6 @@
 import { ExternalLinkIcon } from "./external-link-icon";
 import Link from "next/link";
+import RESUME from "@/data/resume";
 
 export default function Footer() {
 	return (
@@ -8,10 +9,10 @@ export default function Footer() {
 				<p>
 					<span className="opacity-75">Adrian Lam (</span>
 					<Link
-						href="https://x.com/adriandlam_"
+						href={`https://x.com/${RESUME.socials.twitter}`}
 						className="link inline-flex gap-0.5"
 					>
-						@adriandlam_
+						@{RESUME.socials.twitter}
 						<ExternalLinkIcon className="mt-0.5 size-3" />
 					</Link>
 					<span className="opacity-75">)</span>
@@ -21,7 +22,7 @@ export default function Footer() {
 						RSS
 					</Link>
 					<Link
-						href="https://github.com/adriandlam/adriandlamcom"
+						href={`https://github.com/${RESUME.socials.github}/adriandlamcom`}
 						className="link inline-flex gap-0.5"
 					>
 						Source

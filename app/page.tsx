@@ -19,10 +19,7 @@ export default function Home() {
 				<div>
 					<h1>Adrian Lam</h1>
 					<p className="text-muted-foreground font-mono text-sm">
-						software engineer
-					</p>
-					<p className="text-muted-foreground font-mono text-sm">
-						vancouver, bc
+						software engineer, vancouver, bc
 					</p>
 				</div>
 			</div>

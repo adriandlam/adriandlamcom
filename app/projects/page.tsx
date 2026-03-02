@@ -21,7 +21,7 @@ export default function ProjectsPage() {
 							<Link href={`/projects/${project.slug}`} className="link">
 								{project.name}
 							</Link>{" "}
-							– {project.description}
+							– {project.shortDescription || project.description}
 						</li>
 					))}
 				</ul>

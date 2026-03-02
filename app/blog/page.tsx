@@ -25,13 +25,13 @@ export default async function BlogPage() {
 			<table className="mt-8 w-full">
 				<thead>
 					<tr className="border-b border-border">
-						<th className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide">
+						<th className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide w-24">
 							date
 						</th>
 						<th className="text-left py-2 px-6 text-xs text-muted-foreground font-normal font-mono tracking-wide">
 							title
 						</th>
-						<th className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide">
+						<th className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide w-72">
 							summary
 						</th>
 						{/* TODO: add views */}
@@ -46,7 +46,7 @@ export default async function BlogPage() {
 							key={post.slug}
 							className="hover:bg-muted/50 transition-colors relative group"
 						>
-							<td className="py-2.5 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono">
+							<td className="py-2.5 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono w-24">
 								{formatDate(post.publishedAt)}
 							</td>
 							<td className="py-2.5 px-6">
@@ -57,7 +57,7 @@ export default async function BlogPage() {
 								/>
 								<span className="line-clamp-1">{post.title}</span>
 							</td>
-							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell">
+							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell w-72">
 								<span className="line-clamp-1">{post.summary}</span>
 							</td>
 						</tr>
