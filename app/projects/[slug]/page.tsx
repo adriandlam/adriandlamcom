@@ -2,6 +2,12 @@ import RESUME from "@/data/resume";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+export async function generateStaticParams() {
+	return RESUME.projects.map((p) => ({ slug: p.slug }));
+}
+
+export const dynamicParams = false;
+
 export default async function ProjectPage({
 	params,
 }: {

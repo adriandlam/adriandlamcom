@@ -4,8 +4,6 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
-import { ThemeProvider } from "@/components/theme-provider";
-import ThemeToggle from "@/components/theme-toggle";
 import RESUME from "@/data/resume";
 
 const geistSans = Geist({
@@ -31,23 +29,16 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
 			<body className="antialiased">
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="light"
-					disableTransitionOnChange
-				>
-					<div className="px-4 py-2.5 border relative">
-						<p className="text-center text-accent-foreground text-sm font-mono">
-							The projects page is a work in progress.
-						</p>
-					</div>
-					<ThemeToggle />
-					<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
-						<Nav />
-						<div className="pt-12 md:pt-18 lg:pt-20">{children}</div>
-						<Footer />
-					</div>
-				</ThemeProvider>
+				<div className="px-4 py-2.5 border relative">
+					<p className="text-center text-accent-foreground text-sm font-mono">
+						The projects page is a work in progress.
+					</p>
+				</div>
+				<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
+					<Nav />
+					<div className="pt-12 md:pt-18 lg:pt-20">{children}</div>
+					<Footer />
+				</div>
 				<Analytics />
 			</body>
 		</html>

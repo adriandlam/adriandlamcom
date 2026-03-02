@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { ExternalLinkIcon } from "./external-link-icon";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
 
@@ -64,30 +65,34 @@ const tabs: NavTab[] = [
 	{ name: "photos", href: "/photos" },
 ];
 
-// Prefetch all sibling pages for instant navigation
+// Prefetch adjacent pages for instant j/k/h navigation
 function usePrefetchSiblings(activeParentTab: NavTab | null, pathname: string) {
 	const router = useRouter();
 
 	useEffect(() => {
-		// Prefetch parent tabs when on main navigation
 		if (!activeParentTab) {
+			// On parent tabs: prefetch all 4 main routes (cheap, only 4)
 			for (const tab of tabs) {
 				router.prefetch(tab.href);
 			}
 		} else {
-			// Prefetch sibling pages when in a child section
-			for (const child of activeParentTab.children || []) {
-				router.prefetch(child.href);
+			// On child pages: prefetch only prev/next siblings + parent (for h key)
+			const children = activeParentTab.children || [];
+			const currentIndex = children.findIndex(
+				(child) => pathname === child.href,
+			);
+			if (currentIndex > 0) {
+				router.prefetch(children[currentIndex - 1].href);
 			}
-			// Also prefetch parent
+			if (currentIndex < children.length - 1) {
+				router.prefetch(children[currentIndex + 1].href);
+			}
 			router.prefetch(activeParentTab.href);
 		}
 	}, [router, activeParentTab, pathname]);
 }
 
 export default function Nav() {
-	const [, setHoverTab] = useState<string | null>(null);
-
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -354,18 +359,7 @@ export default function Nav() {
 								>
 									<span className="flex gap-0.5">
 										github
-										<svg
-											className="mt-1 size-3"
-											viewBox="0 0 12 12"
-											fill="currentColor"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<title>External link</title>
-											<path
-												d="M3.5 3C3.22386 3 3 3.22386 3 3.5C3 3.77614 3.22386 4 3.5 4V3ZM8.5 3.5H9C9 3.22386 8.77614 3 8.5 3V3.5ZM8 8.5C8 8.77614 8.22386 9 8.5 9C8.77614 9 9 8.77614 9 8.5H8ZM2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L2.64645 8.64645ZM3.5 4H8.5V3H3.5V4ZM8 3.5V8.5H9V3.5H8ZM8.14645 3.14645L2.64645 8.64645L3.35355 9.35355L8.85355 3.85355L8.14645 3.14645Z"
-												fill="var(--grey1)"
-											></path>
-										</svg>
+										<ExternalLinkIcon />
 									</span>
 									<Kbd>g</Kbd>
 								</Link>

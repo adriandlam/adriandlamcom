@@ -3,82 +3,65 @@
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme {
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: hsl(21, 99%, 50%);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
+    /* Vesper core */
+    --background: #101010;
+    --foreground: #ffffff;
+    --card: #1a1a1a;
+    --card-foreground: #ffffff;
+    --popover: #1a1a1a;
+    --popover-foreground: #ffffff;
+    --primary: #ffffff;
+    --primary-foreground: #101010;
+    --secondary: #232323;
+    --secondary-foreground: #cccccc;
+    --muted: #232323;
+    --muted-foreground: #a0a0a0;
+    --accent: #232323;
+    --accent-foreground: #ffc799;
+    --accent-interactive: #99ffe4;
+    --destructive: #ff8080;
+    --destructive-foreground: #101010;
+    --border: #2a2a2a;
+    --input: #2e2e2e;
+    --ring: #505050;
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-}
 
-.dark {
-    --background: oklch(19.13% 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: #fe7b36;
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    /* Vesper palette */
+    --vesper-orange: #ffc799;
+    --vesper-aqua: #99ffe4;
+    --vesper-red: #ff8080;
+    --vesper-teal: #82d8c1;
+    --vesper-slate: #65737e;
+    --vesper-comment: #7d7d7d;
+    --vesper-surface: #1a1a1a;
+    --vesper-selection: #2a2a2a;
+    --vesper-divider: #2e2e2e;
+    --vesper-dim: #505050;
+    --vesper-muted: #a0a0a0;
+    --vesper-text: #cccccc;
+
+    /* Charts mapped to Vesper chromatic colors */
+    --chart-1: #ffc799;
+    --chart-2: #99ffe4;
+    --chart-3: #82d8c1;
+    --chart-4: #ff8080;
+    --chart-5: #65737e;
+
+    /* Sidebar */
+    --sidebar: #1a1a1a;
+    --sidebar-foreground: #ffffff;
+    --sidebar-primary: #ffc799;
+    --sidebar-primary-foreground: #101010;
+    --sidebar-accent: #232323;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #2a2a2a;
+    --sidebar-ring: #505050;
 }
 
 @theme inline {
@@ -96,6 +79,7 @@
     --color-muted-foreground: var(--muted-foreground);
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
+    --color-accent-interactive: var(--accent-interactive);
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
     --color-border: var(--border);
@@ -118,10 +102,24 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Vesper palette as Tailwind colors */
+    --color-vesper-orange: var(--vesper-orange);
+    --color-vesper-aqua: var(--vesper-aqua);
+    --color-vesper-red: var(--vesper-red);
+    --color-vesper-teal: var(--vesper-teal);
+    --color-vesper-slate: var(--vesper-slate);
+    --color-vesper-comment: var(--vesper-comment);
+    --color-vesper-surface: var(--vesper-surface);
+    --color-vesper-selection: var(--vesper-selection);
+    --color-vesper-divider: var(--vesper-divider);
+    --color-vesper-dim: var(--vesper-dim);
+    --color-vesper-muted: var(--vesper-muted);
+    --color-vesper-text: var(--vesper-text);
 }
 
 .katex-display > .katex {
-    color: #fff;
+    color: var(--foreground);
     display: inline-block;
     white-space: nowrap;
     max-width: 100%;
@@ -152,7 +150,7 @@ html {
 }
 
 .link {
-    @apply cursor-pointer decoration-border underline-offset-4 underline hover:decoration-accent-foreground transition-all duration-200 ease-out;
+    @apply cursor-pointer decoration-border underline-offset-4 underline hover:decoration-accent-interactive transition-all duration-200 ease-out;
 }
 
 /* Fix list marker alignment */
@@ -259,16 +257,10 @@ figure[data-rehype-pretty-code-figure] {
     @apply mt-6 mb-4;
 }
 
-/* Syntax highlighting for multiple themes (rehype-pretty-code) */
+/* Syntax highlighting (single Vesper theme) */
 code[data-theme],
 code[data-theme] span {
     color: var(--shiki-light);
-    @apply text-sm;
-}
-
-.dark code[data-theme],
-.dark code[data-theme] span {
-    color: var(--shiki-dark);
     @apply text-sm;
 }
 

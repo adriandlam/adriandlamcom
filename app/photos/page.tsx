@@ -31,6 +31,8 @@ export default async function PhotosPage() {
 						className="object-cover w-full h-full"
 						priority={i < 2}
 						sizes="(max-width: 640px) 100vw, 50vw"
+						placeholder={photo.blurDataURL ? "blur" : "empty"}
+						blurDataURL={photo.blurDataURL}
 					/>
 				))}
 			</div>

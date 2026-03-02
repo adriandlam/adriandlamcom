@@ -27,20 +27,27 @@ export default function Home() {
 			<div className="mt-8">
 				<div className="space-y-4">
 					<p>
-						I love building stuff that either solves real problems or helps me
-						learn new concepts.
+						Currently, I'm studying Math at the University of British Columbia.
+						This May, I'm joining{" "}
+						<Link
+							href="https://cloudflare.com"
+							target="_blank"
+							className="link"
+						>
+							Cloudflare
+						</Link>{" "}
+						as a software intern in Austin, TX.
 					</p>
 					<p>
-						Currently, I'm studying Mathematics at the University of British
-						Columbia. Previously, I was an intern at Vercel as a core maintainer
-						of the{" "}
+						Previously, I worked as an intern at Vercel as one of the core
+						maintainer of the{" "}
 						<Link
 							href="https://useworkflow.dev"
 							target="_blank"
 							className="link"
 						>
 							Workflow DevKit
-						</Link>{" "}
+						</Link>
 						.
 					</p>
 					<p>

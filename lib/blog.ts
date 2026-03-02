@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 export type BlogPost = {
 	title: string;
@@ -42,7 +43,7 @@ export const getBlogPosts = unstable_cache(
 	getBlogPostsUncached,
 	["blog-posts"],
 	{
-		revalidate: 3600, // 1 hour
+		revalidate: false,
 		tags: ["blog"],
 	},
 );
@@ -63,7 +64,7 @@ export type BlogPostWithContent = {
 	content: string;
 };
 
-export const getBlogPost = unstable_cache(
+const getBlogPostCached = unstable_cache(
 	async (slug: string): Promise<BlogPostWithContent | null> => {
 		const filePath = path.join(process.cwd(), `content/blog/${slug}.mdx`);
 
@@ -78,7 +79,10 @@ export const getBlogPost = unstable_cache(
 	},
 	["blog-post"],
 	{
-		revalidate: 3600,
+		revalidate: false,
 		tags: ["blog"],
 	},
 );
+
+// Wrap in React cache() for request-level dedup (called in both generateMetadata and Page)
+export const getBlogPost = cache((slug: string) => getBlogPostCached(slug));
