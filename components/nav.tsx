@@ -28,16 +28,21 @@ function slideTransition(direction: "up" | "down"): () => void {
 	const newSlideY = direction === "up" ? -slideDistance : slideDistance;
 
 	return () => {
-		// Old content: fade out fast, slide away
+		// Old content: fade out fast, slide away, blur out
 		document.documentElement.animate(
 			[
-				{ opacity: 1, transform: "translateY(0)" },
+				{ opacity: 1, transform: "translateY(0)", filter: "blur(0px)" },
 				{
 					opacity: 0,
 					transform: `translateY(${oldSlideY * 0.5}px)`,
+					filter: "blur(3px)",
 					offset: 0.25,
 				},
-				{ opacity: 0, transform: `translateY(${oldSlideY}px)` },
+				{
+					opacity: 0,
+					transform: `translateY(${oldSlideY}px)`,
+					filter: "blur(3px)",
+				},
 			],
 			{
 				duration,
@@ -181,6 +186,7 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 
 			// j/k navigation through tabs
 			if (key === "j" || key === "k") {
+				if (event.repeat) return;
 				event.preventDefault();
 				const isNext = key === "j";
 				// j = down the list (older), k = up the list (newer)

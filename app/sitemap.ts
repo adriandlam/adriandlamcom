@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
 import { getBlogPosts } from "@/lib/blog";
-import RESUME from "@/data/resume";
+import { getProjects } from "@/lib/projects";
 
 const SITE_URL = "https://adriandlam.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const posts = await getBlogPosts();
+	const [posts, projects] = await Promise.all([getBlogPosts(), getProjects()]);
 
 	const blogEntries = posts.map((post) => ({
 		url: `${SITE_URL}/blog/${post.slug}`,
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		priority: 0.7,
 	}));
 
-	const projectEntries = RESUME.projects.map((project) => ({
+	const projectEntries = projects.map((project) => ({
 		url: `${SITE_URL}/projects/${project.slug}`,
 		changeFrequency: "monthly" as const,
 		priority: 0.6,

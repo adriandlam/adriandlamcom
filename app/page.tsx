@@ -1,9 +1,12 @@
-import RESUME from "@/data/resume";
+import { getProjects } from "@/lib/projects";
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
 
-export default function Home() {
+export default async function Home() {
+	const projects = await getProjects();
+	const featuredProjects = projects.filter((p) => p.featured);
+
 	return (
 		<main>
 			{/* Intro Section */}
@@ -65,16 +68,14 @@ export default function Home() {
 			<div className="mt-8">
 				<p>Some cool projects I've worked on:</p>
 				<ul className="list">
-					{RESUME.projects
-						.filter((project) => project.featured)
-						.map((project) => (
-							<li key={project.name}>
-								<Link href={`/projects/${project.slug}`} className="link">
-									{project.name}
-								</Link>{" "}
-								– {project.shortDescription || project.description}
-							</li>
-						))}
+					{featuredProjects.map((project) => (
+						<li key={project.slug}>
+							<Link href={`/projects/${project.slug}`} className="link">
+								{project.name}
+							</Link>{" "}
+							– {project.shortDescription || project.description}
+						</li>
+					))}
 				</ul>
 				<p>
 					You can view all my projects{" "}

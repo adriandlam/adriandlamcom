@@ -1,7 +1,9 @@
-import RESUME from "@/data/resume";
+import { getProjects } from "@/lib/projects";
 import Link from "next/link";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+	const projects = await getProjects();
+
 	return (
 		<main className="container mx-auto">
 			<div>
@@ -12,12 +14,9 @@ export default function ProjectsPage() {
 				</p>
 			</div>
 			<div className="mt-8">
-				<p className="mb-10 text-muted-foreground text-sm font-mono">
-					This page is a work in progress.
-				</p>
 				<ul className="list">
-					{RESUME.projects.map((project) => (
-						<li key={project.name}>
+					{projects.map((project) => (
+						<li key={project.slug}>
 							<Link href={`/projects/${project.slug}`} className="link">
 								{project.name}
 							</Link>{" "}

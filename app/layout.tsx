@@ -4,7 +4,6 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
-import RESUME from "@/data/resume";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ViewTransitions } from "next-view-transitions";
 import { getBlogPostsForNav } from "@/lib/blog";
@@ -21,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: `${RESUME.name}`,
-	description: `${RESUME.bio.intro}`,
+	title: "Adrian Lam",
+	description: "math student @ ubc, incoming software intern @ cloudflare",
 	alternates: {
 		types: {
 			"application/rss+xml": "/feed",

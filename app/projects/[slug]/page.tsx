@@ -1,13 +1,45 @@
-import RESUME from "@/data/resume";
-import Link from "next/link";
+import type { Metadata } from "next";
+import { getProject, getProjects } from "@/lib/projects";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { mdxComponents, mdxOptions } from "@/lib/mdx";
+import "katex/dist/katex.min.css";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
 
-export async function generateStaticParams() {
-	return RESUME.projects.map((p) => ({ slug: p.slug }));
-}
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+	const { slug } = await params;
+	const project = await getProject(slug);
 
-export const dynamicParams = false;
+	if (!project) {
+		return { title: "Project Not Found" };
+	}
+
+	const { metadata } = project;
+
+	return {
+		title: `${metadata.name} | Adrian Lam`,
+		description: metadata.description,
+		openGraph: {
+			title: metadata.name,
+			description: metadata.description,
+			type: "article",
+			url: `https://adriandlam.com/projects/${slug}`,
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: metadata.name,
+			description: metadata.description,
+		},
+		alternates: {
+			canonical: `https://adriandlam.com/projects/${slug}`,
+		},
+	};
+}
 
 export default async function ProjectPage({
 	params,
@@ -15,12 +47,13 @@ export default async function ProjectPage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const project = RESUME.projects.find((p) => p.slug === slug);
+	const project = await getProject(slug);
 
-	// Handle case where project doesn't exist or shouldn't be shown
 	if (!project) {
 		notFound();
 	}
+
+	const { metadata, content } = project;
 
 	return (
 		<main className="container mx-auto">
@@ -30,13 +63,13 @@ export default async function ProjectPage({
 					<span className="uppercase font-mono text-accent-foreground text-xs tracking-widest">
 						Project
 					</span>
-					<h1 className="text-4xl mt-1.5">{project.name}</h1>
-					<p className=" text-muted-foreground mt-2">{project.description}</p>
+					<h1 className="text-4xl mt-1.5">{metadata.name}</h1>
+					<p className=" text-muted-foreground mt-2">{metadata.description}</p>
 				</div>
 				<div className="flex flex-wrap gap-3">
-					{project.url && (
+					{metadata.url && (
 						<Link
-							href={project.url}
+							href={metadata.url}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="link inline-flex gap-0.5"
@@ -48,19 +81,33 @@ export default async function ProjectPage({
 				</div>
 			</div>
 
-			{/* Main content */}
-			<div className="md:col-span-2 space-y-6">
-				{project.keyFeatures && (
-					<section>
-						<h2 className="text-2xl mb-3">Key Features</h2>
-						<ul className="list">
-							{project.keyFeatures.map((feature: string) => (
-								<li key={feature}>{feature}</li>
-							))}
-						</ul>
-					</section>
-				)}
-			</div>
+			{/* MDX content */}
+			<article>
+				<MDXRemote
+					source={content}
+					components={mdxComponents}
+					options={{
+						mdxOptions: mdxOptions as any,
+					}}
+				/>
+			</article>
+
+			{/* Back nav */}
+			<nav className="mt-16 border-t border-border pt-8">
+				<Link
+					href="/projects"
+					className="link text-sm text-muted-foreground font-mono lg:hidden"
+				>
+					← Back to projects
+				</Link>
+			</nav>
 		</main>
 	);
 }
+
+export async function generateStaticParams() {
+	const projects = await getProjects();
+	return projects.map((p) => ({ slug: p.slug }));
+}
+
+export const dynamicParams = false;
