@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getProject, getProjects } from "@/lib/projects";
+import { SITE_URL } from "@/lib/constants";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
 import "katex/dist/katex.min.css";
@@ -31,7 +32,7 @@ export async function generateMetadata({
 			title: metadata.name,
 			description: metadata.description,
 			type: "article",
-			url: `https://adriandlam.com/projects/${slug}`,
+			url: `${SITE_URL}/projects/${slug}`,
 		},
 		twitter: {
 			card: "summary_large_image",
@@ -39,7 +40,7 @@ export async function generateMetadata({
 			description: metadata.description,
 		},
 		alternates: {
-			canonical: `https://adriandlam.com/projects/${slug}`,
+			canonical: `${SITE_URL}/projects/${slug}`,
 		},
 	};
 }
@@ -60,7 +61,7 @@ export default async function ProjectPage({
 	const headings = extractHeadings(content);
 
 	return (
-		<main className="container mx-auto">
+		<main>
 			<div className="relative">
 				{headings.length >= 2 && <TableOfContents items={headings} />}
 

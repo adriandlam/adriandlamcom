@@ -145,7 +145,10 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
 			{/* Mobile: collapsible details at top — below xl */}
 			<details className="xl:hidden mb-8 group">
 				<summary className="uppercase font-mono text-accent-foreground text-xs tracking-widest cursor-pointer list-none flex items-center gap-2 select-none">
-					<span className="text-vesper-dim transition-transform duration-200 group-open:rotate-90">
+					<span
+						aria-hidden="true"
+						className="text-vesper-dim transition-transform duration-200 group-open:rotate-90"
+					>
 						▸
 					</span>
 					on this page

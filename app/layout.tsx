@@ -20,8 +20,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Adrian Lam",
-	description: "math student @ ubc, incoming software intern @ cloudflare",
+	metadataBase: new URL(
+		process.env.NEXT_PUBLIC_URL ||
+			process.env.SITE_URL ||
+			"https://adriandlam.com",
+	),
+	title: {
+		default: "Adrian Lam",
+		template: "%s | Adrian Lam",
+	},
+	description:
+		"Software engineer, math student at UBC, and incoming intern at Cloudflare. Building things on the web.",
 	alternates: {
 		types: {
 			"application/rss+xml": "/feed",

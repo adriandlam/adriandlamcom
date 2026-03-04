@@ -1,6 +1,5 @@
 import { getBlogPosts } from "@/lib/blog";
-
-const SITE_URL = "https://adriandlam.com";
+import { SITE_URL } from "@/lib/constants";
 
 export async function GET() {
 	const posts = await getBlogPosts();

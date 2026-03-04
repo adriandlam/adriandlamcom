@@ -1,20 +1,19 @@
+import type { Metadata } from "next";
 import { getBlogPosts, type BlogPost } from "@/lib/blog";
 import { TransitionLink } from "@/components/transition-link";
+import { formatDateShort } from "@/lib/utils";
 
-// Format date helper function
-function formatDate(dateString: string) {
-	const date = new Date(dateString);
-	return date.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "short",
-	});
-}
+export const metadata: Metadata = {
+	title: "Blog",
+	description:
+		"Writing on software, machine learning, and whatever's on my mind.",
+};
 
 export default async function BlogPage() {
 	const posts = await getBlogPosts();
 
 	return (
-		<main className="container mx-auto">
+		<main>
 			<div>
 				<h1>Blog</h1>
 				<p className="mt-2 text-muted-foreground">
@@ -25,13 +24,22 @@ export default async function BlogPage() {
 			<table className="mt-8 w-full">
 				<thead>
 					<tr className="border-b border-border">
-						<th className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide w-24">
+						<th
+							scope="col"
+							className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide w-24"
+						>
 							date
 						</th>
-						<th className="text-left py-2 px-6 text-xs text-muted-foreground font-normal font-mono tracking-wide">
+						<th
+							scope="col"
+							className="text-left py-2 px-6 text-xs text-muted-foreground font-normal font-mono tracking-wide"
+						>
 							title
 						</th>
-						<th className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide w-72">
+						<th
+							scope="col"
+							className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide w-72"
+						>
 							summary
 						</th>
 						{/* TODO: add views */}
@@ -47,7 +55,7 @@ export default async function BlogPage() {
 							className="hover:bg-muted/50 transition-colors relative group"
 						>
 							<td className="py-2.5 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono w-24">
-								{formatDate(post.publishedAt)}
+								{formatDateShort(post.publishedAt)}
 							</td>
 							<td className="py-2.5 px-6">
 								<TransitionLink

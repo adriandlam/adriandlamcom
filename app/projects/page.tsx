@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import { getProjects } from "@/lib/projects";
 import { TransitionLink } from "@/components/transition-link";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "Projects",
+	description:
+		"Things I've built — side projects, open source, and experiments.",
+};
 
 export default async function ProjectsPage() {
 	const projects = await getProjects();
 
 	return (
-		<main className="container mx-auto">
+		<main>
 			<div>
 				<h1 className="text-xl tracking-tight font-medium">Projects</h1>
 				<p className="mt-2 text-muted-foreground">

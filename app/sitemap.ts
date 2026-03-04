@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBlogPosts } from "@/lib/blog";
 import { getProjects } from "@/lib/projects";
-
-const SITE_URL = "https://adriandlam.com";
+import { SITE_URL } from "@/lib/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const [posts, projects] = await Promise.all([getBlogPosts(), getProjects()]);

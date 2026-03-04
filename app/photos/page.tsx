@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPhotos } from "./actions";
+
+export const metadata: Metadata = {
+	title: "Photos",
+	description: "Shot on a Lumix G85 with a 25mm F1.7 and 12-60mm.",
+};
 
 function PhotoGridSkeleton() {
 	return (
@@ -26,7 +32,9 @@ async function PhotoGrid() {
 				<Image
 					key={photo.url}
 					src={photo.url}
-					alt={`Photo ${i + 1}`}
+					alt={(photo.name ?? "")
+						.replace(/\.[^/.]+$/, "")
+						.replace(/[-_]/g, " ")}
 					width={1200}
 					height={1600}
 					className="object-cover w-full h-full"
@@ -42,7 +50,7 @@ async function PhotoGrid() {
 
 export default function PhotosPage() {
 	return (
-		<main className="container mx-auto">
+		<main>
 			<div>
 				<h1>Photos</h1>
 				<p className="text-muted-foreground mt-2">

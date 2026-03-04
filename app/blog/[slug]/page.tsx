@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getBlogPost, getBlogPosts } from "@/lib/blog";
+import { SITE_URL } from "@/lib/constants";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import "katex/dist/katex.min.css";
@@ -11,19 +12,7 @@ import { extractHeadings } from "@/lib/toc";
 import { TableOfContents } from "@/components/table-of-contents";
 import { TransitionLink } from "@/components/transition-link";
 import { ChevronLeft } from "lucide-react";
-
-// Format date helper function
-function formatDate(dateString: string) {
-	const date = new Date(dateString);
-	return date.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	});
-}
-
-// Re-export for backward compatibility
-export { getBlogPost };
+import { formatDateLong } from "@/lib/utils";
 
 // Generate metadata for the page
 export async function generateMetadata({
@@ -43,7 +32,9 @@ export async function generateMetadata({
 	const { metadata } = post;
 
 	const ogImage =
-		metadata.coverImage || metadata.images?.[0] || "/default-og-image.jpg";
+		metadata.coverImage ||
+		metadata.images?.[0] ||
+		`${SITE_URL}/opengraph-image`;
 
 	return {
 		title: `${metadata.title} | Adrian Lam's Blog`,
@@ -57,7 +48,7 @@ export async function generateMetadata({
 				metadata.excerpt || `Read ${metadata.title} on Adrian Lam's Blog`,
 			type: "article",
 			publishedTime: metadata.publishedAt,
-			url: `https://adriandlam.com/blog/${slug}`,
+			url: `${SITE_URL}/blog/${slug}`,
 			images: [
 				{
 					url: ogImage,
@@ -75,7 +66,7 @@ export async function generateMetadata({
 			images: [ogImage],
 		},
 		alternates: {
-			canonical: `https://adriandlam.com/blog/${slug}`,
+			canonical: `${SITE_URL}/blog/${slug}`,
 		},
 	};
 }
@@ -98,7 +89,7 @@ export default async function Page({
 	}
 
 	const { metadata, content, readingTime } = post;
-	const formattedDate = formatDate(metadata.publishedAt);
+	const formattedDate = formatDateLong(metadata.publishedAt);
 	const headings = extractHeadings(content);
 
 	// Find adjacent posts (sorted newest-first)
