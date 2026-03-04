@@ -222,13 +222,17 @@ strong {
     @apply font-medium;
 }
 
-h1 a,
-h2 a,
-h3 a,
-h4 a,
-h5 a,
-h6 a {
-    @apply no-underline! text-inherit!;
+/* Heading anchor links */
+.heading-anchor {
+    @apply no-underline text-inherit inline-flex items-baseline gap-2;
+}
+
+.heading-hash {
+    @apply text-vesper-dim opacity-0 transition-opacity duration-200 ease-out font-normal select-none;
+}
+
+.heading-anchor:hover .heading-hash {
+    @apply opacity-100 text-muted-foreground;
 }
 
 /* Remark pretty code stuff */

@@ -12,13 +12,39 @@ import remarkRemoveComments from "remark-remove-comments";
 
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeUnwrapImages from "rehype-unwrap-images";
 
+function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
+	const Heading = ({ children, id, ...props }: any) => {
+		const Tag = `h${level}` as any;
+		return (
+			<Tag id={id} className="group/heading" {...props}>
+				{id ? (
+					<a href={`#${id}`} className="heading-anchor">
+						{children}
+						<span className="heading-hash" aria-hidden="true">
+							#
+						</span>
+					</a>
+				) : (
+					children
+				)}
+			</Tag>
+		);
+	};
+	Heading.displayName = `Heading${level}`;
+	return Heading;
+}
+
 export const mdxComponents = {
 	...CalloutComponents,
+	h2: createHeading(2),
+	h3: createHeading(3),
+	h4: createHeading(4),
+	h5: createHeading(5),
+	h6: createHeading(6),
 	img: ({ src, alt, ...props }: any) => {
 		const imageSrc = src?.startsWith("/") ? src : `/${src}`;
 
@@ -77,7 +103,6 @@ export const mdxOptions = {
 	rehypePlugins: [
 		rehypeKatex,
 		rehypeSlug,
-		[rehypeAutolinkHeadings, { behavior: "wrap" }],
 		[
 			rehypePrettyCode,
 			{

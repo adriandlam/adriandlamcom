@@ -73,11 +73,18 @@ const getBlogPostsForNavUncached = async (): Promise<
 			return {
 				slug: filename.replace(/\.mdx$/, ""),
 				title: data.title,
+				publishedAt: data.publishedAt,
 			};
 		})
-		.filter(Boolean) as { slug: string; title: string }[];
+		.filter(Boolean) as { slug: string; title: string; publishedAt: string }[];
 
-	return posts.sort((a, b) => a.title.localeCompare(b.title));
+	// Sort newest first, then strip publishedAt before returning
+	return posts
+		.sort(
+			(a, b) =>
+				new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+		)
+		.map(({ slug, title }) => ({ slug, title }));
 };
 
 export const getBlogPostsForNav = unstable_cache(
