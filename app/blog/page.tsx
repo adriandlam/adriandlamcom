@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { getBlogPosts, type BlogPost } from "@/lib/blog";
+import { TransitionLink } from "@/components/transition-link";
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -50,8 +50,9 @@ export default async function BlogPage() {
 								{formatDate(post.publishedAt)}
 							</td>
 							<td className="py-2.5 px-6">
-								<Link
+								<TransitionLink
 									href={`/blog/${post.slug}`}
+									direction="left"
 									className="absolute inset-0 z-10"
 									aria-label={`Read blog post: ${post.title}`}
 								/>

@@ -67,6 +67,7 @@ export const getProjects = unstable_cache(getProjectsUncached, ["projects"], {
 export type NavProject = {
 	slug: string;
 	name: string;
+	year: number;
 };
 
 const getProjectsForNavUncached = async (): Promise<NavProject[]> => {
@@ -82,11 +83,12 @@ const getProjectsForNavUncached = async (): Promise<NavProject[]> => {
 			return {
 				slug: filename.replace(/\.mdx$/, ""),
 				name: data.name as string,
+				year: data.year as number,
 			};
 		})
 		.filter(Boolean) as NavProject[];
 
-	return projects.sort((a, b) => a.name.localeCompare(b.name));
+	return projects.sort((a, b) => b.year - a.year);
 };
 
 export const getProjectsForNav = unstable_cache(

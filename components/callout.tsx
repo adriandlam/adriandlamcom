@@ -44,7 +44,9 @@ export function Callout({
 	};
 	const { icon: Icon, className, iconClassName } = variantMap[variant];
 	return (
-		<div className={cn("relative w-full border px-4 py-4.5 my-4", className)}>
+		<div
+			className={cn("relative w-full border px-4 py-4.5 mt-6 mb-4", className)}
+		>
 			<div className="flex gap-3">
 				<Icon className={cn("h-4 w-4 shrink-0", iconClassName)} />
 				<div className="flex-1">{children}</div>

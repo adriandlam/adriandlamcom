@@ -7,70 +7,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTransitionRouter } from "next-view-transitions";
 import { cn } from "@/lib/utils";
+import { slideTransition } from "@/lib/transitions";
 import { ExternalLinkIcon } from "./external-link-icon";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
-
-/**
- * Returns an onTransitionReady callback that animates the
- * page-content view transition pseudo-elements as a directional slide.
- *
- * "up" = navigating to a newer/higher item (k key)
- *   -> old content slides down, new content enters from top
- * "down" = navigating to an older/lower item (j key)
- *   -> old content slides up, new content enters from bottom
- */
-function slideTransition(direction: "up" | "down"): () => void {
-	const slideDistance = 45; // px — subtle directional cue, not a spectacle
-	const duration = 180; // ms — fast enough for rapid j/k, slow enough to register
-
-	const oldSlideY = direction === "up" ? slideDistance : -slideDistance;
-	const newSlideY = direction === "up" ? -slideDistance : slideDistance;
-
-	return () => {
-		// Old content: fade out fast, slide away, blur out
-		document.documentElement.animate(
-			[
-				{ opacity: 1, transform: "translateY(0)", filter: "blur(0px)" },
-				{
-					opacity: 0,
-					transform: `translateY(${oldSlideY * 0.5}px)`,
-					filter: "blur(3px)",
-					offset: 0.25,
-				},
-				{
-					opacity: 0,
-					transform: `translateY(${oldSlideY}px)`,
-					filter: "blur(3px)",
-				},
-			],
-			{
-				duration,
-				easing: "cubic-bezier(0.4, 0, 1, 1)",
-				fill: "forwards",
-				pseudoElement: "::view-transition-old(page-content)",
-			},
-		);
-		// New content: slight delay so old is gone, then slide into place
-		document.documentElement.animate(
-			[
-				{ opacity: 0, transform: `translateY(${newSlideY}px)` },
-				{
-					opacity: 0,
-					transform: `translateY(${newSlideY * 0.6}px)`,
-					offset: 0.2,
-				},
-				{ opacity: 1, transform: "translateY(0)" },
-			],
-			{
-				duration,
-				easing: "cubic-bezier(0, 0, 0.2, 1)",
-				fill: "forwards",
-				pseudoElement: "::view-transition-new(page-content)",
-			},
-		);
-	};
-}
 
 interface NavItem {
 	name: string;
@@ -230,7 +170,9 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 			// h to go back to parent tab when on a child tab
 			if (key === "h" && activeParentTab) {
 				event.preventDefault();
-				router.push(activeParentTab.href);
+				router.push(activeParentTab.href, {
+					onTransitionReady: slideTransition("right"),
+				});
 				return;
 			}
 
@@ -239,7 +181,9 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 				const currentTab = tabs.find((tab) => pathname === tab.href);
 				if (currentTab?.children && currentTab.children.length > 0) {
 					event.preventDefault();
-					router.push(currentTab.children[0].href);
+					router.push(currentTab.children[0].href, {
+						onTransitionReady: slideTransition("left"),
+					});
 				}
 				return;
 			}

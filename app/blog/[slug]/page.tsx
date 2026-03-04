@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
+import { extractHeadings } from "@/lib/toc";
+import { TableOfContents } from "@/components/table-of-contents";
+import { TransitionLink } from "@/components/transition-link";
+import { ChevronLeft } from "lucide-react";
 
 // Format date helper function
 function formatDate(dateString: string) {
@@ -95,6 +99,7 @@ export default async function Page({
 
 	const { metadata, content, readingTime } = post;
 	const formattedDate = formatDate(metadata.publishedAt);
+	const headings = extractHeadings(content);
 
 	// Find adjacent posts (sorted newest-first)
 	const currentIndex = allPosts.findIndex((p) => p.slug === slug);
@@ -105,6 +110,7 @@ export default async function Page({
 	return (
 		<main>
 			<div className="relative">
+				{headings.length >= 2 && <TableOfContents items={headings} />}
 				{/* Main article with right margin on large screens */}
 				<article>
 					<header className="mb-12">
@@ -155,41 +161,15 @@ export default async function Page({
 				</article>
 
 				{/* Post navigation */}
-				<nav className="mt-16 border-t border-border pt-8">
+				<nav className="mt-16 border-t border-border pt-8 inline-block lg:hidden">
 					{/* Back to blog — mobile only */}
-					<Link
+					<TransitionLink
 						href="/blog"
-						className="link text-sm text-muted-foreground font-mono mb-8 inline-block lg:hidden"
+						direction="right"
+						className="link text-sm text-muted-foreground font-mono mb-8"
 					>
-						← Back to blog
-					</Link>
-
-					<div className="flex justify-between items-start gap-8">
-						<div className="flex-1 min-w-0">
-							{olderPost && (
-								<Link href={`/blog/${olderPost.slug}`} className="group block">
-									<span className="text-xs font-mono text-muted-foreground tracking-wide">
-										← Older
-									</span>
-									<p className="text-sm mt-1 text-foreground group-hover:text-accent-interactive transition-colors truncate">
-										{olderPost.title}
-									</p>
-								</Link>
-							)}
-						</div>
-						<div className="flex-1 min-w-0 text-right">
-							{newerPost && (
-								<Link href={`/blog/${newerPost.slug}`} className="group block">
-									<span className="text-xs font-mono text-muted-foreground tracking-wide">
-										Newer →
-									</span>
-									<p className="text-sm mt-1 text-foreground group-hover:text-accent-interactive transition-colors truncate">
-										{newerPost.title}
-									</p>
-								</Link>
-							)}
-						</div>
-					</div>
+						<ChevronLeft /> Back to blog
+					</TransitionLink>
 				</nav>
 			</div>
 		</main>

@@ -1,4 +1,5 @@
 import { getProjects } from "@/lib/projects";
+import { TransitionLink } from "@/components/transition-link";
 import Link from "next/link";
 
 export default async function ProjectsPage() {
@@ -17,9 +18,13 @@ export default async function ProjectsPage() {
 				<ul className="list">
 					{projects.map((project) => (
 						<li key={project.slug}>
-							<Link href={`/projects/${project.slug}`} className="link">
+							<TransitionLink
+								href={`/projects/${project.slug}`}
+								direction="left"
+								className="link"
+							>
 								{project.name}
-							</Link>{" "}
+							</TransitionLink>{" "}
 							– {project.shortDescription || project.description}
 						</li>
 					))}
