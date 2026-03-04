@@ -126,6 +126,11 @@ function usePrefetchSiblings(
 			for (const tab of tabs) {
 				router.prefetch(tab.href);
 			}
+			// Also prefetch the first child of the current tab (target of 'l' key)
+			const currentTab = tabs.find((t) => pathname === t.href);
+			if (currentTab?.children?.[0]) {
+				router.prefetch(currentTab.children[0].href);
+			}
 		} else {
 			// On child pages: prefetch only prev/next siblings + parent (for h key)
 			const children = activeParentTab.children || [];
@@ -269,15 +274,13 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 				<ul className="flex items-center gap-1">
 					{tabs.map((tab) => {
 						const isActive =
-							pathname === tab.href || pathname.startsWith(tab.href + "/");
+							pathname === tab.href || pathname.startsWith(`${tab.href}/`);
 						return (
 							<li
 								key={tab.name}
 								className={cn(
 									tabClassname,
-									isActive
-										? "text-primary bg-secondary"
-										: "text-muted-foreground",
+									isActive ? "text-primary " : "text-muted-foreground",
 								)}
 							>
 								<Link href={tab.href} className="block py-1 px-4">
@@ -394,7 +397,7 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 										className={cn(
 											tabClassname,
 											isActive
-												? "text-primary bg-secondary"
+												? "text-primary bg-accent"
 												: "text-muted-foreground",
 										)}
 									>

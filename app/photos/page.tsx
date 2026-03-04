@@ -1,9 +1,46 @@
+import { Suspense } from "react";
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getPhotos } from "./actions";
 
-export default async function PhotosPage() {
+function PhotoGridSkeleton() {
+	return (
+		<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+			{Array.from({ length: 4 }).map((_, i) => (
+				<Skeleton
+					// biome-ignore lint/suspicious/noArrayIndexKey: static skeleton items
+					key={i}
+					className="aspect-[3/4] w-full rounded-none"
+				/>
+			))}
+		</div>
+	);
+}
+
+async function PhotoGrid() {
 	const photos = await getPhotos();
 
+	return (
+		<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+			{photos.map((photo, i) => (
+				<Image
+					key={photo.url}
+					src={photo.url}
+					alt={`Photo ${i + 1}`}
+					width={1200}
+					height={1600}
+					className="object-cover w-full h-full"
+					priority={i < 2}
+					sizes="(max-width: 640px) 100vw, 50vw"
+					placeholder={photo.blurDataURL ? "blur" : "empty"}
+					blurDataURL={photo.blurDataURL}
+				/>
+			))}
+		</div>
+	);
+}
+
+export default function PhotosPage() {
 	return (
 		<main className="container mx-auto">
 			<div>
@@ -19,23 +56,9 @@ export default async function PhotosPage() {
 				</p>
 			</div>
 
-			{/* Photo Grid */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-				{photos.map((photo, i) => (
-					<Image
-						key={photo.url}
-						src={photo.url}
-						alt={`Photo ${i + 1}`}
-						width={1200}
-						height={1600}
-						className="object-cover w-full h-full"
-						priority={i < 2}
-						sizes="(max-width: 640px) 100vw, 50vw"
-						placeholder={photo.blurDataURL ? "blur" : "empty"}
-						blurDataURL={photo.blurDataURL}
-					/>
-				))}
-			</div>
+			<Suspense fallback={<PhotoGridSkeleton />}>
+				<PhotoGrid />
+			</Suspense>
 		</main>
 	);
 }
