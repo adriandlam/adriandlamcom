@@ -8,6 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ViewTransitions } from "next-view-transitions";
 import { getBlogPostsForNav } from "@/lib/blog";
 import { getProjectsForNav } from "@/lib/projects";
+import { env } from "@/lib/env";
+import { SITE_URL } from "@/lib/constants";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -20,11 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	metadataBase: new URL(
-		process.env.NEXT_PUBLIC_URL ||
-			process.env.SITE_URL ||
-			"https://adriandlam.com",
-	),
+	metadataBase: new URL(SITE_URL),
 	title: {
 		default: "Adrian Lam",
 		template: "%s | Adrian Lam",
