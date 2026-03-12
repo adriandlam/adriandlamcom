@@ -1,12 +1,17 @@
+import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { KatexStyles } from "@/components/katex-styles";
 import { getBlogPost, getBlogPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/constants";
-import "katex/dist/katex.min.css";
-import { ChevronLeft } from "lucide-react";
-import { notFound } from "next/navigation";
-import { TableOfContents } from "@/components/table-of-contents";
+
+const TableOfContents = dynamic(() =>
+	import("@/components/table-of-contents").then((m) => m.TableOfContents),
+);
+
 import { TransitionLink } from "@/components/transition-link";
 import { Badge } from "@/components/ui/badge";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
@@ -77,11 +82,7 @@ export default async function Page({
 }) {
 	const { slug } = await params;
 
-	// Read the file content with gray-matter
-	const [post, allPosts] = await Promise.all([
-		getBlogPost(slug),
-		getBlogPosts(),
-	]);
+	const post = await getBlogPost(slug);
 
 	if (!post) {
 		notFound();
@@ -90,15 +91,11 @@ export default async function Page({
 	const { metadata, content, readingTime } = post;
 	const formattedDate = formatDateLong(metadata.publishedAt);
 	const headings = extractHeadings(content);
-
-	// Find adjacent posts (sorted newest-first)
-	const currentIndex = allPosts.findIndex((p) => p.slug === slug);
-	const _newerPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
-	const _olderPost =
-		currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+	const usesMath = content.includes("$") || content.includes("\\(");
 
 	return (
 		<main>
+			{usesMath && <KatexStyles />}
 			<div className="relative">
 				{headings.length >= 2 && <TableOfContents items={headings} />}
 				{/* Main article with right margin on large screens */}

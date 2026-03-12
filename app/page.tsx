@@ -16,6 +16,7 @@ export default async function Home() {
 					alt="Avatar"
 					width={64}
 					height={64}
+					sizes="64px"
 					className="size-16 rounded-full"
 					priority
 				/>
