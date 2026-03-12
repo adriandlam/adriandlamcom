@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { getProject, getProjects } from "@/lib/projects";
-import { SITE_URL } from "@/lib/constants";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { SITE_URL } from "@/lib/constants";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
+import { getProject, getProjects } from "@/lib/projects";
 import "katex/dist/katex.min.css";
-import { notFound } from "next/navigation";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
-import { extractHeadings } from "@/lib/toc";
 import { TableOfContents } from "@/components/table-of-contents";
 import { TransitionLink } from "@/components/transition-link";
+import { extractHeadings } from "@/lib/toc";
 
 export async function generateMetadata({
 	params,
@@ -97,6 +97,7 @@ export default async function ProjectPage({
 						source={content}
 						components={mdxComponents}
 						options={{
+							// biome-ignore lint/suspicious/noExplicitAny: remark/rehype plugin types don't match next-mdx-remote's expected types
 							mdxOptions: mdxOptions as any,
 						}}
 					/>

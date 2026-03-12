@@ -25,9 +25,6 @@ jobs:
       - name: Biome check (lint + format)
         run: bunx biome check .
 
-      - name: Next.js lint
-        run: bun run lint
-
       - name: TypeScript typecheck
         run: bunx tsc --noEmit
 

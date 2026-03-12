@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Image from "next/image";
+import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPhotos } from "./actions";
 

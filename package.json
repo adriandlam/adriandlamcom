@@ -6,7 +6,7 @@
 		"dev": "bun --bun next dev",
 		"build": "bun --bun next build",
 		"start": "next start",
-		"lint": "next lint",
+		"lint": "biome check .",
 		"format": "biome format --write",
 		"lint:links": "remark content/blog --use remark-validate-links --frail --quiet"
 	},
@@ -43,7 +43,8 @@
 		"remark-smartypants": "^3.0.2",
 		"sharp": "^0.34.5",
 		"tailwind-merge": "^3.5.0",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"zod": "^4.3.6"
 	},
 	"size-limit": [
 		{

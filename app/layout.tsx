@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
-import Footer from "@/components/footer";
-import Nav from "@/components/nav";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ViewTransitions } from "next-view-transitions";
+import Footer from "@/components/footer";
+import Nav from "@/components/nav";
 import { getBlogPostsForNav } from "@/lib/blog";
+import { SITE_URL } from "@/lib/constants";
 import { getProjectsForNav } from "@/lib/projects";
 
 const geistSans = Geist({
@@ -20,11 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	metadataBase: new URL(
-		process.env.NEXT_PUBLIC_URL ||
-			process.env.SITE_URL ||
-			"https://adriandlam.com",
-	),
+	metadataBase: new URL(SITE_URL),
 	title: {
 		default: "Adrian Lam",
 		template: "%s | Adrian Lam",
