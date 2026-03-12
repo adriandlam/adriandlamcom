@@ -1,3 +1,4 @@
 import { env } from "./env";
 
-export const SITE_URL = env.VERCEL_PROJECT_PRODUCTION_URL;
+const rawUrl = env.VERCEL_PROJECT_PRODUCTION_URL;
+export const SITE_URL = rawUrl ? `https://${rawUrl}` : "https://adrianlam.sh";

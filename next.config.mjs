@@ -62,7 +62,7 @@ const nextConfig = {
 };
 
 const bundleAnalyzer = withBundleAnalyzer({
-	enabled: env.ANALYZE === "true",
+	enabled: process.env.ANALYZE === "true",
 });
 
 export default bundleAnalyzer(nextConfig);

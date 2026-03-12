@@ -6,7 +6,7 @@
 		"dev": "bun --bun next dev",
 		"build": "bun --bun next build",
 		"start": "next start",
-		"lint": "next lint",
+		"lint": "biome check .",
 		"format": "biome format --write",
 		"lint:links": "remark content/blog --use remark-validate-links --frail --quiet"
 	},

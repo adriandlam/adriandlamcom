@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
-import Footer from "@/components/footer";
-import Nav from "@/components/nav";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ViewTransitions } from "next-view-transitions";
+import Footer from "@/components/footer";
+import Nav from "@/components/nav";
 import { getBlogPostsForNav } from "@/lib/blog";
-import { getProjectsForNav } from "@/lib/projects";
-import { env } from "@/lib/env";
 import { SITE_URL } from "@/lib/constants";
+import { getProjectsForNav } from "@/lib/projects";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",

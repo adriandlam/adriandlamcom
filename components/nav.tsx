@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTransitionRouter } from "next-view-transitions";
-import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useMemo } from "react";
 import { slideTransition } from "@/lib/transitions";
+import { cn } from "@/lib/utils";
 import { ExternalLinkIcon } from "./external-link-icon";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
@@ -154,7 +154,7 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 					// Navigate through parent tabs
 					const currentIndex = tabs.findIndex(
 						(tab) =>
-							pathname === tab.href || pathname.startsWith(tab.href + "/"),
+							pathname === tab.href || pathname.startsWith(`${tab.href}/`),
 					);
 					const newIndex = isNext ? currentIndex + 1 : currentIndex - 1;
 
@@ -311,10 +311,10 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 						>
 							{tabs.map((tab, index) => {
 								const isActive =
-									pathname === tab.href || pathname.startsWith(tab.href + "/");
+									pathname === tab.href || pathname.startsWith(`${tab.href}/`);
 								const activeIndex = tabs.findIndex(
 									(t) =>
-										pathname === t.href || pathname.startsWith(t.href + "/"),
+										pathname === t.href || pathname.startsWith(`${t.href}/`),
 								);
 
 								// Show 'k' on item above active, 'j' on item below active, 'l' on active with children
