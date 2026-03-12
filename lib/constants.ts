@@ -1,4 +1,4 @@
-export const SITE_URL =
-	process.env.NEXT_PUBLIC_URL ||
-	process.env.SITE_URL ||
-	"https://adriandlam.com";
+import { env } from "./env";
+
+const rawUrl = env.VERCEL_PROJECT_PRODUCTION_URL;
+export const SITE_URL = rawUrl ? `https://${rawUrl}` : "https://adrianlam.sh";

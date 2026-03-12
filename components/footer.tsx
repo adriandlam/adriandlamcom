@@ -1,5 +1,5 @@
-import { ExternalLinkIcon } from "./external-link-icon";
 import Link from "next/link";
+import { ExternalLinkIcon } from "./external-link-icon";
 
 export default function Footer() {
 	return (

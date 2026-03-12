@@ -1,15 +1,15 @@
 "use client";
 
+import { motion } from "motion/react";
 import {
+	useCallback,
 	useEffect,
 	useLayoutEffect,
 	useRef,
 	useState,
-	useCallback,
 } from "react";
-import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 import type { TocItem } from "@/lib/toc";
+import { cn } from "@/lib/utils";
 
 export function TableOfContents({ items }: { items: TocItem[] }) {
 	const [activeId, setActiveId] = useState<string>("");

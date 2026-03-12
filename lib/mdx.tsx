@@ -1,23 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLinkIcon } from "@/components/external-link-icon";
-import * as CalloutComponents from "@/components/callout";
-
-import remarkMath from "remark-math";
-import remarkGfm from "remark-gfm";
-import remarkSmartyPants from "remark-smartypants";
+import rehypeExternalLinks from "rehype-external-links";
+import rehypeKatex from "rehype-katex";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkDirective from "remark-directive";
 import remarkGemoji from "remark-gemoji";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import remarkRemoveComments from "remark-remove-comments";
-
-import rehypeKatex from "rehype-katex";
-import rehypeSlug from "rehype-slug";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeExternalLinks from "rehype-external-links";
-import rehypeUnwrapImages from "rehype-unwrap-images";
+import remarkSmartyPants from "remark-smartypants";
+import * as CalloutComponents from "@/components/callout";
+import { ExternalLinkIcon } from "@/components/external-link-icon";
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
+	// biome-ignore lint/suspicious/noExplicitAny: MDX component props are untyped
 	const Heading = ({ children, id, ...props }: any) => {
+		// biome-ignore lint/suspicious/noExplicitAny: dynamic heading tag
 		const Tag = `h${level}` as any;
 		return (
 			<Tag id={id} className="group/heading" {...props}>
@@ -45,6 +45,7 @@ export const mdxComponents = {
 	h4: createHeading(4),
 	h5: createHeading(5),
 	h6: createHeading(6),
+	// biome-ignore lint/suspicious/noExplicitAny: MDX component props are untyped
 	img: ({ src, alt, ...props }: any) => {
 		const imageSrc = src?.startsWith("/") ? src : `/${src}`;
 
