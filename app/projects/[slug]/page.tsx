@@ -9,9 +9,8 @@ import { SITE_URL } from "@/lib/constants";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
 import { getProject, getProjects } from "@/lib/projects";
 
-const TableOfContents = dynamic(
-	() => import("@/components/table-of-contents").then((m) => m.TableOfContents),
-	{ ssr: false },
+const TableOfContents = dynamic(() =>
+	import("@/components/table-of-contents").then((m) => m.TableOfContents),
 );
 
 import { TransitionLink } from "@/components/transition-link";

@@ -8,9 +8,8 @@ import { KatexStyles } from "@/components/katex-styles";
 import { getBlogPost, getBlogPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/constants";
 
-const TableOfContents = dynamic(
-	() => import("@/components/table-of-contents").then((m) => m.TableOfContents),
-	{ ssr: false },
+const TableOfContents = dynamic(() =>
+	import("@/components/table-of-contents").then((m) => m.TableOfContents),
 );
 
 import { TransitionLink } from "@/components/transition-link";
