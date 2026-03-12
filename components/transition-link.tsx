@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransitionRouter } from "next-view-transitions";
+import { useEffect } from "react";
 import { slideTransition } from "@/lib/transitions";
 
 interface TransitionLinkProps
@@ -22,6 +23,10 @@ export function TransitionLink({
 	...props
 }: TransitionLinkProps) {
 	const router = useTransitionRouter();
+
+	useEffect(() => {
+		router.prefetch(href);
+	}, [router, href]);
 
 	return (
 		<a

@@ -40,8 +40,10 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const blogPosts = await getBlogPostsForNav();
-	const projects = await getProjectsForNav();
+	const [blogPosts, projects] = await Promise.all([
+		getBlogPostsForNav(),
+		getProjectsForNav(),
+	]);
 
 	return (
 		<ViewTransitions>

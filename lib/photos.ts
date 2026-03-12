@@ -1,3 +1,4 @@
+import "server-only";
 import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { unstable_cache } from "next/cache";
 import sharp from "sharp";

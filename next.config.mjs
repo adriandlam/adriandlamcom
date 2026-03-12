@@ -10,7 +10,9 @@ const nextConfig = {
 			"@aws-sdk/client-s3",
 			"lucide-react",
 			"motion",
-			"@radix-ui/react-tooltip",
+			"@radix-ui/react-separator",
+			"class-variance-authority",
+			"next-view-transitions",
 		],
 	},
 	// Optionally, add any other Next.js config below

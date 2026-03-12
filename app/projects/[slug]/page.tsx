@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { ExternalLinkIcon } from "@/components/external-link-icon";
+import { KatexStyles } from "@/components/katex-styles";
 import { SITE_URL } from "@/lib/constants";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
 import { getProject, getProjects } from "@/lib/projects";
-import "katex/dist/katex.min.css";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ExternalLinkIcon } from "@/components/external-link-icon";
-import { TableOfContents } from "@/components/table-of-contents";
+
+const TableOfContents = dynamic(
+	() => import("@/components/table-of-contents").then((m) => m.TableOfContents),
+	{ ssr: false },
+);
+
 import { TransitionLink } from "@/components/transition-link";
 import { extractHeadings } from "@/lib/toc";
 
@@ -59,9 +65,11 @@ export default async function ProjectPage({
 
 	const { metadata, content } = project;
 	const headings = extractHeadings(content);
+	const usesMath = content.includes("$") || content.includes("\\(");
 
 	return (
 		<main>
+			{usesMath && <KatexStyles />}
 			<div className="relative">
 				{headings.length >= 2 && <TableOfContents items={headings} />}
 

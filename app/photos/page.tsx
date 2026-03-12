@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getPhotos } from "./actions";
+import { getPhotos } from "@/lib/photos";
 
 export const metadata: Metadata = {
 	title: "Photos",
