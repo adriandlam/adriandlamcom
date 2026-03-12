@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { getBlogPosts, type BlogPost } from "@/lib/blog";
 import { TransitionLink } from "@/components/transition-link";
+import { type BlogPost, getBlogPosts } from "@/lib/blog";
 import { formatDateShort } from "@/lib/utils";
 
 export const metadata: Metadata = {
