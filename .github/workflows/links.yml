@@ -1,0 +1,26 @@
+name: Link Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "content/blog/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  links:
+    name: Validate Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Validate blog links
+        run: bun run lint:links
