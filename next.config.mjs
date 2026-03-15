@@ -4,6 +4,17 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 const nextConfig = {
 	// Configure `pageExtensions` to include markdown and MDX files
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+	// Optimize package imports for faster builds and smaller bundles
+	experimental: {
+		optimizePackageImports: [
+			"@aws-sdk/client-s3",
+			"lucide-react",
+			"motion",
+			"@radix-ui/react-separator",
+			"class-variance-authority",
+			"next-view-transitions",
+		],
+	},
 	// Optionally, add any other Next.js config below
 	images: {
 		minimumCacheTTL: 1209600,
@@ -15,6 +26,7 @@ const nextConfig = {
 				hostname: "photos.adriandlam.com",
 			},
 		],
+		unoptimized: true,
 	},
 	transpilePackages: ["next-mdx-remote"],
 	async headers() {
@@ -31,10 +43,6 @@ const nextConfig = {
 						value: "max-age=63072000; includeSubDomains; preload",
 					},
 					{
-						key: "X-XSS-Protection",
-						value: "1; mode=block",
-					},
-					{
 						key: "X-Frame-Options",
 						value: "SAMEORIGIN",
 					},
@@ -45,6 +53,10 @@ const nextConfig = {
 					{
 						key: "Referrer-Policy",
 						value: "origin-when-cross-origin",
+					},
+					{
+						key: "Permissions-Policy",
+						value: "camera=(), microphone=(), geolocation=()",
 					},
 				],
 			},

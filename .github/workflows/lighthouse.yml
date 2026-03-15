@@ -1,0 +1,72 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Wait for Vercel preview deployment
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.3
+        id: vercel
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+          check_interval: 10
+
+      - name: Run Lighthouse
+        id: lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ steps.vercel.outputs.url }}
+            ${{ steps.vercel.outputs.url }}/blog
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 3
+
+      - name: Format Lighthouse score
+        id: format
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const results = ${{ steps.lighthouse.outputs.manifest }};
+            const links = ${{ steps.lighthouse.outputs.links }};
+
+            const score = (res) => res >= 0.9 ? '🟢' : res >= 0.5 ? '🟠' : '🔴';
+            const fmt = (res) => Math.round(res * 100);
+
+            let comment = '### Lighthouse Report\n\n';
+
+            for (const result of results) {
+              const url = new URL(result.url).pathname || '/';
+              const s = result.summary;
+              comment += `**${url}**\n\n`;
+              comment += '| Category | Score |\n| --- | --- |\n';
+              comment += `| ${score(s.performance)} Performance | ${fmt(s.performance)} |\n`;
+              comment += `| ${score(s.accessibility)} Accessibility | ${fmt(s.accessibility)} |\n`;
+              comment += `| ${score(s['best-practices'])} Best Practices | ${fmt(s['best-practices'])} |\n`;
+              comment += `| ${score(s.seo)} SEO | ${fmt(s.seo)} |\n\n`;
+            }
+
+            comment += `[Full report](${Object.values(links)[0]})\n`;
+            core.setOutput('comment', comment);
+
+      - name: Post PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: lighthouse
+          message: ${{ steps.format.outputs.comment }}

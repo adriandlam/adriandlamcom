@@ -1,19 +1,19 @@
-import Link from "next/link";
-import { getBlogPosts } from "@/lib/blog";
+import type { Metadata } from "next";
+import { TransitionLink } from "@/components/transition-link";
+import { type BlogPost, getBlogPosts } from "@/lib/blog";
+import { formatDateShort } from "@/lib/utils";
 
-// Format date helper function
-function formatDate(dateString: string) {
-	const date = new Date(dateString);
-	return date.toLocaleDateString("en-US", {
-		year: "numeric",
-	});
-}
+export const metadata: Metadata = {
+	title: "Blog",
+	description:
+		"Writing on software, machine learning, and whatever's on my mind.",
+};
 
-export default function BlogPage() {
-	const posts = getBlogPosts();
+export default async function BlogPage() {
+	const posts = await getBlogPosts();
 
 	return (
-		<main className="container mx-auto">
+		<main>
 			<div>
 				<h1>Blog</h1>
 				<p className="mt-2 text-muted-foreground">
@@ -24,13 +24,22 @@ export default function BlogPage() {
 			<table className="mt-8 w-full">
 				<thead>
 					<tr className="border-b border-border">
-						<th className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide">
+						<th
+							scope="col"
+							className="text-left py-2 px-0 text-xs text-muted-foreground font-normal font-mono tracking-wide w-24"
+						>
 							date
 						</th>
-						<th className="text-left py-2 px-6 text-xs text-muted-foreground font-normal font-mono tracking-wide">
+						<th
+							scope="col"
+							className="text-left py-2 px-6 text-xs text-muted-foreground font-normal font-mono tracking-wide"
+						>
 							title
 						</th>
-						<th className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide">
+						<th
+							scope="col"
+							className="text-left py-2 px-4 text-xs text-muted-foreground font-normal hidden md:table-cell font-mono tracking-wide w-72"
+						>
 							summary
 						</th>
 						{/* TODO: add views */}
@@ -40,25 +49,26 @@ export default function BlogPage() {
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-border">
-					{posts.map((post) => (
+					{posts.map((post: BlogPost) => (
 						<tr
 							key={post.slug}
 							className="hover:bg-muted/50 transition-colors relative group"
 						>
-							<td className="py-2.5 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono">
-								{formatDate(post.publishedAt)}
+							<td className="py-2.5 px-0 text-sm text-muted-foreground whitespace-nowrap font-mono w-24">
+								{formatDateShort(post.publishedAt)}
 							</td>
 							<td className="py-2.5 px-6">
-								<span className="line-clamp-1 w-38">{post.title}</span>
+								<TransitionLink
+									href={`/blog/${post.slug}`}
+									direction="left"
+									className="absolute inset-0 z-10"
+									aria-label={`Read blog post: ${post.title}`}
+								/>
+								<span className="line-clamp-1">{post.title}</span>
 							</td>
-							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell">
+							<td className="py-2.5 px-4 text-sm text-muted-foreground hidden md:table-cell w-72">
 								<span className="line-clamp-1">{post.summary}</span>
 							</td>
-							<Link
-								href={`/blog/${post.slug}`}
-								className="absolute inset-0 z-10"
-								aria-label={`Read blog post: ${post.title}`}
-							/>
 						</tr>
 					))}
 				</tbody>

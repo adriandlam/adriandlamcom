@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import {
 	AlertTriangleIcon,
 	CheckCircleIcon,
@@ -6,6 +5,7 @@ import {
 	XCircleIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 type variants = "info" | "warning" | "error" | "success";
 
@@ -20,31 +20,33 @@ export function Callout({
 		info: {
 			icon: InfoIcon,
 			className:
-				"bg-blue-500/15 border-blue-500/25 [&_h5]:text-blue-500 [&_p]:text-blue-500 dark:[&_p]:text-blue-400",
-			iconClassName: "text-blue-500",
+				"bg-vesper-aqua/15 border-vesper-aqua/25 [&_h5]:text-vesper-aqua [&_p]:text-vesper-aqua",
+			iconClassName: "text-vesper-aqua",
 		},
 		warning: {
 			icon: AlertTriangleIcon,
 			className:
-				"bg-yellow-500/15 border-yellow-500/25 [&_h5]:text-yellow-500  [&_p]:text-yellow-500 dark:[&_p]:text-yellow-400",
-			iconClassName: "text-yellow-500",
+				"bg-vesper-orange/15 border-vesper-orange/25 [&_h5]:text-vesper-orange [&_p]:text-vesper-orange",
+			iconClassName: "text-vesper-orange",
 		},
 		error: {
 			icon: XCircleIcon,
 			className:
-				"bg-rose-500/15 border-rose-500/25 [&_h5]:text-rose-500 [&_p]:text-rose-500 dark:[&_p]:text-rose-400",
-			iconClassName: "text-rose-500",
+				"bg-vesper-red/15 border-vesper-red/25 [&_h5]:text-vesper-red [&_p]:text-vesper-red",
+			iconClassName: "text-vesper-red",
 		},
 		success: {
 			icon: CheckCircleIcon,
 			className:
-				"bg-green-500/15 border-green-500/25 [&_h5]:text-green-500 [&_p]:text-green-500 dark:[&_p]:text-green-400",
-			iconClassName: "text-green-500",
+				"bg-vesper-teal/15 border-vesper-teal/25 [&_h5]:text-vesper-teal [&_p]:text-vesper-teal",
+			iconClassName: "text-vesper-teal",
 		},
 	};
 	const { icon: Icon, className, iconClassName } = variantMap[variant];
 	return (
-		<div className={cn("relative w-full border px-4 py-4.5 my-4", className)}>
+		<div
+			className={cn("relative w-full border px-4 py-4.5 mt-6 mb-4", className)}
+		>
 			<div className="flex gap-3">
 				<Icon className={cn("h-4 w-4 shrink-0", iconClassName)} />
 				<div className="flex-1">{children}</div>
@@ -60,9 +62,5 @@ export function CalloutTitle({ children }: { children: ReactNode }) {
 	);
 }
 export function CalloutDescription({ children }: { children: ReactNode }) {
-	return (
-		<div className="text-sm [&_p]:leading-relaxed prose-p:text-rose-500">
-			{children}
-		</div>
-	);
+	return <div className="text-sm [&_p]:leading-relaxed">{children}</div>;
 }

@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ViewTransitions } from "next-view-transitions";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
-import { ThemeProvider } from "@/components/theme-provider";
-import ThemeToggle from "@/components/theme-toggle";
-import RESUME from "@/data/resume";
+import { getBlogPostsForNav } from "@/lib/blog";
+import { SITE_URL } from "@/lib/constants";
+import { getProjectsForNav } from "@/lib/projects";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -19,37 +21,48 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: `${RESUME.name}`,
-	description: `${RESUME.bio.intro}`,
+	metadataBase: new URL(SITE_URL),
+	title: {
+		default: "Adrian Lam",
+		template: "%s | Adrian Lam",
+	},
+	description:
+		"Software engineer, math student at UBC, and incoming intern at Cloudflare. Building things on the web.",
+	alternates: {
+		types: {
+			"application/rss+xml": "/feed",
+		},
+	},
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const [blogPosts, projects] = await Promise.all([
+		getBlogPostsForNav(),
+		getProjectsForNav(),
+	]);
+
 	return (
-		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-			<body className="antialiased">
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="light"
-					disableTransitionOnChange
-				>
-					<div className="px-4 py-2.5 border relative">
-						<p className="text-center text-accent-foreground text-sm font-mono">
-							The projects page is a work in progress.
-						</p>
-					</div>
-					<ThemeToggle />
+		<ViewTransitions>
+			<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+				<body className="antialiased">
 					<div className="max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-auto px-4">
-						<Nav />
-						<div className="pt-12 md:pt-18 lg:pt-20">{children}</div>
+						<Nav blogPosts={blogPosts} projects={projects} />
+						<div
+							className="pt-12 md:pt-18 lg:pt-20"
+							style={{ viewTransitionName: "page-content" }}
+						>
+							{children}
+						</div>
 						<Footer />
 					</div>
-				</ThemeProvider>
-				<Analytics />
-			</body>
-		</html>
+					<Analytics />
+					<SpeedInsights />
+				</body>
+			</html>
+		</ViewTransitions>
 	);
 }

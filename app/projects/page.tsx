@@ -1,9 +1,19 @@
-import RESUME from "@/data/resume";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { TransitionLink } from "@/components/transition-link";
+import { getProjects } from "@/lib/projects";
 
-export default function ProjectsPage() {
+export const metadata: Metadata = {
+	title: "Projects",
+	description:
+		"Things I've built — side projects, open source, and experiments.",
+};
+
+export default async function ProjectsPage() {
+	const projects = await getProjects();
+
 	return (
-		<main className="container mx-auto">
+		<main>
 			<div>
 				<h1 className="text-xl tracking-tight font-medium">Projects</h1>
 				<p className="mt-2 text-muted-foreground">
@@ -12,14 +22,17 @@ export default function ProjectsPage() {
 				</p>
 			</div>
 			<div className="mt-8">
-				<p className="mb-10">These pages are a work in progress.</p>
 				<ul className="list">
-					{RESUME.projects.map((project) => (
-						<li key={project.name}>
-							<Link href={`/projects/${project.slug}`} className="link">
+					{projects.map((project) => (
+						<li key={project.slug}>
+							<TransitionLink
+								href={`/projects/${project.slug}`}
+								direction="left"
+								className="link"
+							>
 								{project.name}
-							</Link>{" "}
-							– {project.description}
+							</TransitionLink>{" "}
+							– {project.shortDescription || project.description}
 						</li>
 					))}
 				</ul>
