@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PhotoGrid } from "@/components/photo-grid";
 import { getPhotos } from "@/lib/photos";
 
 export const revalidate = 3600;
@@ -25,27 +25,9 @@ function PhotoGridSkeleton() {
 	);
 }
 
-async function PhotoGrid() {
+async function PhotoGridServer() {
 	const photos = await getPhotos();
-
-	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-			{photos.map((photo, i) => (
-				<Image
-					key={photo.url}
-					src={photo.url}
-					alt={photo.name}
-					width={1200}
-					height={1600}
-					className="object-cover w-full h-full"
-					priority={i < 2}
-					sizes="(max-width: 640px) 100vw, 50vw"
-					placeholder={photo.blurDataURL ? "blur" : "empty"}
-					blurDataURL={photo.blurDataURL}
-				/>
-			))}
-		</div>
-	);
+	return <PhotoGrid photos={photos} />;
 }
 
 export default function PhotosPage() {
@@ -65,7 +47,7 @@ export default function PhotosPage() {
 			</div>
 
 			<Suspense fallback={<PhotoGridSkeleton />}>
-				<PhotoGrid />
+				<PhotoGridServer />
 			</Suspense>
 		</main>
 	);

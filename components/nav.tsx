@@ -237,7 +237,7 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 			</div>
 			<div
 				className={cn(
-					"fixed right-0 left-0 m-8 z-10 w-32 hidden lg:inline lg:w-48 overflow-hidden transition-all duration-200 ease-out",
+					"fixed right-0 left-0 m-8 w-32 hidden lg:inline lg:w-48 overflow-hidden transition-all duration-200 ease-out",
 					activeParentTab ? "lg:w-54" : "",
 				)}
 			>
@@ -252,8 +252,14 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 							transition={{ duration: 0.1, ease: "easeOut" }}
 						>
 							<li className={cn(tabClassname, "text-muted-foreground")}>
-								<Link
+								<a
 									href={activeParentTab.href}
+									onClick={(e) => {
+										e.preventDefault();
+										router.push(activeParentTab.href, {
+											onTransitionReady: slideTransition("right"),
+										});
+									}}
 									className="flex items-center justify-between w-full py-1 px-2 gap-2"
 								>
 									<span className="inline-flex items-center gap-1 line-clamp-1">
@@ -263,7 +269,7 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 										</span>
 									</span>
 									<Kbd>h</Kbd>
-								</Link>
+								</a>
 							</li>
 							<Separator className="mx-0.5 my-1.5" />
 							{(() => {
