@@ -1,8 +1,14 @@
 import "server-only";
-import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { unstable_cache } from "next/cache";
-import sharp from "sharp";
 import { env } from "@/lib/env";
+
+interface ManifestEntry {
+	original: string;
+	lastModified: string | null;
+}
+
+type Manifest = Record<string, ManifestEntry>;
 
 function getS3Client(): S3Client | null {
 	const accountId = env.CLOUDFLARE_ACCOUNT_ID;
@@ -21,24 +27,25 @@ function getS3Client(): S3Client | null {
 			secretAccessKey,
 		},
 		requestHandler: {
-			requestTimeout: 5000, // 5 second timeout
+			requestTimeout: 5000,
 		},
 	});
 }
 
-async function generateBlurDataURL(url: string): Promise<string | undefined> {
+/** Fetch a text object from R2 */
+async function fetchTextObject(
+	s3Client: S3Client,
+	key: string,
+): Promise<string | undefined> {
 	try {
-		const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-		if (!response.ok) return undefined;
-
-		const buffer = Buffer.from(await response.arrayBuffer());
-		const resized = await sharp(buffer)
-			.resize(16, 16, { fit: "inside" })
-			.blur()
-			.webp({ quality: 20 })
-			.toBuffer();
-
-		return `data:image/webp;base64,${resized.toString("base64")}`;
+		const response = await s3Client.send(
+			new GetObjectCommand({
+				Bucket: "photos-optimized",
+				Key: key,
+			}),
+		);
+		if (!response.Body) return undefined;
+		return await response.Body.transformToString();
 	} catch {
 		return undefined;
 	}
@@ -52,33 +59,33 @@ export const getPhotos = unstable_cache(
 				return [];
 			}
 
-			const command = new ListObjectsV2Command({
-				Bucket: "photos",
-			});
-			const response = await s3Client.send(command);
-
-			if (!response.Contents) {
+			// Fetch the manifest
+			const manifestText = await fetchTextObject(s3Client, "_manifest.json");
+			if (!manifestText) {
 				return [];
 			}
 
-			const photoEntries = response.Contents.filter(
-				(obj) => obj.Key && /\.(jpg|jpeg|png|gif|webp)$/i.test(obj.Key),
-			).sort((a, b) => {
-				const aDate = a.LastModified ? new Date(a.LastModified).getTime() : 0;
-				const bDate = b.LastModified ? new Date(b.LastModified).getTime() : 0;
+			const manifest = JSON.parse(manifestText) as Manifest;
+
+			// Sort by lastModified (newest first)
+			const entries = Object.entries(manifest).sort(([, a], [, b]) => {
+				const aDate = a.lastModified ? new Date(a.lastModified).getTime() : 0;
+				const bDate = b.lastModified ? new Date(b.lastModified).getTime() : 0;
 				return bDate - aDate;
 			});
 
-			// Generate blur placeholders in parallel
+			// Fetch blur placeholders in parallel
 			const photos = await Promise.all(
-				photoEntries.map(async (obj) => {
-					const url = `https://photos.adriandlam.com/${obj.Key}`;
-					const blurDataURL = await generateBlurDataURL(url);
+				entries.map(async ([hash], index) => {
+					const url = `https://photos.adriandlam.com/${hash}.webp`;
+					const blurText = await fetchTextObject(s3Client, `${hash}.blur.txt`);
+					const blurDataURL = blurText?.startsWith("data:")
+						? blurText
+						: undefined;
+
 					return {
-						name: obj.Key,
+						name: `Photo ${index + 1}`,
 						url,
-						lastModified: obj.LastModified?.toISOString(),
-						size: obj.Size,
 						blurDataURL,
 					};
 				}),

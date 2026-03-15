@@ -34,9 +34,7 @@ async function PhotoGrid() {
 				<Image
 					key={photo.url}
 					src={photo.url}
-					alt={(photo.name ?? "")
-						.replace(/\.[^/.]+$/, "")
-						.replace(/[-_]/g, " ")}
+					alt={photo.name}
 					width={1200}
 					height={1600}
 					className="object-cover w-full h-full"
