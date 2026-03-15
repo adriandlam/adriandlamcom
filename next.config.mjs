@@ -60,6 +60,33 @@ const nextConfig = {
 					},
 				],
 			},
+			{
+				source: "/me.jpeg",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=2592000",
+					},
+				],
+			},
+			{
+				source: "/projects/:path*",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=2592000",
+					},
+				],
+			},
+			{
+				source: "/blog-assets/:path*",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=2592000",
+					},
+				],
+			},
 		];
 	},
 };
