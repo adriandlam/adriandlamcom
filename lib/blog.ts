@@ -1,5 +1,6 @@
-import fs from "fs";
-import path from "path";
+import "server-only";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";

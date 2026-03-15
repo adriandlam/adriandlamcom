@@ -1,4 +1,4 @@
-# adriandlam.com
+# adrianlam.sh
 
 My personal site. Blog, projects, photos.
 

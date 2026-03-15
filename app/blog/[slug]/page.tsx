@@ -1,17 +1,21 @@
+import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { KatexStyles } from "@/components/katex-styles";
 import { getBlogPost, getBlogPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/constants";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import Image from "next/image";
-import "katex/dist/katex.min.css";
+
+const TableOfContents = dynamic(() =>
+	import("@/components/table-of-contents").then((m) => m.TableOfContents),
+);
+
+import { TransitionLink } from "@/components/transition-link";
 import { Badge } from "@/components/ui/badge";
-import { notFound } from "next/navigation";
-import Link from "next/link";
 import { mdxComponents, mdxOptions } from "@/lib/mdx";
 import { extractHeadings } from "@/lib/toc";
-import { TableOfContents } from "@/components/table-of-contents";
-import { TransitionLink } from "@/components/transition-link";
-import { ChevronLeft } from "lucide-react";
 import { formatDateLong } from "@/lib/utils";
 
 // Generate metadata for the page
@@ -78,11 +82,7 @@ export default async function Page({
 }) {
 	const { slug } = await params;
 
-	// Read the file content with gray-matter
-	const [post, allPosts] = await Promise.all([
-		getBlogPost(slug),
-		getBlogPosts(),
-	]);
+	const post = await getBlogPost(slug);
 
 	if (!post) {
 		notFound();
@@ -91,15 +91,11 @@ export default async function Page({
 	const { metadata, content, readingTime } = post;
 	const formattedDate = formatDateLong(metadata.publishedAt);
 	const headings = extractHeadings(content);
-
-	// Find adjacent posts (sorted newest-first)
-	const currentIndex = allPosts.findIndex((p) => p.slug === slug);
-	const newerPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
-	const olderPost =
-		currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+	const usesMath = content.includes("$") || content.includes("\\(");
 
 	return (
 		<main>
+			{usesMath && <KatexStyles />}
 			<div className="relative">
 				{headings.length >= 2 && <TableOfContents items={headings} />}
 				{/* Main article with right margin on large screens */}
@@ -146,6 +142,7 @@ export default async function Page({
 						source={content}
 						components={mdxComponents}
 						options={{
+							// biome-ignore lint/suspicious/noExplicitAny: remark/rehype plugin types don't match next-mdx-remote's expected types
 							mdxOptions: mdxOptions as any,
 						}}
 					/>

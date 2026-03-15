@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { getProjects } from "@/lib/projects";
-import { TransitionLink } from "@/components/transition-link";
 import Link from "next/link";
+import { TransitionLink } from "@/components/transition-link";
+import { getProjects } from "@/lib/projects";
 
 export const metadata: Metadata = {
 	title: "Projects",

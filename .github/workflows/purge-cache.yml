@@ -1,0 +1,45 @@
+name: Purge Cache
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  purge:
+    name: Purge Cloudflare & Vercel Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge Cloudflare Cache
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"prefixes":["photos.adriandlam.com/"]}')
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "$body"
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::Cloudflare cache purge failed with status $http_code"
+            exit 1
+          fi
+
+      - name: Purge Vercel Cache
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://api.vercel.com/v1/edge-cache/invalidate-by-tags?projectIdOrName=prj_uBtescZoTJW4IjtvViy98hZAlX9f&teamId=team_V0Fs9lcvqbRHIlFCuxTAKjgT" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"tags":["photos"]}')
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "$body"
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::Vercel cache purge failed with status $http_code"
+            exit 1
+          fi

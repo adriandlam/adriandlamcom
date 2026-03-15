@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTransitionRouter } from "next-view-transitions";
-import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useMemo } from "react";
 import { slideTransition } from "@/lib/transitions";
+import { cn } from "@/lib/utils";
 import { ExternalLinkIcon } from "./external-link-icon";
 import { Kbd } from "./ui/kbd";
 import { Separator } from "./ui/separator";
@@ -154,7 +154,7 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 					// Navigate through parent tabs
 					const currentIndex = tabs.findIndex(
 						(tab) =>
-							pathname === tab.href || pathname.startsWith(tab.href + "/"),
+							pathname === tab.href || pathname.startsWith(`${tab.href}/`),
 					);
 					const newIndex = isNext ? currentIndex + 1 : currentIndex - 1;
 
@@ -266,39 +266,40 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 								</Link>
 							</li>
 							<Separator className="mx-0.5 my-1.5" />
-							{activeParentTab.children?.map((child, index) => {
+							{(() => {
 								const children = activeParentTab.children || [];
-								const activeIndex = children.findIndex(
+								const activeChildIndex = children.findIndex(
 									(c) => pathname === c.href,
 								);
+								return children.map((child, index) => {
+									// Show 'k' on item above active, 'j' on item below active
+									let shortcut: string | undefined;
+									if (activeChildIndex >= 0) {
+										if (index === activeChildIndex - 1) shortcut = "k";
+										else if (index === activeChildIndex + 1) shortcut = "j";
+									}
 
-								// Show 'k' on item above active, 'j' on item below active
-								let shortcut: string | undefined;
-								if (activeIndex >= 0) {
-									if (index === activeIndex - 1) shortcut = "k";
-									else if (index === activeIndex + 1) shortcut = "j";
-								}
-
-								return (
-									<li
-										key={child.name}
-										className={cn(
-											tabClassname,
-											pathname === child.href
-												? "text-primary bg-secondary"
-												: "text-muted-foreground",
-										)}
-									>
-										<Link
-											href={child.href}
-											className="flex items-center justify-between w-full py-1 px-2 gap-2"
+									return (
+										<li
+											key={child.name}
+											className={cn(
+												tabClassname,
+												pathname === child.href
+													? "text-primary bg-secondary"
+													: "text-muted-foreground",
+											)}
 										>
-											<span className="line-clamp-1">{child.name}</span>
-											{shortcut && <Kbd>{shortcut}</Kbd>}
-										</Link>
-									</li>
-								);
-							})}
+											<Link
+												href={child.href}
+												className="flex items-center justify-between w-full py-1 px-2 gap-2"
+											>
+												<span className="line-clamp-1">{child.name}</span>
+												{shortcut && <Kbd>{shortcut}</Kbd>}
+											</Link>
+										</li>
+									);
+								});
+							})()}
 						</motion.ul>
 					) : (
 						<motion.ul
@@ -309,57 +310,60 @@ export default function Nav({ blogPosts, projects }: NavProps) {
 							exit={{ opacity: 0, translateX: 20 }}
 							transition={{ duration: 0.1, ease: "easeOut" }}
 						>
-							{tabs.map((tab, index) => {
-								const isActive =
-									pathname === tab.href || pathname.startsWith(tab.href + "/");
-								const activeIndex = tabs.findIndex(
+							{(() => {
+								const activeTabIndex = tabs.findIndex(
 									(t) =>
-										pathname === t.href || pathname.startsWith(t.href + "/"),
+										pathname === t.href || pathname.startsWith(`${t.href}/`),
 								);
+								return tabs.map((tab, index) => {
+									const isActive =
+										pathname === tab.href ||
+										pathname.startsWith(`${tab.href}/`);
 
-								// Show 'k' on item above active, 'j' on item below active, 'l' on active with children
-								let shortcut: string | undefined;
-								if (activeIndex >= 0) {
-									if (
-										index === activeIndex &&
-										isActive &&
-										pathname === tab.href &&
-										tab.children &&
-										tab.children.length > 0
-									) {
-										shortcut = "l";
-									} else if (index === activeIndex - 1) {
-										shortcut = "k";
-									} else if (index === activeIndex + 1) {
-										shortcut = "j";
+									// Show 'k' on item above active, 'j' on item below active, 'l' on active with children
+									let shortcut: string | undefined;
+									if (activeTabIndex >= 0) {
+										if (
+											index === activeTabIndex &&
+											isActive &&
+											pathname === tab.href &&
+											tab.children &&
+											tab.children.length > 0
+										) {
+											shortcut = "l";
+										} else if (index === activeTabIndex - 1) {
+											shortcut = "k";
+										} else if (index === activeTabIndex + 1) {
+											shortcut = "j";
+										}
 									}
-								}
 
-								return (
-									<li
-										key={tab.name}
-										className={cn(
-											tabClassname,
-											isActive
-												? "text-primary bg-accent"
-												: "text-muted-foreground",
-										)}
-									>
-										<Link
-											href={tab.href}
-											className="flex items-center justify-between w-full py-1 px-2 gap-2"
+									return (
+										<li
+											key={tab.name}
+											className={cn(
+												tabClassname,
+												isActive
+													? "text-primary bg-accent"
+													: "text-muted-foreground",
+											)}
 										>
-											<span className="line-clamp-1">{tab.name}</span>
-											<span className="flex items-center">
-												{shortcut === "l" && (
-													<ChevronRight className="size-3.5" />
-												)}
-												{shortcut && <Kbd>{shortcut}</Kbd>}
-											</span>
-										</Link>
-									</li>
-								);
-							})}
+											<Link
+												href={tab.href}
+												className="flex items-center justify-between w-full py-1 px-2 gap-2"
+											>
+												<span className="line-clamp-1">{tab.name}</span>
+												<span className="flex items-center">
+													{shortcut === "l" && (
+														<ChevronRight className="size-3.5" />
+													)}
+													{shortcut && <Kbd>{shortcut}</Kbd>}
+												</span>
+											</Link>
+										</li>
+									);
+								});
+							})()}
 							<Separator className="mx-0.5 my-1.5" />
 							<li className={cn(tabClassname, "text-muted-foreground w-full")}>
 								<Link

@@ -1,7 +1,7 @@
-import { getProjects } from "@/lib/projects";
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
+import { getProjects } from "@/lib/projects";
 
 export default async function Home() {
 	const projects = await getProjects();
@@ -16,6 +16,7 @@ export default async function Home() {
 					alt="Avatar"
 					width={64}
 					height={64}
+					sizes="64px"
 					className="size-16 rounded-full"
 					priority
 				/>

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Image from "next/image";
+import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getPhotos } from "./actions";
+import { getPhotos } from "@/lib/photos";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
 	title: "Photos",
@@ -16,7 +18,7 @@ function PhotoGridSkeleton() {
 				<Skeleton
 					// biome-ignore lint/suspicious/noArrayIndexKey: static skeleton items
 					key={i}
-					className="aspect-[3/4] w-full rounded-none"
+					className="aspect-3/4 w-full rounded-none"
 				/>
 			))}
 		</div>

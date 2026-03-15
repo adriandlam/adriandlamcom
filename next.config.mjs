@@ -10,7 +10,9 @@ const nextConfig = {
 			"@aws-sdk/client-s3",
 			"lucide-react",
 			"motion",
-			"@radix-ui/react-tooltip",
+			"@radix-ui/react-separator",
+			"class-variance-authority",
+			"next-view-transitions",
 		],
 	},
 	// Optionally, add any other Next.js config below
@@ -24,6 +26,7 @@ const nextConfig = {
 				hostname: "photos.adriandlam.com",
 			},
 		],
+		unoptimized: true,
 	},
 	transpilePackages: ["next-mdx-remote"],
 	async headers() {
@@ -54,6 +57,33 @@ const nextConfig = {
 					{
 						key: "Permissions-Policy",
 						value: "camera=(), microphone=(), geolocation=()",
+					},
+				],
+			},
+			{
+				source: "/me.jpeg",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=2592000",
+					},
+				],
+			},
+			{
+				source: "/projects/:path*",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=2592000",
+					},
+				],
+			},
+			{
+				source: "/blog-assets/:path*",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=2592000",
 					},
 				],
 			},

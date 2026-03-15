@@ -1,30 +1,30 @@
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import "server-only";
+import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { unstable_cache } from "next/cache";
 import sharp from "sharp";
+import { env } from "@/lib/env";
 
-const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
-const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
+function getS3Client(): S3Client | null {
+	const accountId = env.CLOUDFLARE_ACCOUNT_ID;
+	const accessKeyId = env.CLOUDFLARE_R2_ACCESS_KEY_ID;
+	const secretAccessKey = env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
 
-if (!accountId || !accessKeyId || !secretAccessKey) {
-	throw new Error("Missing R2 credentials");
+	if (!accountId || !accessKeyId || !secretAccessKey) {
+		return null;
+	}
+
+	return new S3Client({
+		region: "auto",
+		endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+		credentials: {
+			accessKeyId,
+			secretAccessKey,
+		},
+		requestHandler: {
+			requestTimeout: 5000, // 5 second timeout
+		},
+	});
 }
-
-const s3Client = new S3Client({
-	region: "auto",
-	endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-	credentials: {
-		accessKeyId,
-		secretAccessKey,
-	},
-	requestHandler: {
-		requestTimeout: 5000, // 5 second timeout
-	},
-});
-
-const command = new ListObjectsV2Command({
-	Bucket: "photos",
-});
 
 async function generateBlurDataURL(url: string): Promise<string | undefined> {
 	try {
@@ -47,6 +47,14 @@ async function generateBlurDataURL(url: string): Promise<string | undefined> {
 export const getPhotos = unstable_cache(
 	async () => {
 		try {
+			const s3Client = getS3Client();
+			if (!s3Client) {
+				return [];
+			}
+
+			const command = new ListObjectsV2Command({
+				Bucket: "photos",
+			});
 			const response = await s3Client.send(command);
 
 			if (!response.Contents) {

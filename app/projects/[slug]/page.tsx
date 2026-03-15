@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { getProject, getProjects } from "@/lib/projects";
-import { SITE_URL } from "@/lib/constants";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { mdxComponents, mdxOptions } from "@/lib/mdx";
-import "katex/dist/katex.min.css";
-import { notFound } from "next/navigation";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
-import { extractHeadings } from "@/lib/toc";
-import { TableOfContents } from "@/components/table-of-contents";
+import { KatexStyles } from "@/components/katex-styles";
+import { SITE_URL } from "@/lib/constants";
+import { mdxComponents, mdxOptions } from "@/lib/mdx";
+import { getProject, getProjects } from "@/lib/projects";
+
+const TableOfContents = dynamic(() =>
+	import("@/components/table-of-contents").then((m) => m.TableOfContents),
+);
+
 import { TransitionLink } from "@/components/transition-link";
+import { extractHeadings } from "@/lib/toc";
 
 export async function generateMetadata({
 	params,
@@ -59,9 +64,11 @@ export default async function ProjectPage({
 
 	const { metadata, content } = project;
 	const headings = extractHeadings(content);
+	const usesMath = content.includes("$") || content.includes("\\(");
 
 	return (
 		<main>
+			{usesMath && <KatexStyles />}
 			<div className="relative">
 				{headings.length >= 2 && <TableOfContents items={headings} />}
 
@@ -97,6 +104,7 @@ export default async function ProjectPage({
 						source={content}
 						components={mdxComponents}
 						options={{
+							// biome-ignore lint/suspicious/noExplicitAny: remark/rehype plugin types don't match next-mdx-remote's expected types
 							mdxOptions: mdxOptions as any,
 						}}
 					/>
