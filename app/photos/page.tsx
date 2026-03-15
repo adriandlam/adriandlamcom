@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPhotos } from "@/lib/photos";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
 	title: "Photos",
 	description: "Shot on a Lumix G85 with a 25mm F1.7 and 12-60mm.",
@@ -16,7 +18,7 @@ function PhotoGridSkeleton() {
 				<Skeleton
 					// biome-ignore lint/suspicious/noArrayIndexKey: static skeleton items
 					key={i}
-					className="aspect-[3/4] w-full rounded-none"
+					className="aspect-3/4 w-full rounded-none"
 				/>
 			))}
 		</div>

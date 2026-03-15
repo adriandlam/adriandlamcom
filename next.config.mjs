@@ -26,6 +26,7 @@ const nextConfig = {
 				hostname: "photos.adriandlam.com",
 			},
 		],
+		unoptimized: true,
 	},
 	transpilePackages: ["next-mdx-remote"],
 	async headers() {
