@@ -133,7 +133,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 	return (
 		<svg
 			viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-			className="w-full max-w-[600px] h-auto"
+			className="w-full max-w-[600px] h-auto border p-4 rounded"
 			style={{ minWidth: 400 }}
 			role="img"
 			aria-label="Neural network visualization showing activations across layers"
@@ -301,7 +301,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 						y={y}
 						textAnchor="middle"
 						dominantBaseline="central"
-						className="text-[7px] font-mono fill-background pointer-events-none"
+						className="text-[7px] font-mono fill-foreground pointer-events-none"
 						style={{ userSelect: "none" }}
 					>
 						{i}
