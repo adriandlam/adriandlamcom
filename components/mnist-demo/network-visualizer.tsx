@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { InferenceResult } from "./inference";
+import { getThemeColors, lerpColor, type ThemeColors } from "./theme";
 
 interface NetworkVisualizerProps {
 	result: InferenceResult | null;
@@ -29,8 +30,6 @@ const GRID_TOTAL = GRID_SIZE * PIXEL_SIZE; // 84px
 
 const NODE_MARGIN_TOP = 20;
 const NODE_AREA_HEIGHT = SVG_HEIGHT - 40; // 260px usable
-
-const ACCENT = "#99ffe4";
 
 const LAYER_LABELS = ["784", "256", "256", "256", "10"] as const;
 const LAYER_LABEL_X = [
@@ -63,26 +62,30 @@ function sampleActivations(full: Float32Array, count: number): number[] {
 	return sampled.map((v) => Math.min(Math.max(v / max, 0), 1));
 }
 
-function hiddenColor(activation: number): string {
-	const c = Math.min(Math.max(activation, 0), 1);
-	const r = Math.round(0x1a + (0xff - 0x1a) * c * 0.6);
-	const g = Math.round(0x1a + (0xc7 - 0x1a) * c * 0.6);
-	const b = Math.round(0x1a + (0x99 - 0x1a) * c * 0.6);
-	return `rgb(${r},${g},${b})`;
+/**
+ * Hidden layer node color: surface → dimmed accent-foreground (orange).
+ * Uses 0.6 intensity to keep the glow subtle.
+ */
+function hiddenColor(activation: number, theme: ThemeColors): string {
+	return lerpColor(theme.surface, theme.accentForegroundRgb, activation * 0.6);
 }
 
-function outputColor(probability: number): string {
-	const c = Math.min(Math.max(probability, 0), 1);
-	const r = Math.round(0x1a + (0x99 - 0x1a) * c);
-	const g = Math.round(0x1a + (0xff - 0x1a) * c);
-	const b = Math.round(0x1a + (0xe4 - 0x1a) * c);
-	return `rgb(${r},${g},${b})`;
+/**
+ * Output layer node color: surface → accent-interactive (aqua).
+ */
+function outputColor(probability: number, theme: ThemeColors): string {
+	return lerpColor(theme.surface, theme.accentRgb, probability);
 }
 
 export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
+	const [theme, setTheme] = useState<ThemeColors | null>(null);
+
+	useEffect(() => {
+		setTheme(getThemeColors());
+	}, []);
+
 	const hasResult = result !== null;
 
-	// Compute sampled/normalized activations for hidden layers
 	const hiddenActivations = useMemo(() => {
 		if (!result) {
 			return {
@@ -108,7 +111,6 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 		return max > 0 ? outputProbs.indexOf(max) : -1;
 	}, [outputProbs]);
 
-	// Precompute node positions
 	const hiddenYPositions = useMemo(() => {
 		const positions: number[] = [];
 		for (let i = 0; i < HIDDEN_NODE_COUNT; i++) {
@@ -125,17 +127,19 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 		return positions;
 	}, []);
 
-	// Input pixel grid, top-left corner
 	const gridOriginX = LAYER_X.input - GRID_TOTAL / 2;
 	const gridOriginY = (SVG_HEIGHT - GRID_TOTAL) / 2;
 	const gridCenterX = LAYER_X.input;
 	const gridCenterY = SVG_HEIGHT / 2;
 
-	// Input pixel data
 	const inputPixels = useMemo(() => {
 		if (!result) return null;
 		return result.activations.input;
 	}, [result]);
+
+	// Use theme border color for connection strokes, accent for highlights
+	const borderColor = theme?.border ?? "#2a2a2a";
+	const accentColor = theme?.accent ?? "#99ffe4";
 
 	return (
 		<svg
@@ -155,7 +159,7 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 					y1={gridCenterY}
 					x2={LAYER_X.hidden1}
 					y2={hy}
-					stroke="#2a2a2a"
+					stroke={borderColor}
 					strokeWidth={0.5}
 					animate={{
 						opacity: hasResult ? 0.05 + hiddenActivations.h1[hi] * 0.3 : 0.03,
@@ -173,7 +177,7 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 						y1={h1y}
 						x2={LAYER_X.hidden2}
 						y2={h2y}
-						stroke="#2a2a2a"
+						stroke={borderColor}
 						strokeWidth={0.3}
 						animate={{
 							opacity: hasResult
@@ -195,7 +199,7 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 						y1={h2y}
 						x2={LAYER_X.hidden3}
 						y2={h3y}
-						stroke="#2a2a2a"
+						stroke={borderColor}
 						strokeWidth={0.3}
 						animate={{
 							opacity: hasResult
@@ -217,7 +221,7 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 						y1={h3y}
 						x2={LAYER_X.output}
 						y2={oy}
-						stroke="#2a2a2a"
+						stroke={borderColor}
 						strokeWidth={0.3}
 						animate={{
 							opacity: hasResult
@@ -255,7 +259,11 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 					cx={LAYER_X.hidden1}
 					cy={y}
 					r={HIDDEN_RADIUS}
-					animate={{ fill: hiddenColor(hiddenActivations.h1[i]) }}
+					animate={{
+						fill: theme
+							? hiddenColor(hiddenActivations.h1[i], theme)
+							: "#1a1a1a",
+					}}
 					transition={{ duration: 0.3 }}
 				/>
 			))}
@@ -267,7 +275,11 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 					cx={LAYER_X.hidden2}
 					cy={y}
 					r={HIDDEN_RADIUS}
-					animate={{ fill: hiddenColor(hiddenActivations.h2[i]) }}
+					animate={{
+						fill: theme
+							? hiddenColor(hiddenActivations.h2[i], theme)
+							: "#1a1a1a",
+					}}
 					transition={{ duration: 0.3 }}
 				/>
 			))}
@@ -279,7 +291,11 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 					cx={LAYER_X.hidden3}
 					cy={y}
 					r={HIDDEN_RADIUS}
-					animate={{ fill: hiddenColor(hiddenActivations.h3[i]) }}
+					animate={{
+						fill: theme
+							? hiddenColor(hiddenActivations.h3[i], theme)
+							: "#1a1a1a",
+					}}
 					transition={{ duration: 0.3 }}
 				/>
 			))}
@@ -292,8 +308,8 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 						cy={y}
 						r={OUTPUT_RADIUS}
 						animate={{
-							fill: outputColor(outputProbs[i]),
-							stroke: i === topIndex && hasResult ? ACCENT : "none",
+							fill: theme ? outputColor(outputProbs[i], theme) : "#1a1a1a",
+							stroke: i === topIndex && hasResult ? accentColor : "none",
 							strokeWidth: i === topIndex && hasResult ? 1.5 : 0,
 						}}
 						transition={{ duration: 0.3 }}

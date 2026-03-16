@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { CnnInferenceResult } from "./cnn-inference";
+import { getThemeColors, type RGB, type ThemeColors } from "./theme";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -59,9 +60,7 @@ const LAYERS: LayerConfig[] = [
 	},
 ];
 
-/** Warm colormap endpoints */
-const COLOR_LO = { r: 0x10, g: 0x10, b: 0x10 }; // #101010
-const COLOR_HI = { r: 0xff, g: 0xc7, b: 0x99 }; // #ffc799
+// Color endpoints are read from theme at runtime (see FeatureMaps component)
 
 // ─── Sub-component: single feature map canvas ────────────────────────────────
 
@@ -71,12 +70,16 @@ function FeatureMapCanvas({
 	height,
 	width,
 	scale,
+	colorLo,
+	colorHi,
 }: {
 	data: Float32Array;
 	channelIndex: number;
 	height: number;
 	width: number;
 	scale: number;
+	colorLo: RGB;
+	colorHi: RGB;
 }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -87,8 +90,17 @@ function FeatureMapCanvas({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
-		drawFeatureMap(ctx, data, channelIndex, height, width, scale);
-	}, [data, channelIndex, height, width, scale]);
+		drawFeatureMap(
+			ctx,
+			data,
+			channelIndex,
+			height,
+			width,
+			scale,
+			colorLo,
+			colorHi,
+		);
+	}, [data, channelIndex, height, width, scale, colorLo, colorHi]);
 
 	return (
 		<canvas
@@ -109,6 +121,8 @@ function drawFeatureMap(
 	height: number,
 	width: number,
 	scale: number,
+	colorLo: RGB,
+	colorHi: RGB,
 ) {
 	const channelSize = height * width;
 	const offset = channelIndex * channelSize;
@@ -132,9 +146,9 @@ function drawFeatureMap(
 			const t = (data[offset + y * width + x] - min) / range;
 
 			// Interpolate between dark and warm accent
-			const r = COLOR_LO.r + t * (COLOR_HI.r - COLOR_LO.r);
-			const g = COLOR_LO.g + t * (COLOR_HI.g - COLOR_LO.g);
-			const b = COLOR_LO.b + t * (COLOR_HI.b - COLOR_LO.b);
+			const r = colorLo.r + t * (colorHi.r - colorLo.r);
+			const g = colorLo.g + t * (colorHi.g - colorLo.g);
+			const b = colorLo.b + t * (colorHi.b - colorLo.b);
 
 			// Fill the scaled block
 			for (let sy = 0; sy < scale; sy++) {
@@ -157,6 +171,12 @@ function drawFeatureMap(
 // ─── Main component ──────────────────────────────────────────────────────────
 
 export function FeatureMaps({ result }: FeatureMapsProps) {
+	const [theme, setTheme] = useState<ThemeColors | null>(null);
+
+	useEffect(() => {
+		setTheme(getThemeColors());
+	}, []);
+
 	if (!result) {
 		return (
 			<p className="text-sm text-muted-foreground">
@@ -165,13 +185,18 @@ export function FeatureMaps({ result }: FeatureMapsProps) {
 		);
 	}
 
+	const colorLo = theme?.background ?? { r: 0x10, g: 0x10, b: 0x10 };
+	const colorHi = theme?.accentForegroundRgb ?? {
+		r: 0xff,
+		g: 0xc7,
+		b: 0x99,
+	};
+
 	return (
 		<div className="flex flex-col gap-4">
 			{LAYERS.map((layer) => (
 				<div key={layer.key}>
-					<p className="text-xs font-mono text-muted-foreground mb-1.5">
-						{layer.label}
-					</p>
+					<p className="text-xs font-mono mb-1.5">{layer.label}</p>
 					<div className="flex flex-wrap gap-1.5">
 						{SAMPLED_CHANNELS.map((ch) => (
 							<FeatureMapCanvas
@@ -181,6 +206,8 @@ export function FeatureMaps({ result }: FeatureMapsProps) {
 								height={layer.height}
 								width={layer.width}
 								scale={layer.scale}
+								colorLo={colorLo}
+								colorHi={colorHi}
 							/>
 						))}
 					</div>

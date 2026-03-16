@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
+import { getThemeColors, rgbaString, type ThemeColors } from "./theme";
 
 interface ConfusionData {
 	cnn: {
@@ -19,6 +20,7 @@ function cellStyle(
 	value: number,
 	maxVal: number,
 	isDiagonal: boolean,
+	theme: ThemeColors,
 ): React.CSSProperties {
 	if (value === 0) return {};
 
@@ -26,14 +28,20 @@ function cellStyle(
 
 	if (isDiagonal) {
 		return {
-			backgroundColor: `rgba(153, 255, 228, ${normalized})`,
-			color: normalized > 0.5 ? "#000" : "var(--color-muted-foreground)",
+			backgroundColor: rgbaString(theme.accentRgb, normalized),
+			color:
+				normalized > 0.5
+					? `rgb(${theme.background.r},${theme.background.g},${theme.background.b})`
+					: theme.mutedForeground,
 		};
 	}
 
 	return {
-		backgroundColor: `rgba(255, 128, 128, ${normalized * 0.8})`,
-		color: normalized > 0.3 ? "#000" : "var(--color-muted-foreground)",
+		backgroundColor: rgbaString(theme.destructiveRgb, normalized * 0.8),
+		color:
+			normalized > 0.3
+				? `rgb(${theme.background.r},${theme.background.g},${theme.background.b})`
+				: theme.mutedForeground,
 	};
 }
 
@@ -41,6 +49,11 @@ export function ConfusionMatrix() {
 	const [data, setData] = useState<ConfusionData | null>(cachedData);
 	const [error, setError] = useState<string | null>(null);
 	const [model, setModel] = useState<"cnn" | "mlp">("cnn");
+	const [theme, setTheme] = useState<ThemeColors | null>(null);
+
+	useEffect(() => {
+		setTheme(getThemeColors());
+	}, []);
 
 	useEffect(() => {
 		if (cachedData) return;
@@ -170,7 +183,9 @@ export function ConfusionMatrix() {
 										<div
 											key={`${row}-${col}`}
 											className="flex items-center justify-center rounded-[2px]"
-											style={cellStyle(value, maxVal, isDiagonal)}
+											style={
+												theme ? cellStyle(value, maxVal, isDiagonal, theme) : {}
+											}
 											title={`True: ${row}, Predicted: ${col}, Count: ${value}`}
 										>
 											{value > 0 && (

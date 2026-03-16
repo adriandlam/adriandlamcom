@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 
 interface PredictionBarsProps {
 	probabilities: Float32Array | null;
@@ -16,9 +17,6 @@ export function PredictionBars({ probabilities }: PredictionBarsProps) {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<span className="text-xs font-mono text-accent-foreground">
-				Predictions
-			</span>
 			{probs.map((prob, digit) => {
 				const isTop = digit === topIndex;
 				const hasInput = topIndex !== -1;
@@ -30,8 +28,9 @@ export function PredictionBars({ probabilities }: PredictionBarsProps) {
 				return (
 					<div key={digit} className="flex items-center gap-2">
 						<span
-							className="w-3 text-xs font-mono text-muted-foreground text-right"
-							style={{ opacity: hasInput ? (isTop ? 1 : 0.5) : 1 }}
+							className={cn("w-3 text-xs font-mono text-right", {
+								"text-muted-foreground opacity-25": !hasInput || !isTop,
+							})}
 						>
 							{digit}
 						</span>
@@ -51,8 +50,12 @@ export function PredictionBars({ probabilities }: PredictionBarsProps) {
 							/>
 						</div>
 						<span
-							className="w-12 text-right text-xs font-mono text-muted-foreground"
-							style={{ opacity: hasInput ? (isTop ? 1 : 0.5) : 1 }}
+							className={cn(
+								"w-10 text-right text-xs font-mono text-muted-foreground",
+								{
+									"opacity-25": !hasInput || !isTop,
+								},
+							)}
 						>
 							{(prob * 100).toFixed(1)}%
 						</span>

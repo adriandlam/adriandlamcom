@@ -105,10 +105,12 @@ export function ModelComparison({
 				{/* MLP column */}
 				<div className="flex flex-col gap-2">
 					<div className="flex items-baseline gap-2">
-						<span className="font-mono text-xs text-accent-foreground">
+						<span className="font-mono text-sm text-accent-foreground">
 							MLP
 						</span>
-						<span className="text-xs text-muted-foreground">(98.32%)</span>
+						<span className="text-xs text-muted-foreground">
+							(98.32% accuracy)
+						</span>
 					</div>
 					{loading ? (
 						<p className="text-xs text-muted-foreground">Loading weights…</p>
@@ -120,10 +122,12 @@ export function ModelComparison({
 				{/* CNN column */}
 				<div className="flex flex-col gap-2">
 					<div className="flex items-baseline gap-2">
-						<span className="font-mono text-xs text-accent-foreground">
+						<span className="font-mono text-sm text-accent-foreground">
 							CNN
 						</span>
-						<span className="text-xs text-muted-foreground">(96.58%)</span>
+						<span className="text-xs text-muted-foreground">
+							(96.58% accuracy)
+						</span>
 					</div>
 					{loading ? (
 						<p className="text-xs text-muted-foreground">Loading weights…</p>
@@ -135,7 +139,9 @@ export function ModelComparison({
 
 			{disagree && (
 				<p className="mt-3 text-xs font-mono text-vesper-red">
-					Models disagree — MLP predicts {mlpTop}, CNN predicts {cnnTop}
+					Models disagree: MLP predicts{" "}
+					<span className="font-semibold">{mlpTop}</span>, CNN predicts{" "}
+					<span className="font-semibold">{cnnTop}</span>
 				</p>
 			)}
 		</div>
