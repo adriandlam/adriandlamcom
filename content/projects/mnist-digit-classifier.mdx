@@ -8,11 +8,13 @@ inProgress: false
 year: 2024
 ---
 
-A deep multi-layer perceptron built entirely from scratch — no PyTorch `nn.Module`, no autograd. Just raw matrix multiplications, manual backpropagation, and gradient descent. Plus a CNN for comparison.
+I built this to understand how neural networks actually work. The math behind a multi-layer perceptron is surprisingly simple — matrix multiplies, ReLU, softmax, chain rule — but frameworks like PyTorch abstract all of it away behind `nn.Module` and autograd. So I wrote everything from scratch: forward pass, backpropagation, gradient descent, all of it. No `torch.nn`, no automatic differentiation.
 
-## Try it Yourself
+I also trained a CNN using PyTorch for comparison, to see how much spatial awareness matters for image classification.
 
-Draw a digit and watch both models classify it in real-time. The network visualization shows MLP activations flowing through each layer, while the feature maps reveal what the CNN's convolutional filters detect.
+## Try it yourself
+
+Draw a digit below. Both models classify it in real-time, entirely in your browser.
 
 <MnistDemo />
 
@@ -20,55 +22,47 @@ Draw a digit and watch both models classify it in real-time. The network visuali
 
 ### MLP (from scratch)
 
-The MLP is a 4-layer fully connected network:
+A 4-layer fully connected network:
 
-- **Input**: 784 neurons (28×28 pixel grid, flattened)
-- **Hidden layers**: 3 layers of 256 neurons each, with ReLU activation
-- **Output**: 10 neurons with softmax (one per digit class)
+- **Input**: 784 neurons (28×28 pixels, flattened)
+- **Hidden layers**: 3 × 256 neurons with ReLU
+- **Output**: 10 neurons with softmax
 
-Each hidden layer uses a dual-bias design — a pre-activation bias added before ReLU and a post-activation bias that bypasses the nonlinearity, giving each neuron a linear skip connection past its own activation function.
+Each hidden layer uses a dual-bias design — a pre-activation bias before ReLU and a post-activation bias that bypasses it. This gives each neuron a small linear skip connection past its own activation function, which I found improved accuracy slightly.
 
 ### CNN
 
-The CNN uses spatial structure that the MLP ignores:
+The CNN uses spatial structure that the MLP throws away by flattening:
 
-- **Conv1**: 32 filters (3×3) with BatchNorm → ReLU → MaxPool(2×2)
-- **Conv2**: 32 filters (3×3) with BatchNorm → ReLU → MaxPool(2×2)
-- **FC**: 800 → 10 (flatten and classify)
+- **Conv1**: 32 filters (3×3), BatchNorm, ReLU, MaxPool
+- **Conv2**: 32 filters (3×3), BatchNorm, ReLU, MaxPool
+- **FC**: 800 → 10
 
-Convolutional layers detect local patterns (edges, curves) that are translation-invariant — a "7" is recognized whether it's drawn in the center or corner.
+Convolutional layers detect local patterns like edges and curves that are translation-invariant — a "7" gets recognized whether it's drawn in the center or corner.
 
 ## Training
 
-**MLP:**
-- Weight initialization: Xavier uniform, scaled per-layer
-- Learning rate: 0.5, with cosine annealing decay
-- Batch size: 128, 5 epochs
-- Loss: Cross-entropy (implemented from scratch)
-- The entire training loop — forward pass, backpropagation, and weight updates — is written without any automatic differentiation.
+**MLP** — trained for 5 epochs with Xavier initialization, learning rate 0.5 with cosine annealing, batch size 128. Cross-entropy loss implemented from scratch. The entire training loop — forward pass, backpropagation, weight updates — is written without any automatic differentiation. Gradients derived by hand and computed explicitly for each layer.
 
-**CNN:**
-- Standard PyTorch `nn.Module` with Adam optimizer
-- Dropout (0.25) for regularization
-- Trained for 50 epochs
+**CNN** — standard PyTorch training with Adam optimizer, dropout (0.25), 45 epochs.
 
 ## Results
 
-| Model | Test Accuracy | Parameters |
+| Model | Demo Accuracy | Parameters |
 |-------|-------------|------------|
 | MLP (from scratch) | 97.76% | ~397K |
 | CNN (PyTorch) | 96.58% | ~18K |
 
-Both models run entirely in your browser using pure TypeScript — no server, no ONNX, no WebAssembly.
+The CNN in the [repo](https://github.com/adriandlam/mnist-classifier) achieves 99.31% when fully trained — the demo runs a lighter checkpoint to keep browser inference fast. Both models run entirely in your browser using pure TypeScript. No server, no ONNX, no WebAssembly. Just matrix math.
 
 ## Test Samples
 
-Curated examples from the MNIST test set, showing where the models agree and disagree:
+Some digits from the MNIST test set. Green means correct, red means the model got it wrong.
 
 <SampleGrid />
 
 ## Confusion Matrices
 
-See which digits each model confuses most often:
+Which digits does each model mix up?
 
 <ConfusionMatrix />
