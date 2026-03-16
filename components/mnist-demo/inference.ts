@@ -244,8 +244,14 @@ export function forward(
 		throw new Error(`Expected input of length 784, got ${input.length}`);
 	}
 
+	// Normalize to match training distribution (MNIST mean=0.1307, std=0.3081)
+	const normalized = new Float32Array(784);
+	for (let i = 0; i < 784; i++) {
+		normalized[i] = (input[i] - 0.1307) / 0.3081;
+	}
+
 	// Layer 1: 784 → 256
-	const h1 = matvec(weights.W1, input, 256, 784);
+	const h1 = matvec(weights.W1, normalized, 256, 784);
 	addBias(h1, weights.w1); // pre-activation bias
 	relu(h1);
 	const y1 = new Float32Array(h1); // copy before adding post-ReLU bias
