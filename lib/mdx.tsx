@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import rehypeExternalLinks from "rehype-external-links";
@@ -13,6 +14,11 @@ import remarkRemoveComments from "remark-remove-comments";
 import remarkSmartyPants from "remark-smartypants";
 import * as CalloutComponents from "@/components/callout";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
+
+const MnistDemo = dynamic(
+	() => import("@/components/mnist-demo/mnist-demo").then((m) => m.MnistDemo),
+	{ ssr: false },
+);
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 	// biome-ignore lint/suspicious/noExplicitAny: MDX component props are untyped
@@ -39,6 +45,7 @@ function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 }
 
 export const mdxComponents = {
+	MnistDemo,
 	...CalloutComponents,
 	h2: createHeading(2),
 	h3: createHeading(3),

@@ -8,4 +8,40 @@ inProgress: false
 year: 2024
 ---
 
-Neural network built from scratch achieving 98.32% accuracy on MNIST.
+A deep multi-layer perceptron built entirely from scratch — no PyTorch `nn.Module`, no autograd. Just raw matrix multiplications, manual backpropagation, and gradient descent.
+
+## Try it yourself
+
+Draw a digit below and watch the network classify it in real-time. The visualization shows activations flowing through each layer as the model processes your input.
+
+<MnistDemo />
+
+## Architecture
+
+The model is a 4-layer fully connected network:
+
+- **Input**: 784 neurons (28×28 pixel grid, flattened)
+- **Hidden layers**: 3 layers of 256 neurons each, with ReLU activation
+- **Output**: 10 neurons with softmax (one per digit class)
+
+Each hidden layer uses a dual-bias design — a pre-activation bias added before ReLU and a post-activation bias that bypasses the nonlinearity, giving each neuron a linear skip connection past its own activation function.
+
+## Training
+
+- **Weight initialization**: Xavier uniform, scaled per-layer
+- **Learning rate**: 0.5, with cosine annealing decay
+- **Batch size**: 128
+- **Epochs**: 5
+- **Loss**: Cross-entropy (implemented from scratch)
+
+The entire training loop, including forward pass, backpropagation, and weight updates, is written without any automatic differentiation. Gradients are derived by hand and computed explicitly for each layer.
+
+## Results
+
+| Metric | Value |
+|--------|-------|
+| Test accuracy | 98.32% |
+| Train accuracy | 99.72% |
+| Parameters | ~397K |
+
+The project also includes experiments with simpler architectures (784→128→10), dropout regularization, learning rate scheduling, and weight initialization comparisons — all documented in the project notebooks.
