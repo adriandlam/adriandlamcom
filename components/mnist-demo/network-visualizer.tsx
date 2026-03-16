@@ -128,7 +128,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 	}, [result]);
 
 	const borderColor = theme.border;
-	const accentColor = theme.accent;
+	const activeLineColor = "#ffffff";
 
 	return (
 		<svg
@@ -151,7 +151,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 						y1={gridCenterY}
 						x2={LAYER_X.hidden1}
 						y2={hy}
-						stroke={hasResult && a > 0.3 ? accentColor : borderColor}
+						stroke={hasResult && a > 0.3 ? activeLineColor : borderColor}
 						strokeWidth={0.5}
 						opacity={opacity}
 					/>
@@ -171,7 +171,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 							y1={h1y}
 							x2={LAYER_X.hidden2}
 							y2={h2y}
-							stroke={hasResult && s > 0.2 ? accentColor : borderColor}
+							stroke={hasResult && s > 0.2 ? activeLineColor : borderColor}
 							strokeWidth={0.4 + s * 0.6}
 							opacity={opacity}
 						/>
@@ -192,7 +192,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 							y1={h2y}
 							x2={LAYER_X.hidden3}
 							y2={h3y}
-							stroke={hasResult && s > 0.2 ? accentColor : borderColor}
+							stroke={hasResult && s > 0.2 ? activeLineColor : borderColor}
 							strokeWidth={0.4 + s * 0.6}
 							opacity={opacity}
 						/>
@@ -213,7 +213,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 							y1={h3y}
 							x2={LAYER_X.output}
 							y2={oy}
-							stroke={hasResult && s > 0.2 ? accentColor : borderColor}
+							stroke={hasResult && s > 0.2 ? activeLineColor : borderColor}
 							strokeWidth={0.4 + s * 0.6}
 							opacity={opacity}
 						/>
@@ -291,7 +291,7 @@ export const NetworkVisualizer = memo(function NetworkVisualizer({
 						r={OUTPUT_RADIUS}
 						animate={{
 							fill: outputColor(outputProbs[i], theme),
-							stroke: i === topIndex && hasResult ? accentColor : "none",
+							stroke: i === topIndex && hasResult ? theme.accent : "none",
 							strokeWidth: i === topIndex && hasResult ? 1.5 : 0,
 						}}
 						transition={{ duration: 0.3 }}
