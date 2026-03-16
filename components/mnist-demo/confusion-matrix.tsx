@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { getThemeColors, rgbaString, type ThemeColors } from "./theme";
 
 interface ConfusionData {
@@ -49,14 +49,32 @@ export function ConfusionMatrix() {
 	const [data, setData] = useState<ConfusionData | null>(cachedData);
 	const [error, setError] = useState<string | null>(null);
 	const [model, setModel] = useState<"cnn" | "mlp">("cnn");
-	const [theme, setTheme] = useState<ThemeColors | null>(null);
+	const [visible, setVisible] = useState(false);
+	const sentinelRef = useRef<HTMLDivElement>(null);
+	const theme = getThemeColors();
 
+	// Only fetch when scrolled into view
 	useEffect(() => {
-		setTheme(getThemeColors());
+		const el = sentinelRef.current;
+		if (!el) return;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					setVisible(true);
+					observer.disconnect();
+				}
+			},
+			{ rootMargin: "200px" },
+		);
+		observer.observe(el);
+		return () => observer.disconnect();
 	}, []);
 
 	useEffect(() => {
-		if (cachedData) return;
+		if (!visible || cachedData) {
+			if (cachedData) setData(cachedData);
+			return;
+		}
 
 		let cancelled = false;
 
@@ -77,7 +95,7 @@ export function ConfusionMatrix() {
 		return () => {
 			cancelled = true;
 		};
-	}, []);
+	}, [visible]);
 
 	if (error) {
 		return <p className="text-xs text-vesper-red font-mono">Error: {error}</p>;
@@ -85,9 +103,11 @@ export function ConfusionMatrix() {
 
 	if (!data) {
 		return (
-			<p className="text-xs text-muted-foreground font-mono">
-				Loading confusion matrix…
-			</p>
+			<div ref={sentinelRef}>
+				<p className="text-xs text-muted-foreground font-mono">
+					Loading confusion matrix…
+				</p>
+			</div>
 		);
 	}
 
@@ -183,9 +203,7 @@ export function ConfusionMatrix() {
 										<div
 											key={`${row}-${col}`}
 											className="flex items-center justify-center rounded-[2px]"
-											style={
-												theme ? cellStyle(value, maxVal, isDiagonal, theme) : {}
-											}
+											style={cellStyle(value, maxVal, isDiagonal, theme)}
 											title={`True: ${row}, Predicted: ${col}, Count: ${value}`}
 										>
 											{value > 0 && (

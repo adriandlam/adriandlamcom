@@ -11,6 +11,8 @@ export function DrawingCanvas({ onDraw, size = 280 }: DrawingCanvasProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const isDrawingRef = useRef(false);
 	const lastPosRef = useRef<{ x: number; y: number } | null>(null);
+	const rafRef = useRef<number | null>(null);
+	const pendingNotifyRef = useRef(false);
 
 	const downsampleAndNotify = useCallback(() => {
 		const canvas = canvasRef.current;
@@ -101,18 +103,28 @@ export function DrawingCanvas({ onDraw, size = 280 }: DrawingCanvasProps) {
 		ctx.lineCap = "round";
 		ctx.lineJoin = "round";
 
+		// Throttle inference to one per animation frame
+		const scheduleNotify = () => {
+			if (pendingNotifyRef.current) return;
+			pendingNotifyRef.current = true;
+			rafRef.current = requestAnimationFrame(() => {
+				pendingNotifyRef.current = false;
+				downsampleAndNotify();
+			});
+		};
+
 		const startDrawing = (x: number, y: number) => {
 			isDrawingRef.current = true;
 			lastPosRef.current = { x, y };
 			drawDot(ctx, x, y);
-			downsampleAndNotify();
+			scheduleNotify();
 		};
 
 		const continueDrawing = (x: number, y: number) => {
 			if (!isDrawingRef.current || !lastPosRef.current) return;
 			drawLine(ctx, lastPosRef.current.x, lastPosRef.current.y, x, y);
 			lastPosRef.current = { x, y };
-			downsampleAndNotify();
+			scheduleNotify();
 		};
 
 		const stopDrawing = () => {
@@ -167,6 +179,7 @@ export function DrawingCanvas({ onDraw, size = 280 }: DrawingCanvasProps) {
 			canvas.removeEventListener("touchstart", onTouchStart);
 			canvas.removeEventListener("touchmove", onTouchMove);
 			canvas.removeEventListener("touchend", onTouchEnd);
+			if (rafRef.current) cancelAnimationFrame(rafRef.current);
 		};
 	}, [getCanvasCoords, drawDot, drawLine, downsampleAndNotify]);
 

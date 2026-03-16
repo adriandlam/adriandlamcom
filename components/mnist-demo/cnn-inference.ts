@@ -89,11 +89,10 @@ export async function loadCnnWeights(
 			numElements *= view.getUint32(offset, true);
 			offset += 4;
 		}
-		const data = new Float32Array(numElements);
-		for (let i = 0; i < numElements; i++) {
-			data[i] = view.getFloat32(offset + i * 4, true);
-		}
-		offset += numElements * 4;
+		const byteLength = numElements * 4;
+		// Fast bulk copy — slice ensures proper alignment
+		const data = new Float32Array(buffer.slice(offset, offset + byteLength));
+		offset += byteLength;
 		tensors.push(data);
 	}
 

@@ -57,9 +57,31 @@ function SampleCanvas({ pixels }: { pixels: number[] }) {
 export function SampleGrid() {
 	const [data, setData] = useState<SamplesData | null>(cachedData);
 	const [error, setError] = useState<string | null>(null);
+	const [visible, setVisible] = useState(false);
+	const sentinelRef = useRef<HTMLDivElement>(null);
+
+	// Only fetch when scrolled into view
+	useEffect(() => {
+		const el = sentinelRef.current;
+		if (!el) return;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					setVisible(true);
+					observer.disconnect();
+				}
+			},
+			{ rootMargin: "200px" },
+		);
+		observer.observe(el);
+		return () => observer.disconnect();
+	}, []);
 
 	useEffect(() => {
-		if (cachedData) return;
+		if (!visible || cachedData) {
+			if (cachedData) setData(cachedData);
+			return;
+		}
 
 		let cancelled = false;
 
@@ -82,7 +104,7 @@ export function SampleGrid() {
 		return () => {
 			cancelled = true;
 		};
-	}, []);
+	}, [visible]);
 
 	if (error) {
 		return <p className="text-xs text-vesper-red font-mono">Error: {error}</p>;
@@ -90,9 +112,11 @@ export function SampleGrid() {
 
 	if (!data) {
 		return (
-			<p className="text-xs text-muted-foreground font-mono">
-				Loading samples…
-			</p>
+			<div ref={sentinelRef}>
+				<p className="text-xs text-muted-foreground font-mono">
+					Loading samples…
+				</p>
+			</div>
 		);
 	}
 

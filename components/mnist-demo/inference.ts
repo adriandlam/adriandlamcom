@@ -89,12 +89,21 @@ function parseTensor(
 		offset += 4;
 	}
 
-	// Read float32 data — copy into a new Float32Array to avoid alignment issues
+	// Read float32 data — use bulk copy via DataView for performance
+	const byteLength = numElements * 4;
 	const data = new Float32Array(numElements);
-	for (let i = 0; i < numElements; i++) {
-		data[i] = view.getFloat32(offset + i * 4, true);
+	const src = new DataView(view.buffer, offset, byteLength);
+	// Check if platform is little-endian (almost all modern browsers)
+	const isLE = new Uint8Array(new Uint16Array([1]).buffer)[0] === 1;
+	if (isLE) {
+		// Fast path: direct memory copy for little-endian platforms
+		data.set(new Float32Array(view.buffer.slice(offset, offset + byteLength)));
+	} else {
+		for (let i = 0; i < numElements; i++) {
+			data[i] = src.getFloat32(i * 4, true);
+		}
 	}
-	offset += numElements * 4;
+	offset += byteLength;
 
 	return { data, shape, offset };
 }

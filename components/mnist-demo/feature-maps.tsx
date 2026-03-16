@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import type { CnnInferenceResult } from "./cnn-inference";
-import { getThemeColors, type RGB, type ThemeColors } from "./theme";
+import { getThemeColors, type RGB } from "./theme";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -171,11 +171,7 @@ function drawFeatureMap(
 // ─── Main component ──────────────────────────────────────────────────────────
 
 export function FeatureMaps({ result }: FeatureMapsProps) {
-	const [theme, setTheme] = useState<ThemeColors | null>(null);
-
-	useEffect(() => {
-		setTheme(getThemeColors());
-	}, []);
+	const theme = getThemeColors();
 
 	if (!result) {
 		return (
@@ -185,12 +181,8 @@ export function FeatureMaps({ result }: FeatureMapsProps) {
 		);
 	}
 
-	const colorLo = theme?.background ?? { r: 0x10, g: 0x10, b: 0x10 };
-	const colorHi = theme?.accentForegroundRgb ?? {
-		r: 0xff,
-		g: 0xc7,
-		b: 0x99,
-	};
+	const colorLo = theme.background;
+	const colorHi = theme.accentForegroundRgb;
 
 	return (
 		<div className="flex flex-col gap-4">

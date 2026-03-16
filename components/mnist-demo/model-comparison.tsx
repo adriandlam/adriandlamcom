@@ -32,37 +32,10 @@ export function ModelComparison({
 
 	const mlpWeightsRef = useRef<ModelWeights | null>(null);
 	const cnnWeightsRef = useRef<CnnWeights | null>(null);
+	const loadingRef = useRef(false);
 
-	// Preload both model weights in parallel on mount
+	// Load weights on first draw, then run inference whenever pixels change
 	useEffect(() => {
-		let cancelled = false;
-
-		async function preload() {
-			try {
-				const [mlpW, cnnW] = await Promise.all([
-					loadWeights(),
-					loadCnnWeights(),
-				]);
-				if (cancelled) return;
-				mlpWeightsRef.current = mlpW;
-				cnnWeightsRef.current = cnnW;
-			} catch (err) {
-				console.error("Failed to load model weights:", err);
-			} finally {
-				if (!cancelled) setLoading(false);
-			}
-		}
-
-		preload();
-		return () => {
-			cancelled = true;
-		};
-	}, []);
-
-	// Run inference when pixels change
-	useEffect(() => {
-		if (loading) return;
-
 		if (!pixels || !pixels.some((v) => v > 0)) {
 			setMlpResult(null);
 			setCnnResult(null);
@@ -71,18 +44,49 @@ export function ModelComparison({
 			return;
 		}
 
-		const mlpW = mlpWeightsRef.current;
-		const cnnW = cnnWeightsRef.current;
-		if (!mlpW || !cnnW) return;
+		// If weights already loaded, run inference immediately
+		if (mlpWeightsRef.current && cnnWeightsRef.current) {
+			const mlp = forward(pixels, mlpWeightsRef.current);
+			const cnn = cnnForward(pixels, cnnWeightsRef.current);
+			setMlpResult(mlp);
+			setCnnResult(cnn);
+			onMlpResult?.(mlp);
+			onCnnResult?.(cnn);
+			setLoading(false);
+			return;
+		}
 
-		const mlp = forward(pixels, mlpW);
-		const cnn = cnnForward(pixels, cnnW);
+		// First interaction — load weights then run inference
+		if (loadingRef.current) return; // already loading
+		loadingRef.current = true;
 
-		setMlpResult(mlp);
-		setCnnResult(cnn);
-		onMlpResult?.(mlp);
-		onCnnResult?.(cnn);
-	}, [pixels, loading, onCnnResult, onMlpResult]);
+		let cancelled = false;
+		Promise.all([loadWeights(), loadCnnWeights()])
+			.then(([mlpW, cnnW]) => {
+				if (cancelled) return;
+				mlpWeightsRef.current = mlpW;
+				cnnWeightsRef.current = cnnW;
+				setLoading(false);
+
+				// biome-ignore lint/complexity/useOptionalChain: need non-null narrowing for forward()
+				if (pixels && pixels.some((v) => v > 0)) {
+					const mlp = forward(pixels, mlpW);
+					const cnn = cnnForward(pixels, cnnW);
+					setMlpResult(mlp);
+					setCnnResult(cnn);
+					onMlpResult?.(mlp);
+					onCnnResult?.(cnn);
+				}
+			})
+			.catch((err) => {
+				console.error("Failed to load model weights:", err);
+				if (!cancelled) setLoading(false);
+			});
+
+		return () => {
+			cancelled = true;
+		};
+	}, [pixels, onCnnResult, onMlpResult]);
 
 	// Determine if models disagree on top prediction
 	const mlpTop = mlpResult
@@ -126,7 +130,7 @@ export function ModelComparison({
 							CNN
 						</span>
 						<span className="text-xs text-muted-foreground">
-							(96.58% accuracy)
+							(99.31% accuracy)
 						</span>
 					</div>
 					{loading ? (

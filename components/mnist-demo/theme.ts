@@ -52,6 +52,20 @@ function getCssVarRgb(name: string, fallback: string): RGB {
 /** Cached theme colors — populated once on first access. */
 let cached: ThemeColors | null = null;
 
+/** SSR-safe fallback colors (Vesper defaults). */
+const FALLBACK: ThemeColors = {
+	surface: { r: 0x1a, g: 0x1a, b: 0x1a },
+	background: { r: 0x10, g: 0x10, b: 0x10 },
+	border: "#2a2a2a",
+	accent: "#99ffe4",
+	accentRgb: { r: 0x99, g: 0xff, b: 0xe4 },
+	accentForeground: "#ffc799",
+	accentForegroundRgb: { r: 0xff, g: 0xc7, b: 0x99 },
+	destructive: "#ff8080",
+	destructiveRgb: { r: 0xff, g: 0x80, b: 0x80 },
+	mutedForeground: "#a0a0a0",
+};
+
 export interface ThemeColors {
 	/** Card/surface background — #1a1a1a (--card) */
 	surface: RGB;
@@ -74,10 +88,12 @@ export interface ThemeColors {
 
 /**
  * Get theme colors, parsed from CSS custom properties.
- * Caches after first call. Safe to call from client components.
+ * Caches after first call. Returns hardcoded fallbacks during SSR.
+ * Safe to call synchronously during render (no useEffect needed).
  */
 export function getThemeColors(): ThemeColors {
 	if (cached) return cached;
+	if (typeof document === "undefined") return FALLBACK;
 
 	cached = {
 		surface: getCssVarRgb("--color-card", "#1a1a1a"),
