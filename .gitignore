@@ -45,3 +45,12 @@ next-env.d.ts
 
 # obsidian vault
 .obsidian
+
+# MNIST training data
+/data/
+
+# cloned repos
+/mnist-classifier/
+
+# plan docs (local only)
+/docs/plans/
