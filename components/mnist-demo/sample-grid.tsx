@@ -46,8 +46,8 @@ function SampleCanvas({ pixels }: { pixels: number[] }) {
 			height={28}
 			className="rounded-sm"
 			style={{
-				width: 56,
-				height: 56,
+				width: 84,
+				height: 84,
 				imageRendering: "pixelated",
 			}}
 		/>
@@ -123,9 +123,9 @@ export function SampleGrid() {
 	const { samples, cnn_accuracy, mlp_accuracy } = data;
 
 	return (
-		<div className="not-prose flex flex-col gap-3">
+		<div className="not-prose flex flex-col gap-3 p-4 border rounded-sm">
 			<p className="text-xs font-mono text-muted-foreground">
-				{samples.length} test samples — MLP: {mlp_accuracy}% | CNN:{" "}
+				{samples.length} test samples - MLP: {mlp_accuracy}% | CNN:{" "}
 				{cnn_accuracy}%
 			</p>
 
@@ -138,23 +138,23 @@ export function SampleGrid() {
 					return (
 						<div
 							key={i}
-							className={`bg-secondary rounded-lg p-2 flex flex-col gap-1 items-center ${
-								disagree ? "ring-1 ring-accent-foreground/30" : ""
+							className={`bg-secondary rounded-lg p-3 flex flex-col gap-1.5 items-center ${
+								disagree ? "ring-1 ring-vesper-red/25" : ""
 							}`}
 						>
 							<SampleCanvas pixels={sample.pixels} />
-							<span className="text-[10px] font-mono text-muted-foreground">
+							<span className="text-xs font-mono text-muted-foreground">
 								Label: {sample.label}
 							</span>
 							<span
-								className={`text-[10px] font-mono ${
+								className={`text-xs font-mono ${
 									mlpCorrect ? "text-accent-interactive" : "text-vesper-red"
 								}`}
 							>
 								MLP: {sample.mlp_pred}
 							</span>
 							<span
-								className={`text-[10px] font-mono ${
+								className={`text-xs font-mono ${
 									cnnCorrect ? "text-accent-interactive" : "text-vesper-red"
 								}`}
 							>

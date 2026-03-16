@@ -120,13 +120,13 @@ export function ConfusionMatrix() {
 	const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 	return (
-		<div className="not-prose flex flex-col gap-3">
+		<div className="not-prose flex flex-col gap-3 border p-4 rounded-xs">
 			{/* Model toggle */}
-			<div className="flex gap-4">
+			<div className="flex gap-0.5">
 				<button
 					type="button"
 					onClick={() => setModel("cnn")}
-					className={`text-xs font-mono pb-0.5 transition-colors ${
+					className={`text-sm font-mono pb-0.5 transition-colors px-1.5 ${
 						model === "cnn"
 							? "text-foreground border-b border-accent-interactive"
 							: "text-muted-foreground hover:text-foreground"
@@ -137,7 +137,7 @@ export function ConfusionMatrix() {
 				<button
 					type="button"
 					onClick={() => setModel("mlp")}
-					className={`text-xs font-mono pb-0.5 transition-colors ${
+					className={`text-sm font-mono pb-0.5 transition-colors px-1.5 ${
 						model === "mlp"
 							? "text-foreground border-b border-accent-interactive"
 							: "text-muted-foreground hover:text-foreground"
@@ -169,8 +169,8 @@ export function ConfusionMatrix() {
 					<div
 						className="grid gap-px"
 						style={{
-							gridTemplateColumns: `auto repeat(10, 28px)`,
-							gridTemplateRows: `auto repeat(10, 28px)`,
+							gridTemplateColumns: "auto repeat(10, 36px)",
+							gridTemplateRows: "auto repeat(10, 36px)",
 						}}
 					>
 						{/* Empty top-left corner */}
@@ -180,7 +180,7 @@ export function ConfusionMatrix() {
 						{digits.map((d) => (
 							<div
 								key={`col-${d}`}
-								className="flex items-center justify-center text-xs font-mono text-muted-foreground"
+								className="flex items-center justify-center text-sm font-mono text-muted-foreground"
 							>
 								{d}
 							</div>
@@ -190,7 +190,7 @@ export function ConfusionMatrix() {
 						{digits.map((row) => (
 							<Fragment key={`row-${row}`}>
 								{/* Row header */}
-								<div className="flex items-center justify-center text-xs font-mono text-muted-foreground pr-1">
+								<div className="flex items-center justify-center text-sm font-mono text-muted-foreground pr-1">
 									{row}
 								</div>
 
@@ -207,7 +207,7 @@ export function ConfusionMatrix() {
 											title={`True: ${row}, Predicted: ${col}, Count: ${value}`}
 										>
 											{value > 0 && (
-												<span className="text-[9px] font-mono">{value}</span>
+												<span className="text-[11px] font-mono">{value}</span>
 											)}
 										</div>
 									);

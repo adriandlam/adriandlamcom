@@ -29,7 +29,7 @@ export function MnistDemo() {
 	return (
 		<div className="not-prose my-8 flex flex-col gap-8">
 			{/* Drawing + network visualization */}
-			<div className="flex flex-col lg:flex-row gap-6 items-center">
+			<div className="flex flex-col lg:flex-row gap-6 items-start">
 				<div className="shrink-0">
 					<DrawingCanvas onDraw={handleDraw} size={300} />
 				</div>
