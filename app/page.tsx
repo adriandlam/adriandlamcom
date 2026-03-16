@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
-import { getProjects } from "@/lib/projects";
+import { getFeaturedProjects } from "@/lib/projects";
 
 export default async function Home() {
-	const projects = await getProjects();
-	const featuredProjects = projects.filter((p) => p.featured);
+	const featuredProjects = await getFeaturedProjects();
 
 	return (
 		<main>
@@ -74,7 +73,7 @@ export default async function Home() {
 							<Link href={`/projects/${project.slug}`} className="link">
 								{project.name}
 							</Link>{" "}
-							– {project.shortDescription || project.description}
+							- {project.shortDescription || project.description}
 						</li>
 					))}
 				</ul>

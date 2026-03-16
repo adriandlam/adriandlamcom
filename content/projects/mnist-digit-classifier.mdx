@@ -1,6 +1,6 @@
 ---
 name: "MNIST Digit Classifier"
-shortDescription: "Neural network from scratch, 98.32% accuracy."
+shortDescription: "Neural network from scratch, ~98% accuracy."
 description: "Neural network built from scratch achieving 98.32% accuracy on MNIST."
 url: "https://github.com/adriandlam/mnist-classifier"
 featured: true
@@ -8,15 +8,17 @@ inProgress: false
 year: 2024
 ---
 
-I built this to understand how neural networks actually work. The math behind a multi-layer perceptron is surprisingly simple — matrix multiplies, ReLU, softmax, chain rule — but frameworks like PyTorch abstract all of it away behind `nn.Module` and autograd. So I wrote everything from scratch: forward pass, backpropagation, gradient descent, all of it. No `torch.nn`, no automatic differentiation.
+I built this to understand how neural networks actually work. The math behind a multi-layer perceptron is surprisingly kinda simple - matrix multiplies, ReLU, softmax, chain rule, but frameworks like PyTorch abstract all of it away behind `nn.Module` and autograd. So I decided to write everything from scratch: forward pass, backpropagation, gradient descent, all of it.
 
-I also trained a CNN using PyTorch for comparison, to see how much spatial awareness matters for image classification.
+I also trained a CNN using PyTorch for comparison, to see how much spatial awareness/features matter for image classification.
 
 ## Try it yourself
 
 Draw a digit below. Both models classify it in real-time, entirely in your browser.
 
 <MnistDemo />
+
+---
 
 ## Architecture
 
@@ -28,8 +30,6 @@ A 4-layer fully connected network:
 - **Hidden layers**: 3 × 256 neurons with ReLU
 - **Output**: 10 neurons with softmax
 
-Each hidden layer uses a dual-bias design — a pre-activation bias before ReLU and a post-activation bias that bypasses it. This gives each neuron a small linear skip connection past its own activation function, which I found improved accuracy slightly.
-
 ### CNN
 
 The CNN uses spatial structure that the MLP throws away by flattening:
@@ -38,13 +38,17 @@ The CNN uses spatial structure that the MLP throws away by flattening:
 - **Conv2**: 32 filters (3×3), BatchNorm, ReLU, MaxPool
 - **FC**: 800 → 10
 
-Convolutional layers detect local patterns like edges and curves that are translation-invariant — a "7" gets recognized whether it's drawn in the center or corner.
+Convolutional layers detect local patterns like edges and curves that are translation-invariant. For example, a "7" gets recognized whether it's drawn in the center or corner.
+
+---
 
 ## Training
 
-**MLP** — trained for 5 epochs with Xavier initialization, learning rate 0.5 with cosine annealing, batch size 128. Cross-entropy loss implemented from scratch. The entire training loop — forward pass, backpropagation, weight updates — is written without any automatic differentiation. Gradients derived by hand and computed explicitly for each layer.
+**MLP**: trained for 5 epochs with Xavier weight initialization, learning rate 0.5 with cosine annealing, batch size 128. Cross-entropy loss implemented from scratch. The entire training loop: forward pass, backpropagation, weight updates, was written without any automatic differentiation. Gradients derived by hand and computed explicitly for each layer.
 
-**CNN** — standard PyTorch training with Adam optimizer, dropout (0.25), 45 epochs.
+**CNN**: standard PyTorch training with Adam optimizer, dropout (0.25), 45 epochs.
+
+---
 
 ## Results
 
@@ -53,15 +57,15 @@ Convolutional layers detect local patterns like edges and curves that are transl
 | MLP (from scratch) | 97.76% | ~397K |
 | CNN (PyTorch) | 96.58% | ~18K |
 
-The CNN in the [repo](https://github.com/adriandlam/mnist-classifier) achieves 99.31% when fully trained — the demo runs a lighter checkpoint to keep browser inference fast. Both models run entirely in your browser using pure TypeScript. No server, no ONNX, no WebAssembly. Just matrix math.
+The CNN in the [repo](https://github.com/adriandlam/mnist-classifier) achieves 99.31% when fully trained. The demo runs a lighter checkpoint to keep browser inference fast. Both models run entirely in your browser using pure TypeScript. No server, no ONNX, no WebAssembly.
 
-## Test Samples
+### Test Samples
 
-Some digits from the MNIST test set. Green means correct, red means the model got it wrong.
+Some digits from the MNIST test set.
 
 <SampleGrid />
 
-## Confusion Matrices
+### Confusion Matrices
 
 Which digits does each model mix up?
 

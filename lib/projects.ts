@@ -11,7 +11,6 @@ export type Project = {
 	description: string;
 	shortDescription?: string;
 	url?: string;
-	featured?: boolean;
 	inProgress?: boolean;
 	year: number;
 };
@@ -22,7 +21,6 @@ export type ProjectWithContent = {
 		description: string;
 		shortDescription?: string;
 		url?: string;
-		featured?: boolean;
 		inProgress?: boolean;
 		year: number;
 		draft?: boolean;
@@ -30,11 +28,43 @@ export type ProjectWithContent = {
 	content: string;
 };
 
+type ProjectMeta = {
+	order?: string[];
+	featured: string[];
+};
+
 const PROJECTS_DIR = path.join(process.cwd(), "content/projects");
+
+function getProjectMeta(): ProjectMeta {
+	const metaPath = path.join(PROJECTS_DIR, "meta.json");
+	const raw = fs.readFileSync(metaPath, "utf8");
+	return JSON.parse(raw) as ProjectMeta;
+}
+
+function applyOrdering<T extends { slug: string; year: number }>(
+	projects: T[],
+	order: string[],
+): T[] {
+	const wildcardIndex = order.indexOf("*");
+	const before = wildcardIndex === -1 ? order : order.slice(0, wildcardIndex);
+	const after = wildcardIndex === -1 ? [] : order.slice(wildcardIndex + 1);
+
+	const pinned = new Set([...before, ...after]);
+	const remaining = projects
+		.filter((p) => !pinned.has(p.slug))
+		.sort((a, b) => b.year - a.year);
+
+	const bySlug = new Map(projects.map((p) => [p.slug, p]));
+	const resolve = (slugs: string[]) =>
+		slugs.map((s) => bySlug.get(s)).filter(Boolean) as T[];
+
+	return [...resolve(before), ...remaining, ...resolve(after)];
+}
 
 // Get all projects (listing page + homepage)
 const getProjectsUncached = async (): Promise<Project[]> => {
 	const filenames = fs.readdirSync(PROJECTS_DIR);
+	const meta = getProjectMeta();
 
 	const projects = filenames
 		.filter((filename) => filename.endsWith(".mdx"))
@@ -49,14 +79,14 @@ const getProjectsUncached = async (): Promise<Project[]> => {
 				description: data.description,
 				shortDescription: data.shortDescription,
 				url: data.url,
-				featured: data.featured,
 				inProgress: data.inProgress,
 				year: data.year,
 			};
 		})
 		.filter(Boolean) as Project[];
 
-	return projects.sort((a, b) => b.year - a.year);
+	const effectiveOrder = meta.order ?? [...meta.featured, "*"];
+	return applyOrdering(projects, effectiveOrder);
 };
 
 export const getProjects = unstable_cache(getProjectsUncached, ["projects"], {
@@ -73,6 +103,7 @@ export type NavProject = {
 
 const getProjectsForNavUncached = async (): Promise<NavProject[]> => {
 	const filenames = fs.readdirSync(PROJECTS_DIR);
+	const meta = getProjectMeta();
 
 	const projects = filenames
 		.filter((filename) => filename.endsWith(".mdx"))
@@ -89,12 +120,33 @@ const getProjectsForNavUncached = async (): Promise<NavProject[]> => {
 		})
 		.filter(Boolean) as NavProject[];
 
-	return projects.sort((a, b) => b.year - a.year);
+	const effectiveOrder = meta.order ?? [...meta.featured, "*"];
+	return applyOrdering(projects, effectiveOrder);
 };
 
 export const getProjectsForNav = unstable_cache(
 	getProjectsForNavUncached,
 	["projects-for-nav"],
+	{
+		revalidate: false,
+		tags: ["projects"],
+	},
+);
+
+// Get featured projects in the order specified by meta.json
+const getFeaturedProjectsUncached = async (): Promise<Project[]> => {
+	const allProjects = await getProjectsUncached();
+	const meta = getProjectMeta();
+	const bySlug = new Map(allProjects.map((p) => [p.slug, p]));
+
+	return meta.featured
+		.map((slug) => bySlug.get(slug))
+		.filter(Boolean) as Project[];
+};
+
+export const getFeaturedProjects = unstable_cache(
+	getFeaturedProjectsUncached,
+	["featured-projects"],
 	{
 		revalidate: false,
 		tags: ["projects"],

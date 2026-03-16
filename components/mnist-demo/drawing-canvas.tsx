@@ -189,7 +189,7 @@ export function DrawingCanvas({ onDraw, size = 280 }: DrawingCanvasProps) {
 				ref={canvasRef}
 				width={size}
 				height={size}
-				className="cursor-crosshair touch-none rounded-lg border border-border"
+				className="cursor-crosshair touch-none rounded border border-border"
 			/>
 			<button
 				type="button"

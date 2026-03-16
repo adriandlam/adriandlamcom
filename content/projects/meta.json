@@ -1,0 +1,9 @@
+{
+	"featured": [
+		"vercel-workflow-devkit",
+		"mnist-digit-classifier",
+		"blocksmith",
+		"spec2mcp",
+		"ubc-purity-test"
+	]
+}
