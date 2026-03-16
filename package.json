@@ -11,7 +11,7 @@
 		"lint:links": "remark content/blog --use remark-validate-links --frail --quiet"
 	},
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.1007.0",
+		"@aws-sdk/client-s3": "^3.1009.0",
 		"@radix-ui/react-avatar": "^1.1.11",
 		"@radix-ui/react-separator": "^1.1.8",
 		"@radix-ui/react-slot": "^1.2.4",
