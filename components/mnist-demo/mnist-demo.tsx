@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { DrawingCanvas } from "./drawing-canvas";
 import {
 	forward,
-	loadWeights,
 	type InferenceResult,
+	loadWeights,
 	type ModelWeights,
 } from "./inference";
 import { NetworkVisualizer } from "./network-visualizer";

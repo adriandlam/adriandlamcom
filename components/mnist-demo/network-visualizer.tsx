@@ -22,7 +22,6 @@ const LAYER_X = {
 const HIDDEN_NODE_COUNT = 12;
 const HIDDEN_RADIUS = 7;
 const OUTPUT_RADIUS = 10;
-const REAL_HIDDEN_SIZE = 256;
 
 const GRID_SIZE = 28;
 const PIXEL_SIZE = 3;
@@ -31,7 +30,6 @@ const GRID_TOTAL = GRID_SIZE * PIXEL_SIZE; // 84px
 const NODE_MARGIN_TOP = 20;
 const NODE_AREA_HEIGHT = SVG_HEIGHT - 40; // 260px usable
 
-const DARK = "#1a1a1a";
 const ACCENT = "#99ffe4";
 
 const LAYER_LABELS = ["784", "256", "256", "256", "10"] as const;
@@ -144,6 +142,8 @@ export function NetworkVisualizer({ result }: NetworkVisualizerProps) {
 			viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
 			className="w-full max-w-[600px] h-auto"
 			style={{ minWidth: 400 }}
+			role="img"
+			aria-label="Neural network visualization showing activations across layers"
 		>
 			{/* === Connections === */}
 
