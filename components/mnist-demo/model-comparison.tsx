@@ -63,9 +63,7 @@ export function ModelComparison({
 	useEffect(() => {
 		if (loading) return;
 
-		const hasContent = pixels?.some((v) => v > 0);
-
-		if (!hasContent) {
+		if (!pixels || !pixels.some((v) => v > 0)) {
 			setMlpResult(null);
 			setCnnResult(null);
 			onCnnResult?.(null);
