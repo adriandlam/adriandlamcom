@@ -305,11 +305,9 @@ details summary::-webkit-details-marker {
 /* ── Page transition animations ── */
 
 /* Disable the default root crossfade so only page-content animates */
-/* biome-ignore lint/correctness/noUnknownTypeSelector: view-transition pseudo-elements */
 ::view-transition-old(root) {
 	animation: none;
 }
-/* biome-ignore lint/correctness/noUnknownTypeSelector: view-transition pseudo-elements */
 ::view-transition-new(root) {
 	animation: none;
 }

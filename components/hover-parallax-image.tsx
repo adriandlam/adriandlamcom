@@ -1,13 +1,13 @@
 "use client";
 
-import Image, { type ImageProps } from "next/image";
-import { type Ref, useRef, useState, useCallback, useEffect } from "react";
 import {
 	motion,
 	useMotionValue,
-	useSpring,
 	useReducedMotion,
+	useSpring,
 } from "motion/react";
+import Image, { type ImageProps } from "next/image";
+import { type Ref, useCallback, useEffect, useRef, useState } from "react";
 
 const SPRING_CONFIG = { stiffness: 100, damping: 20 };
 const MAX_OFFSET = 25;

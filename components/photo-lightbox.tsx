@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 /** Full-quality image layer that fades in once loaded */
 function LightboxImage({
@@ -231,6 +231,7 @@ export function PhotoLightbox({
 					aria-label="Close lightbox"
 				>
 					<svg
+						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
 						height="24"
@@ -258,6 +259,7 @@ export function PhotoLightbox({
 						aria-label="Previous photo"
 					>
 						<svg
+							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							width="32"
 							height="32"
@@ -285,6 +287,7 @@ export function PhotoLightbox({
 						aria-label="Next photo"
 					>
 						<svg
+							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							width="32"
 							height="32"
@@ -321,6 +324,8 @@ export function PhotoLightbox({
 					prefersReducedMotion ? { duration: 0.2 } : SPRING_TRANSITION
 				}
 			>
+				{/* biome-ignore lint/a11y/noStaticElementInteractions: acts as backdrop close area, keyboard handled by global Escape listener */}
+				{/* biome-ignore lint/a11y/useKeyWithClickEvents: keyboard handled by global Escape listener */}
 				<div
 					className="relative w-full h-full pointer-events-auto flex items-center justify-center"
 					onClick={(e) => {

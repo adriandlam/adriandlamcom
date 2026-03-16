@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { PhotoGrid } from "@/components/photo-grid";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getPhotos } from "@/lib/photos";
 
 export const revalidate = 3600;
