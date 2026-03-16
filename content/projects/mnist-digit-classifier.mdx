@@ -8,17 +8,19 @@ inProgress: false
 year: 2024
 ---
 
-A deep multi-layer perceptron built entirely from scratch — no PyTorch `nn.Module`, no autograd. Just raw matrix multiplications, manual backpropagation, and gradient descent.
+A deep multi-layer perceptron built entirely from scratch — no PyTorch `nn.Module`, no autograd. Just raw matrix multiplications, manual backpropagation, and gradient descent. Plus a CNN for comparison.
 
-## Try it yourself
+## Try it Yourself
 
-Draw a digit below and watch the network classify it in real-time. The visualization shows activations flowing through each layer as the model processes your input.
+Draw a digit and watch both models classify it in real-time. The network visualization shows MLP activations flowing through each layer, while the feature maps reveal what the CNN's convolutional filters detect.
 
 <MnistDemo />
 
 ## Architecture
 
-The model is a 4-layer fully connected network:
+### MLP (from scratch)
+
+The MLP is a 4-layer fully connected network:
 
 - **Input**: 784 neurons (28×28 pixel grid, flattened)
 - **Hidden layers**: 3 layers of 256 neurons each, with ReLU activation
@@ -26,22 +28,47 @@ The model is a 4-layer fully connected network:
 
 Each hidden layer uses a dual-bias design — a pre-activation bias added before ReLU and a post-activation bias that bypasses the nonlinearity, giving each neuron a linear skip connection past its own activation function.
 
+### CNN
+
+The CNN uses spatial structure that the MLP ignores:
+
+- **Conv1**: 32 filters (3×3) with BatchNorm → ReLU → MaxPool(2×2)
+- **Conv2**: 32 filters (3×3) with BatchNorm → ReLU → MaxPool(2×2)
+- **FC**: 800 → 10 (flatten and classify)
+
+Convolutional layers detect local patterns (edges, curves) that are translation-invariant — a "7" is recognized whether it's drawn in the center or corner.
+
 ## Training
 
-- **Weight initialization**: Xavier uniform, scaled per-layer
-- **Learning rate**: 0.5, with cosine annealing decay
-- **Batch size**: 128
-- **Epochs**: 5
-- **Loss**: Cross-entropy (implemented from scratch)
+**MLP:**
+- Weight initialization: Xavier uniform, scaled per-layer
+- Learning rate: 0.5, with cosine annealing decay
+- Batch size: 128, 5 epochs
+- Loss: Cross-entropy (implemented from scratch)
+- The entire training loop — forward pass, backpropagation, and weight updates — is written without any automatic differentiation.
 
-The entire training loop, including forward pass, backpropagation, and weight updates, is written without any automatic differentiation. Gradients are derived by hand and computed explicitly for each layer.
+**CNN:**
+- Standard PyTorch `nn.Module` with Adam optimizer
+- Dropout (0.25) for regularization
+- Trained for 50 epochs
 
 ## Results
 
-| Metric | Value |
-|--------|-------|
-| Test accuracy | 98.32% |
-| Train accuracy | 99.72% |
-| Parameters | ~397K |
+| Model | Test Accuracy | Parameters |
+|-------|-------------|------------|
+| MLP (from scratch) | 97.76% | ~397K |
+| CNN (PyTorch) | 96.58% | ~18K |
 
-The project also includes experiments with simpler architectures (784→128→10), dropout regularization, learning rate scheduling, and weight initialization comparisons — all documented in the project notebooks.
+Both models run entirely in your browser using pure TypeScript — no server, no ONNX, no WebAssembly.
+
+## Test Samples
+
+Curated examples from the MNIST test set, showing where the models agree and disagree:
+
+<SampleGrid />
+
+## Confusion Matrices
+
+See which digits each model confuses most often:
+
+<ConfusionMatrix />

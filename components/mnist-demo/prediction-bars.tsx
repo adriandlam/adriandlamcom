@@ -15,8 +15,8 @@ export function PredictionBars({ probabilities }: PredictionBarsProps) {
 	const topIndex = maxProb > 0.05 ? probs.indexOf(maxProb) : -1;
 
 	return (
-		<div className="flex flex-col gap-1.5">
-			<span className="text-xs font-mono text-muted-foreground">
+		<div className="flex flex-col gap-2">
+			<span className="text-xs font-mono text-accent-foreground">
 				Predictions
 			</span>
 			{probs.map((prob, digit) => {
@@ -35,7 +35,7 @@ export function PredictionBars({ probabilities }: PredictionBarsProps) {
 						>
 							{digit}
 						</span>
-						<div className="flex-1 h-4 rounded-sm bg-secondary overflow-hidden">
+						<div className="flex-1 h-1 rounded bg-secondary overflow-hidden">
 							<motion.div
 								className="h-full rounded-sm"
 								style={{

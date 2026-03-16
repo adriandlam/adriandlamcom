@@ -1,73 +1,52 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+import type { CnnInferenceResult } from "./cnn-inference";
 import { DrawingCanvas } from "./drawing-canvas";
-import {
-	forward,
-	type InferenceResult,
-	loadWeights,
-	type ModelWeights,
-} from "./inference";
+import { FeatureMaps } from "./feature-maps";
+import type { InferenceResult } from "./inference";
+import { ModelComparison } from "./model-comparison";
 import { NetworkVisualizer } from "./network-visualizer";
-import { PredictionBars } from "./prediction-bars";
 
 export function MnistDemo() {
-	const [result, setResult] = useState<InferenceResult | null>(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const weightsRef = useRef<ModelWeights | null>(null);
+	const [pixels, setPixels] = useState<Float32Array | null>(null);
+	const [mlpResult, setMlpResult] = useState<InferenceResult | null>(null);
+	const [cnnResult, setCnnResult] = useState<CnnInferenceResult | null>(null);
 
-	useEffect(() => {
-		setLoading(true);
-		loadWeights()
-			.then((w) => {
-				weightsRef.current = w;
-				setLoading(false);
-			})
-			.catch((err) => {
-				setError("Failed to load model weights.");
-				setLoading(false);
-				console.error(err);
-			});
+	const handleDraw = useCallback((p: Float32Array) => {
+		const hasContent = p.some((v) => v > 0.01);
+		setPixels(hasContent ? p : null);
 	}, []);
 
-	const handleDraw = useCallback((pixels: Float32Array) => {
-		const weights = weightsRef.current;
-		if (!weights) return;
-
-		const hasContent = pixels.some((v) => v > 0.01);
-		if (!hasContent) {
-			setResult(null);
-			return;
-		}
-
-		const inferenceResult = forward(pixels, weights);
-		setResult(inferenceResult);
+	const handleMlpResult = useCallback((r: InferenceResult | null) => {
+		setMlpResult(r);
 	}, []);
 
-	if (error) {
-		return (
-			<div className="text-vesper-red text-sm font-mono py-4">{error}</div>
-		);
-	}
+	const handleCnnResult = useCallback((r: CnnInferenceResult | null) => {
+		setCnnResult(r);
+	}, []);
 
 	return (
-		<div className="not-prose my-8">
+		<div className="not-prose my-8 flex flex-col gap-8">
+			{/* Drawing + network visualization */}
 			<div className="flex flex-col lg:flex-row gap-6 items-start">
 				<div className="shrink-0">
 					<DrawingCanvas onDraw={handleDraw} size={280} />
-					{loading && (
-						<p className="text-xs font-mono text-muted-foreground mt-2 text-center">
-							Loading model...
-						</p>
-					)}
 				</div>
-
-				<div className="flex-1 flex flex-col gap-4 min-w-0">
-					<NetworkVisualizer result={result} />
-					<PredictionBars probabilities={result?.probabilities ?? null} />
+				<div className="flex-1 min-w-0">
+					<NetworkVisualizer result={mlpResult} />
 				</div>
 			</div>
+
+			{/* Model comparison: MLP vs CNN side-by-side */}
+			<ModelComparison
+				pixels={pixels}
+				onMlpResult={handleMlpResult}
+				onCnnResult={handleCnnResult}
+			/>
+
+			{/* CNN feature maps */}
+			<FeatureMaps result={cnnResult} />
 		</div>
 	);
 }

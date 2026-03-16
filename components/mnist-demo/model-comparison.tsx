@@ -2,17 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-	forward,
-	loadWeights,
-	type InferenceResult,
-	type ModelWeights,
-} from "./inference";
-import {
-	cnnForward,
-	loadCnnWeights,
 	type CnnInferenceResult,
 	type CnnWeights,
+	cnnForward,
+	loadCnnWeights,
 } from "./cnn-inference";
+import {
+	forward,
+	type InferenceResult,
+	loadWeights,
+	type ModelWeights,
+} from "./inference";
 import { PredictionBars } from "./prediction-bars";
 
 interface ModelComparisonProps {
@@ -63,7 +63,7 @@ export function ModelComparison({
 	useEffect(() => {
 		if (loading) return;
 
-		const hasContent = pixels && pixels.some((v) => v > 0);
+		const hasContent = pixels?.some((v) => v > 0);
 
 		if (!hasContent) {
 			setMlpResult(null);

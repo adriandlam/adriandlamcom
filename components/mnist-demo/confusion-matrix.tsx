@@ -91,6 +91,7 @@ export function ConfusionMatrix() {
 			{/* Model toggle */}
 			<div className="flex gap-4">
 				<button
+					type="button"
 					onClick={() => setModel("cnn")}
 					className={`text-xs font-mono pb-0.5 transition-colors ${
 						model === "cnn"
@@ -101,6 +102,7 @@ export function ConfusionMatrix() {
 					CNN
 				</button>
 				<button
+					type="button"
 					onClick={() => setModel("mlp")}
 					className={`text-xs font-mono pb-0.5 transition-colors ${
 						model === "mlp"

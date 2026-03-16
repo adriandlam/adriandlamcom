@@ -13,8 +13,17 @@ import remarkRemoveComments from "remark-remove-comments";
 import remarkSmartyPants from "remark-smartypants";
 import * as CalloutComponents from "@/components/callout";
 import { ExternalLinkIcon } from "@/components/external-link-icon";
-
+import { ConfusionMatrix } from "@/components/mnist-demo/confusion-matrix";
 import { MnistDemo } from "@/components/mnist-demo/mnist-demo";
+import { SampleGrid } from "@/components/mnist-demo/sample-grid";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 	// biome-ignore lint/suspicious/noExplicitAny: MDX component props are untyped
@@ -42,6 +51,8 @@ function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 
 export const mdxComponents = {
 	MnistDemo,
+	SampleGrid,
+	ConfusionMatrix,
 	...CalloutComponents,
 	h2: createHeading(2),
 	h3: createHeading(3),
@@ -92,6 +103,24 @@ export const mdxComponents = {
 		<blockquote className="border-l-2 border-accent-foreground pl-4.5 pr-4 py-4 my-4 [&>p]:mb-0 [&>p]:text-muted-foreground [&>p]:text-[15px]">
 			{children}
 		</blockquote>
+	),
+	table: ({ children }: { children: React.ReactNode }) => (
+		<Table className="my-6">{children}</Table>
+	),
+	thead: ({ children }: { children: React.ReactNode }) => (
+		<TableHeader>{children}</TableHeader>
+	),
+	tbody: ({ children }: { children: React.ReactNode }) => (
+		<TableBody>{children}</TableBody>
+	),
+	tr: ({ children }: { children: React.ReactNode }) => (
+		<TableRow>{children}</TableRow>
+	),
+	th: ({ children }: { children: React.ReactNode }) => (
+		<TableHead>{children}</TableHead>
+	),
+	td: ({ children }: { children: React.ReactNode }) => (
+		<TableCell>{children}</TableCell>
 	),
 };
 
