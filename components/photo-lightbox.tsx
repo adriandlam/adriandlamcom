@@ -4,6 +4,31 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
+/** Full-quality image layer that fades in once loaded */
+function LightboxImage({
+	src,
+	alt,
+	sizes,
+}: {
+	src: string;
+	alt: string;
+	sizes: string;
+}) {
+	const [loaded, setLoaded] = useState(false);
+
+	return (
+		<Image
+			src={src}
+			alt={alt}
+			fill
+			className={`object-contain transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+			sizes={sizes}
+			priority
+			onLoad={() => setLoaded(true)}
+		/>
+	);
+}
+
 interface Photo {
 	url: string;
 	name: string;
@@ -26,6 +51,10 @@ interface PhotoLightboxProps {
 
 const SWIPE_THRESHOLD = 50;
 const SLIDE_DISTANCE = 30;
+
+// Must match the sizes prop used in the grid so browser cache hits
+const GRID_SIZES = "(max-width: 640px) 100vw, 50vw";
+const LIGHTBOX_SIZES = "(max-width: 1024px) 100vw, 1024px";
 
 const SPRING_TRANSITION = {
 	type: "spring" as const,
@@ -310,13 +339,20 @@ export function PhotoLightbox({
 							exit="exit"
 							transition={SLIDE_TRANSITION}
 						>
+							{/* Grid-quality image — cached, shows instantly */}
 							<Image
 								src={photo.url}
 								alt={photo.name}
 								fill
 								className="object-contain"
-								sizes="(max-width: 1024px) 100vw, 1024px"
-								priority
+								sizes={GRID_SIZES}
+							/>
+							{/* Full-quality image — loads on top, fades in when ready */}
+							<LightboxImage
+								key={photo.url}
+								src={photo.url}
+								alt={photo.name}
+								sizes={LIGHTBOX_SIZES}
 							/>
 						</motion.div>
 					</AnimatePresence>
