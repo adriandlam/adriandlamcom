@@ -6,6 +6,14 @@ const envSchema = z.object({
 	CLOUDFLARE_R2_ACCESS_KEY_ID: z.string().min(1).optional(),
 	CLOUDFLARE_R2_SECRET_ACCESS_KEY: z.string().min(1).optional(),
 
+	// Strava API — optional so builds succeed without them (local dev, CI)
+	STRAVA_CLIENT_ID: z.string().min(1).optional(),
+	STRAVA_CLIENT_SECRET: z.string().min(1).optional(),
+	STRAVA_REFRESH_TOKEN: z.string().min(1).optional(),
+
+	// Mapbox — public token for client-side map rendering
+	NEXT_PUBLIC_MAPBOX_TOKEN: z.string().min(1).optional(),
+
 	// Automatically set by Vercel — optional for local dev and CI
 	VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
 });

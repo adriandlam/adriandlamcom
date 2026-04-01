@@ -49,6 +49,7 @@ const getTabs = (
 			href: `/projects/${project.slug}`,
 		})),
 	},
+	{ name: "exploring", href: "/exploring" },
 	{ name: "photos", href: "/photos" },
 ];
 

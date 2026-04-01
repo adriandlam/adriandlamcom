@@ -54,3 +54,6 @@ next-env.d.ts
 
 # plan docs (local only)
 /docs/plans/
+
+# Superpowers brainstorming sessions
+.superpowers/

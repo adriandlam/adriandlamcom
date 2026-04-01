@@ -13,6 +13,8 @@ const nextConfig = {
 			"@radix-ui/react-separator",
 			"class-variance-authority",
 			"next-view-transitions",
+			"mapbox-gl",
+			"react-map-gl",
 		],
 	},
 	// Optionally, add any other Next.js config below

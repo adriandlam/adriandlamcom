@@ -3,6 +3,10 @@
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
 @theme {
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
