@@ -1,1 +1,14 @@
-[]
+[
+	{
+		"lat": 36.4624,
+		"lng": -116.8668,
+		"label": "Death Valley National Park",
+		"type": "landmark"
+	},
+	{
+		"lat": 36.9083,
+		"lng": -116.7586,
+		"label": "Rhyolite Ghost Town",
+		"type": "landmark"
+	}
+]

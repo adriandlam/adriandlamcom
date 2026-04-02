@@ -2,26 +2,29 @@
 
 import polyline from "@mapbox/polyline";
 import { useCallback, useEffect, useRef, useState } from "react";
-import MapGL, { Layer, type MapRef, Source } from "react-map-gl/mapbox";
+import MapGL, { Layer, type MapRef, Popup, Source } from "react-map-gl/mapbox";
 import type { Hike } from "@/lib/strava";
 import type { Landmark } from "@/lib/exploring";
+import { cn } from "@/lib/utils";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 interface ExploringMapProps {
 	hikes: Hike[];
 	landmarks: Landmark[];
-	highlightedHikeId: string | null;
-	onLandmarkClick: (label: string) => void;
 }
 
-function hikesToGeoJSON(hikes: Hike[], highlightedId: string | null) {
+type SelectedFeature =
+	| { type: "hike"; hike: Hike; lng: number; lat: number }
+	| { type: "landmark"; landmark: Landmark };
+
+function hikesToGeoJSON(hikes: Hike[], selectedId: string | null) {
 	return {
 		type: "FeatureCollection" as const,
 		features: hikes.map((hike) => ({
 			type: "Feature" as const,
 			properties: {
 				id: hike.id,
-				highlighted: hike.id === highlightedId,
+				selected: hike.id === selectedId,
 			},
 			geometry: {
 				type: "LineString" as const,
@@ -66,7 +69,6 @@ function landmarksToGeoJSON(landmarks: Landmark[]) {
 	};
 }
 
-// Find the densest cluster of hikes using a grid approach
 function getDensestRegion(hikes: Hike[]): [number, number] | null {
 	const starts = hikes
 		.map((h) => h.startLatLng)
@@ -95,40 +97,30 @@ function getDensestRegion(hikes: Hike[]): [number, number] | null {
 	return [best.lat / best.count, best.lng / best.count];
 }
 
-export function ExploringMap({
-	hikes,
-	landmarks,
-	highlightedHikeId,
-	onLandmarkClick,
-}: ExploringMapProps) {
+function formatDate(dateString: string): string {
+	return new Date(dateString)
+		.toLocaleDateString("en-US", {
+			month: "short",
+			day: "numeric",
+			year: "numeric",
+		})
+		.toLowerCase();
+}
+
+export function ExploringMap({ hikes, landmarks }: ExploringMapProps) {
 	const mapRef = useRef<MapRef>(null);
 	const rotationRef = useRef<number | null>(null);
 	const hasInteractedRef = useRef(false);
 	const hasFlewInRef = useRef(false);
 	const drawAnimRef = useRef<number | null>(null);
-	const pulseAnimRef = useRef<number | null>(null);
 	const [drawingCoords, setDrawingCoords] = useState<[number, number][] | null>(
 		null,
 	);
-	const [pulseRadius, setPulseRadius] = useState(4);
+	const [selected, setSelected] = useState<SelectedFeature | null>(null);
 
-	// Pulsing animation for start point dots
-	useEffect(() => {
-		const startTime = performance.now();
-		const animate = (now: number) => {
-			const elapsed = (now - startTime) / 1000;
-			// Smooth sine pulse between 3 and 6
-			const radius = 4.5 + Math.sin(elapsed * 2) * 1.5;
-			setPulseRadius(radius);
-			pulseAnimRef.current = requestAnimationFrame(animate);
-		};
-		pulseAnimRef.current = requestAnimationFrame(animate);
-		return () => {
-			if (pulseAnimRef.current) cancelAnimationFrame(pulseAnimRef.current);
-		};
-	}, []);
+	const selectedHikeId = selected?.type === "hike" ? selected.hike.id : null;
 
-	// Enable 3D terrain, hillshade, contour lines on map load
+	// Enable hillshade, contour lines, trails on map load
 	const handleLoad = useCallback(() => {
 		const map = mapRef.current?.getMap();
 		if (!map) return;
@@ -145,10 +137,7 @@ export function ExploringMap({
 			tileSize: 512,
 			maxzoom: 14,
 		});
-		// Terrain disabled — causes line rendering to be blurry
-		// map.setTerrain({ source: "mapbox-dem", exaggeration: 1.5 });
 
-		// Hillshade layer — separate DEM source for full resolution
 		map.addLayer(
 			{
 				id: "hillshade",
@@ -165,7 +154,6 @@ export function ExploringMap({
 			"land-structure-polygon",
 		);
 
-		// Contour lines from Mapbox terrain tileset
 		map.addSource("contours", {
 			type: "vector",
 			url: "mapbox://mapbox.mapbox-terrain-v2",
@@ -190,7 +178,6 @@ export function ExploringMap({
 			"hikes-line",
 		);
 
-		// Subtle trail/path features from OSM data
 		map.addLayer(
 			{
 				id: "trails",
@@ -230,70 +217,96 @@ export function ExploringMap({
 			},
 			"hikes-line",
 		);
+
+		// Pointer cursor on interactive layers
+		const interactiveLayers = [
+			"hikes-line",
+			"hike-starts-dot",
+			"landmarks-circle",
+			"landmarks-glow",
+		];
+		for (const layer of interactiveLayers) {
+			map.on("mouseenter", layer, () => {
+				map.getCanvas().style.cursor = "pointer";
+			});
+			map.on("mouseleave", layer, () => {
+				map.getCanvas().style.cursor = "";
+			});
+		}
 	}, []);
 
-	// Fly to highlighted hike, then draw trail after camera arrives
+	// Fly to selected feature and draw trail
 	useEffect(() => {
-		if (!highlightedHikeId || !mapRef.current) return;
-		const hike = hikes.find((h) => h.id === highlightedHikeId);
-		if (!hike?.startLatLng) return;
-
+		if (!selected || !mapRef.current) return;
 		hasInteractedRef.current = true;
 
-		const fullCoords = polyline
-			.decode(hike.polyline)
-			.map(([lat, lng]) => [lng, lat] as [number, number]);
+		if (selected.type === "hike") {
+			const { hike } = selected;
+			if (!hike.startLatLng) return;
 
-		const map = mapRef.current.getMap();
-		mapRef.current.flyTo({
-			center: [hike.startLatLng[1], hike.startLatLng[0]],
-			zoom: 13,
-			pitch: 0,
-			duration: 1500,
-		});
+			const fullCoords = polyline
+				.decode(hike.polyline)
+				.map(([lat, lng]) => [lng, lat] as [number, number]);
 
-		// Start trail drawing only after flyTo completes
-		if (drawAnimRef.current) cancelAnimationFrame(drawAnimRef.current);
-		const startDraw = () => {
-			const totalPoints = fullCoords.length;
-			const duration = 1200;
-			const startTime = performance.now();
+			const map = mapRef.current.getMap();
+			mapRef.current.flyTo({
+				center: [hike.startLatLng[1], hike.startLatLng[0]],
+				zoom: 13,
+				pitch: 0,
+				duration: 1500,
+			});
 
-			const animate = (now: number) => {
-				const elapsed = now - startTime;
-				const progress = Math.min(elapsed / duration, 1);
-				const eased = 1 - (1 - progress) ** 3;
-				const pointCount = Math.max(2, Math.round(totalPoints * eased));
-				setDrawingCoords(fullCoords.slice(0, pointCount));
-
-				if (progress < 1) {
-					drawAnimRef.current = requestAnimationFrame(animate);
-				} else {
-					drawAnimRef.current = null;
-				}
-			};
-			drawAnimRef.current = requestAnimationFrame(animate);
-		};
-		map.once("moveend", startDraw);
-
-		return () => {
-			map.off("moveend", startDraw);
 			if (drawAnimRef.current) cancelAnimationFrame(drawAnimRef.current);
-		};
-	}, [highlightedHikeId, hikes]);
+			const startDraw = () => {
+				const totalPoints = fullCoords.length;
+				const duration = 1200;
+				const startTime = performance.now();
 
-	// Clear drawing when unhovered
+				const animate = (now: number) => {
+					const elapsed = now - startTime;
+					const progress = Math.min(elapsed / duration, 1);
+					const eased = 1 - (1 - progress) ** 3;
+					const pointCount = Math.max(2, Math.round(totalPoints * eased));
+					setDrawingCoords(fullCoords.slice(0, pointCount));
+
+					if (progress < 1) {
+						drawAnimRef.current = requestAnimationFrame(animate);
+					} else {
+						drawAnimRef.current = null;
+					}
+				};
+				drawAnimRef.current = requestAnimationFrame(animate);
+			};
+			map.once("moveend", startDraw);
+
+			return () => {
+				map.off("moveend", startDraw);
+				if (drawAnimRef.current) cancelAnimationFrame(drawAnimRef.current);
+			};
+		}
+
+		if (selected.type === "landmark") {
+			const { landmark } = selected;
+			mapRef.current.flyTo({
+				center: [landmark.lng, landmark.lat],
+				zoom: 10,
+				duration: 1500,
+			});
+		}
+	}, [selected]);
+
+	// Clear drawing when deselected
 	useEffect(() => {
-		if (!highlightedHikeId) {
+		if (!selected || selected.type !== "hike") {
 			setDrawingCoords(null);
 			if (drawAnimRef.current) {
 				cancelAnimationFrame(drawAnimRef.current);
 				drawAnimRef.current = null;
 			}
 		}
-	}, [highlightedHikeId]);
+	}, [selected]);
 
-	// Cinematic initial globe: tilted, slow drift, then fly to densest region
+	// Cinematic initial globe
 	useEffect(() => {
 		if (hasInteractedRef.current) return;
 
@@ -306,7 +319,6 @@ export function ExploringMap({
 			}
 		}
 
-		// Slow drift with slight bearing rotation for cinematic feel
 		let bearing = 0;
 		const rotate = () => {
 			if (mapRef.current && !hasInteractedRef.current) {
@@ -345,19 +357,51 @@ export function ExploringMap({
 		return stopRotation;
 	}, [hikes]);
 
+	// Handle clicks on trails, start dots, and landmarks
 	const handleClick = useCallback(
 		(
-			event: mapboxgl.MapMouseEvent & { features?: mapboxgl.GeoJSONFeature[] },
+			event: mapboxgl.MapMouseEvent & {
+				features?: mapboxgl.GeoJSONFeature[];
+			},
 		) => {
 			const feature = event.features?.[0];
-			if (feature?.properties?.label) {
-				onLandmarkClick(feature.properties.label as string);
+
+			if (!feature) {
+				setSelected(null);
+				return;
 			}
+
+			const layerId = feature.layer?.id;
+
+			// Landmark click
+			if (layerId === "landmarks-circle" || layerId === "landmarks-glow") {
+				const label = feature.properties?.label as string;
+				const lm = landmarks.find((l) => l.label === label);
+				if (lm) setSelected({ type: "landmark", landmark: lm });
+				return;
+			}
+
+			// Hike trail or start dot click
+			if (layerId === "hikes-line" || layerId === "hike-starts-dot") {
+				const id = feature.properties?.id as string;
+				const hike = hikes.find((h) => h.id === id);
+				if (hike) {
+					setSelected({
+						type: "hike",
+						hike,
+						lng: event.lngLat.lng,
+						lat: event.lngLat.lat,
+					});
+				}
+				return;
+			}
+
+			setSelected(null);
 		},
-		[onLandmarkClick],
+		[hikes, landmarks],
 	);
 
-	const hikesGeoJSON = hikesToGeoJSON(hikes, highlightedHikeId);
+	const hikesGeoJSON = hikesToGeoJSON(hikes, selectedHikeId);
 	const hikeStartsGeoJSON = hikeStartsToGeoJSON(hikes);
 	const landmarksGeoJSON = landmarksToGeoJSON(landmarks);
 
@@ -371,6 +415,14 @@ export function ExploringMap({
 				},
 			}
 		: null;
+
+	// Info card popup coordinates
+	const popupCoords: [number, number] | null =
+		selected?.type === "hike" && selected.hike.startLatLng
+			? [selected.hike.startLatLng[1], selected.hike.startLatLng[0]]
+			: selected?.type === "landmark"
+				? [selected.landmark.lng, selected.landmark.lat]
+				: null;
 
 	return (
 		<MapGL
@@ -392,7 +444,12 @@ export function ExploringMap({
 				"horizon-blend": 0.02,
 				"star-intensity": 0.2,
 			}}
-			interactiveLayerIds={["landmarks-circle"]}
+			interactiveLayerIds={[
+				"hikes-line",
+				"hike-starts-dot",
+				"landmarks-circle",
+				"landmarks-glow",
+			]}
 			onClick={handleClick}
 			onLoad={handleLoad}
 			onDragStart={() => {
@@ -403,9 +460,8 @@ export function ExploringMap({
 			}}
 			attributionControl={false}
 			logoPosition="top-left"
-			cursor="grab"
 		>
-			{/* Hike trail lines — highlighted trail hidden here, shown via drawing layer */}
+			{/* Hike trail lines */}
 			<Source id="hikes" type="geojson" data={hikesGeoJSON}>
 				<Layer
 					id="hikes-line"
@@ -423,7 +479,7 @@ export function ExploringMap({
 							12,
 							2.5,
 						],
-						"line-opacity": ["case", ["get", "highlighted"], 0, 0.6],
+						"line-opacity": ["case", ["get", "selected"], 0, 0.6],
 					}}
 					layout={{
 						"line-cap": "round",
@@ -432,32 +488,35 @@ export function ExploringMap({
 				/>
 			</Source>
 
-			{/* Pulsing start-point dots */}
+			{/* Start-point x markers */}
 			<Source id="hike-starts" type="geojson" data={hikeStartsGeoJSON}>
-				{/* Outer pulse glow */}
-				<Layer
-					id="hike-starts-pulse"
-					type="circle"
-					paint={{
-						"circle-radius": pulseRadius * 2,
-						"circle-color": "#99ffe4",
-						"circle-opacity": 0.08,
-						"circle-blur": 1,
-					}}
-				/>
-				{/* Inner dot */}
 				<Layer
 					id="hike-starts-dot"
-					type="circle"
+					type="symbol"
+					layout={{
+						"text-field": "×",
+						"text-size": [
+							"interpolate",
+							["linear"],
+							["zoom"],
+							1,
+							10,
+							8,
+							16,
+							14,
+							22,
+						],
+						"text-allow-overlap": true,
+						"text-ignore-placement": true,
+					}}
 					paint={{
-						"circle-radius": pulseRadius * 0.5,
-						"circle-color": "#99ffe4",
-						"circle-opacity": 0.7,
+						"text-color": "#99ffe4",
+						"text-opacity": 0.8,
 					}}
 				/>
 			</Source>
 
-			{/* Animated trail drawing — only visible when hovering a hike */}
+			{/* Animated trail drawing */}
 			{drawingGeoJSON && (
 				<Source id="drawing" type="geojson" data={drawingGeoJSON}>
 					<Layer
@@ -476,14 +535,14 @@ export function ExploringMap({
 				</Source>
 			)}
 
-			{/* Landmark glow */}
+			{/* Landmark dots */}
 			<Source id="landmarks" type="geojson" data={landmarksGeoJSON}>
 				<Layer
 					id="landmarks-glow"
 					type="circle"
 					paint={{
 						"circle-radius": 10,
-						"circle-color": "#99ffe4",
+						"circle-color": "#ff8080",
 						"circle-opacity": 0.15,
 						"circle-blur": 1,
 					}}
@@ -493,11 +552,58 @@ export function ExploringMap({
 					type="circle"
 					paint={{
 						"circle-radius": 4,
-						"circle-color": "#99ffe4",
+						"circle-color": "#ff8080",
 						"circle-opacity": 0.9,
 					}}
 				/>
 			</Source>
+
+			{/* Info card popup */}
+			{selected && popupCoords && (
+				<Popup
+					longitude={popupCoords[0]}
+					latitude={popupCoords[1]}
+					anchor="bottom"
+					closeButton={false}
+					closeOnClick={false}
+					offset={12}
+					className="exploring-popup"
+				>
+					{selected.type === "hike" ? (
+						<div className="min-w-48 max-w-64">
+							<div className="text-sm font-medium text-vesper-text leading-tight">
+								{selected.hike.name}
+							</div>
+							<div className="flex items-center gap-3 mt-1.5 font-mono text-xs text-vesper-dim">
+								<span>{formatDate(selected.hike.date)}</span>
+							</div>
+							<div className="flex items-center gap-3 mt-1 font-mono text-xs">
+								<span className="text-vesper-orange">
+									{selected.hike.distance} km
+								</span>
+								<span className="text-vesper-dim">
+									{selected.hike.elevationGain}m elev
+								</span>
+								<span className="text-vesper-dim">
+									{selected.hike.movingTime}
+								</span>
+							</div>
+						</div>
+					) : (
+						<div className="min-w-32">
+							<div className="flex items-center gap-2">
+								<span className="size-1.5 rounded-full bg-vesper-red shrink-0" />
+								<span className="text-sm font-medium text-vesper-text">
+									{selected.landmark.label}
+								</span>
+							</div>
+							<div className="font-mono text-xs text-vesper-dim mt-1">
+								{selected.landmark.type}
+							</div>
+						</div>
+					)}
+				</Popup>
+			)}
 		</MapGL>
 	);
 }

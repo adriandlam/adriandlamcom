@@ -9,6 +9,7 @@ interface ExploringPanelProps {
 	hikes: Hike[];
 	landmarks: Landmark[];
 	onHikeHover: (id: string | null) => void;
+	onLandmarkHover: (label: string | null) => void;
 	highlightedLandmark: string | null;
 }
 
@@ -25,6 +26,7 @@ export function ExploringPanel({
 	hikes,
 	landmarks,
 	onHikeHover,
+	onLandmarkHover,
 	highlightedLandmark,
 }: ExploringPanelProps) {
 	const landmarkRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -70,9 +72,11 @@ export function ExploringPanel({
 						onMouseLeave={() => onHikeHover(null)}
 						className="px-4 py-2.5 border-b border-border/50 cursor-pointer hover:bg-muted/50 transition-colors"
 					>
-						<div className="flex items-baseline justify-between">
-							<span className="text-sm text-vesper-text">{hike.name}</span>
-							<span className="font-mono text-xs text-vesper-orange">
+						<div className="flex items-baseline justify-between gap-2">
+							<span className="text-sm text-vesper-text truncate">
+								{hike.name}
+							</span>
+							<span className="font-mono text-xs text-vesper-orange shrink-0">
 								{hike.distance} km
 							</span>
 						</div>
@@ -97,13 +101,15 @@ export function ExploringPanel({
 								ref={(el) => {
 									if (el) landmarkRefs.current.set(lm.label, el);
 								}}
+								onMouseEnter={() => onLandmarkHover(lm.label)}
+								onMouseLeave={() => onLandmarkHover(null)}
 								className={cn(
 									"px-4 py-2.5 border-b border-border/50 cursor-pointer hover:bg-muted/50 transition-colors",
 									highlightedLandmark === lm.label && "bg-muted/50",
 								)}
 							>
 								<div className="flex items-center gap-2">
-									<span className="size-1.5 rounded-full bg-vesper-aqua shrink-0" />
+									<span className="size-1.5 rounded-full bg-vesper-red shrink-0" />
 									<span className="text-sm text-vesper-text">{lm.label}</span>
 									<span className="ml-auto font-mono text-xs text-vesper-dim">
 										{lm.type}

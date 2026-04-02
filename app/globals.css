@@ -7,6 +7,19 @@
   display: none !important;
 }
 
+.exploring-popup .mapboxgl-popup-content {
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.exploring-popup .mapboxgl-popup-tip {
+  border-top-color: rgba(10, 10, 10, 0.92);
+}
+
 @theme {
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);

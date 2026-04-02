@@ -2,6 +2,7 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 import { unstable_cache } from "next/cache";
+import { env } from "@/lib/env";
 import { fetchHikesFromStrava, type Hike } from "@/lib/strava";
 
 export interface Landmark {
@@ -26,6 +27,71 @@ function getHikeOverrides(): Record<string, HikeOverride> {
 	}
 }
 
+async function reverseGeocode(
+	lat: number,
+	lng: number,
+): Promise<string | null> {
+	const token = env.NEXT_PUBLIC_MAPBOX_TOKEN;
+	if (!token) return null;
+
+	const url = `https://api.mapbox.com/search/geocode/v6/reverse?longitude=${lng}&latitude=${lat}&types=place,locality,neighborhood,district,region&limit=1&access_token=${token}`;
+
+	try {
+		const res = await fetch(url);
+		if (!res.ok) {
+			console.error(`[geocode] failed for ${lat},${lng}:`, res.status);
+			return null;
+		}
+		const data = await res.json();
+		const feature = data.features?.[0];
+		if (!feature) {
+			console.warn(`[geocode] no results for ${lat},${lng}`);
+			return null;
+		}
+
+		const props = feature.properties;
+		const featureType = props?.feature_type;
+		const name = props?.name;
+		const region = props?.context?.region?.name;
+		const country = props?.context?.country?.name;
+
+		let result: string | null = null;
+		if (name && country) {
+			// Don't append region if the result itself IS the region
+			if (featureType === "region") {
+				result = `${name}, ${country}`;
+			} else if (region && region !== name) {
+				result = `${name}, ${region}`;
+			} else {
+				result = `${name}, ${country}`;
+			}
+		} else {
+			result = name || null;
+		}
+		console.log(`[geocode] ${lat},${lng} → ${result}`);
+		return result;
+	} catch (e) {
+		console.error(`[geocode] error for ${lat},${lng}:`, e);
+		return null;
+	}
+}
+
+async function enrichWithPlaceNames(hikes: Hike[]): Promise<Hike[]> {
+	return Promise.all(
+		hikes.map(async (hike) => {
+			if (!hike.startLatLng) return hike;
+
+			const placeName = await reverseGeocode(
+				hike.startLatLng[0],
+				hike.startLatLng[1],
+			);
+			if (!placeName) return hike;
+
+			return { ...hike, name: placeName };
+		}),
+	);
+}
+
 function applyOverrides(hikes: Hike[]): Hike[] {
 	const overrides = getHikeOverrides();
 	return hikes.map((hike) => {
@@ -41,7 +107,8 @@ function applyOverrides(hikes: Hike[]): Hike[] {
 export const getHikes = unstable_cache(
 	async (): Promise<Hike[]> => {
 		const hikes = await fetchHikesFromStrava();
-		return applyOverrides(hikes);
+		const enriched = await enrichWithPlaceNames(hikes);
+		return applyOverrides(enriched);
 	},
 	["exploring-hikes"],
 	{
