@@ -1,11 +1,11 @@
 "use client";
 
 import polyline from "@mapbox/polyline";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import MapGL, { Layer, type MapRef, Popup, Source } from "react-map-gl/mapbox";
+import MapGL, { Layer, type MapRef, Source } from "react-map-gl/mapbox";
 import type { Hike } from "@/lib/strava";
 import type { Landmark } from "@/lib/exploring";
-import { cn } from "@/lib/utils";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 interface ExploringMapProps {
@@ -111,7 +111,8 @@ export function ExploringMap({ hikes, landmarks }: ExploringMapProps) {
 	const mapRef = useRef<MapRef>(null);
 	const rotationRef = useRef<number | null>(null);
 	const hasInteractedRef = useRef(false);
-	const hasFlewInRef = useRef(false);
+
+	const densest = getDensestRegion(hikes);
 	const drawAnimRef = useRef<number | null>(null);
 	const [drawingCoords, setDrawingCoords] = useState<[number, number][] | null>(
 		null,
@@ -306,11 +307,9 @@ export function ExploringMap({ hikes, landmarks }: ExploringMapProps) {
 		}
 	}, [selected]);
 
-	// Cinematic initial globe
+	// Gentle rotation on idle
 	useEffect(() => {
 		if (hasInteractedRef.current) return;
-
-		const densest = getDensestRegion(hikes);
 
 		function stopRotation() {
 			if (rotationRef.current !== null) {
@@ -322,40 +321,15 @@ export function ExploringMap({ hikes, landmarks }: ExploringMapProps) {
 		let bearing = 0;
 		const rotate = () => {
 			if (mapRef.current && !hasInteractedRef.current) {
-				const center = mapRef.current.getCenter();
-				bearing += 0.03;
-				mapRef.current.getMap().jumpTo({
-					center: [center.lng + 0.008, center.lat],
-					bearing,
-				});
+				bearing += 0.02;
+				mapRef.current.getMap().jumpTo({ bearing });
 				rotationRef.current = requestAnimationFrame(rotate);
 			}
 		};
 		rotationRef.current = requestAnimationFrame(rotate);
 
-		if (densest && !hasFlewInRef.current) {
-			const timeout = setTimeout(() => {
-				if (!hasInteractedRef.current && mapRef.current) {
-					stopRotation();
-					hasFlewInRef.current = true;
-					mapRef.current.flyTo({
-						center: [densest[1], densest[0]],
-						zoom: 5,
-						pitch: 0,
-						bearing: 0,
-						duration: 3500,
-						curve: 1.8,
-					});
-				}
-			}, 2500);
-			return () => {
-				stopRotation();
-				clearTimeout(timeout);
-			};
-		}
-
 		return stopRotation;
-	}, [hikes]);
+	}, []);
 
 	// Handle clicks on trails, start dots, and landmarks
 	const handleClick = useCallback(
@@ -416,116 +390,164 @@ export function ExploringMap({ hikes, landmarks }: ExploringMapProps) {
 			}
 		: null;
 
-	// Info card popup coordinates
-	const popupCoords: [number, number] | null =
-		selected?.type === "hike" && selected.hike.startLatLng
-			? [selected.hike.startLatLng[1], selected.hike.startLatLng[0]]
-			: selected?.type === "landmark"
-				? [selected.landmark.lng, selected.landmark.lat]
-				: null;
+	// Track screen position of selected feature, offset opposite to trail direction
+	const [popupPos, setPopupPos] = useState<{ x: number; y: number } | null>(
+		null,
+	);
+	// translateX/Y to anchor the card edge toward the trail
+	const [popupTransform, setPopupTransform] = useState({
+		tx: "-50%",
+		ty: "-100%",
+	});
+
+	useEffect(() => {
+		if (!selected || !mapRef.current) {
+			setPopupPos(null);
+			return;
+		}
+
+		const map = mapRef.current.getMap();
+
+		let anchorCoords: [number, number];
+		// tx/ty control which edge of the card is closest to the anchor point
+		let tx = "-50%";
+		let ty = "-100%";
+		let gapX = 0;
+		let gapY = -12;
+
+		if (selected.type === "hike" && selected.hike.startLatLng) {
+			anchorCoords = [
+				selected.hike.startLatLng[1],
+				selected.hike.startLatLng[0],
+			];
+
+			const decoded = polyline
+				.decode(selected.hike.polyline)
+				.map(([lat, lng]) => [lng, lat] as [number, number]);
+			if (decoded.length >= 2) {
+				const sampleEnd =
+					decoded[
+						Math.min(Math.floor(decoded.length * 0.2), decoded.length - 1)
+					];
+				const start = decoded[0];
+				const dx = sampleEnd[0] - start[0];
+				const dy = sampleEnd[1] - start[1];
+
+				// Trail goes right → card anchors from right edge, placed left
+				if (Math.abs(dx) > Math.abs(dy)) {
+					// Primarily horizontal trail
+					if (dx > 0) {
+						tx = "-100%";
+						gapX = -16;
+						ty = "-50%";
+						gapY = 0;
+					} else {
+						tx = "0%";
+						gapX = 16;
+						ty = "-50%";
+						gapY = 0;
+					}
+				} else {
+					// Primarily vertical trail
+					if (dy > 0) {
+						// Trail goes up (north) → card below
+						tx = "-50%";
+						ty = "0%";
+						gapY = 16;
+						gapX = 0;
+					} else {
+						// Trail goes down (south) → card above
+						tx = "-50%";
+						ty = "-100%";
+						gapY = -16;
+						gapX = 0;
+					}
+				}
+			}
+		} else if (selected.type === "landmark") {
+			anchorCoords = [selected.landmark.lng, selected.landmark.lat];
+			tx = "0%";
+			gapX = 16;
+			ty = "-50%";
+			gapY = 0;
+		} else {
+			setPopupPos(null);
+			return;
+		}
+
+		setPopupTransform({ tx, ty });
+
+		const updatePos = () => {
+			const point = map.project(anchorCoords);
+			setPopupPos({ x: point.x + gapX, y: point.y + gapY });
+		};
+
+		updatePos();
+		map.on("move", updatePos);
+		return () => {
+			map.off("move", updatePos);
+		};
+	}, [selected]);
 
 	return (
-		<MapGL
-			ref={mapRef}
-			mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-			initialViewState={{
-				longitude: 0,
-				latitude: 20,
-				zoom: 1.5,
-				pitch: 15,
-			}}
-			projection={{ name: "globe" }}
-			style={{ width: "100%", height: "100%" }}
-			mapStyle="mapbox://styles/mapbox/dark-v11"
-			fog={{
-				color: "#0a0a0a",
-				"high-color": "#0a0a0a",
-				"space-color": "#000000",
-				"horizon-blend": 0.02,
-				"star-intensity": 0.2,
-			}}
-			interactiveLayerIds={[
-				"hikes-line",
-				"hike-starts-dot",
-				"landmarks-circle",
-				"landmarks-glow",
-			]}
-			onClick={handleClick}
-			onLoad={handleLoad}
-			onDragStart={() => {
-				hasInteractedRef.current = true;
-			}}
-			onZoomStart={() => {
-				hasInteractedRef.current = true;
-			}}
-			attributionControl={false}
-			logoPosition="top-left"
-		>
-			{/* Hike trail lines */}
-			<Source id="hikes" type="geojson" data={hikesGeoJSON}>
-				<Layer
-					id="hikes-line"
-					type="line"
-					paint={{
-						"line-color": "#99ffe4",
-						"line-width": [
-							"interpolate",
-							["linear"],
-							["zoom"],
-							1,
-							1.5,
-							5,
-							2,
-							12,
-							2.5,
-						],
-						"line-opacity": ["case", ["get", "selected"], 0, 0.6],
-					}}
-					layout={{
-						"line-cap": "round",
-						"line-join": "round",
-					}}
-				/>
-			</Source>
-
-			{/* Start-point x markers */}
-			<Source id="hike-starts" type="geojson" data={hikeStartsGeoJSON}>
-				<Layer
-					id="hike-starts-dot"
-					type="symbol"
-					layout={{
-						"text-field": "×",
-						"text-size": [
-							"interpolate",
-							["linear"],
-							["zoom"],
-							1,
-							10,
-							8,
-							16,
-							14,
-							22,
-						],
-						"text-allow-overlap": true,
-						"text-ignore-placement": true,
-					}}
-					paint={{
-						"text-color": "#99ffe4",
-						"text-opacity": 0.8,
-					}}
-				/>
-			</Source>
-
-			{/* Animated trail drawing */}
-			{drawingGeoJSON && (
-				<Source id="drawing" type="geojson" data={drawingGeoJSON}>
+		<>
+			<MapGL
+				ref={mapRef}
+				mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+				initialViewState={{
+					longitude: densest ? densest[1] : 0,
+					latitude: densest ? densest[0] : 20,
+					zoom: densest ? 4 : 1.5,
+					pitch: 15,
+				}}
+				projection={{ name: "globe" }}
+				style={{ width: "100%", height: "100%" }}
+				mapStyle="mapbox://styles/mapbox/dark-v11"
+				fog={{
+					color: "#0a0a0a",
+					"high-color": "#0a0a0a",
+					"space-color": "#000000",
+					"horizon-blend": 0.02,
+					"star-intensity": 0.2,
+				}}
+				interactiveLayerIds={[
+					"hikes-line",
+					"hike-starts-dot",
+					"landmarks-circle",
+					"landmarks-glow",
+				]}
+				onClick={handleClick}
+				onLoad={handleLoad}
+				onDragStart={() => {
+					hasInteractedRef.current = true;
+				}}
+				onZoomStart={() => {
+					hasInteractedRef.current = true;
+				}}
+				attributionControl={false}
+				logoPosition="top-left"
+			>
+				{/* Hike trail lines — dashed, visible when zoomed in */}
+				<Source id="hikes" type="geojson" data={hikesGeoJSON}>
 					<Layer
-						id="drawing-line"
+						id="hikes-line"
 						type="line"
+						minzoom={8}
 						paint={{
 							"line-color": "#99ffe4",
-							"line-width": 3,
-							"line-opacity": 1,
+							"line-width": [
+								"interpolate",
+								["linear"],
+								["zoom"],
+								8,
+								1,
+								12,
+								2,
+								16,
+								3,
+							],
+							"line-opacity": ["case", ["get", "selected"], 0.3, 0.6],
+							"line-dasharray": [2, 2],
 						}}
 						layout={{
 							"line-cap": "round",
@@ -533,77 +555,155 @@ export function ExploringMap({ hikes, landmarks }: ExploringMapProps) {
 						}}
 					/>
 				</Source>
-			)}
 
-			{/* Landmark dots */}
-			<Source id="landmarks" type="geojson" data={landmarksGeoJSON}>
-				<Layer
-					id="landmarks-glow"
-					type="circle"
-					paint={{
-						"circle-radius": 10,
-						"circle-color": "#ff8080",
-						"circle-opacity": 0.15,
-						"circle-blur": 1,
-					}}
-				/>
-				<Layer
-					id="landmarks-circle"
-					type="circle"
-					paint={{
-						"circle-radius": 4,
-						"circle-color": "#ff8080",
-						"circle-opacity": 0.9,
-					}}
-				/>
-			</Source>
+				{/* × markers — visible when zoomed out */}
+				<Source id="hike-starts" type="geojson" data={hikeStartsGeoJSON}>
+					<Layer
+						id="hike-starts-dot"
+						type="symbol"
+						maxzoom={10}
+						layout={{
+							"text-field": "×",
+							"text-size": [
+								"interpolate",
+								["linear"],
+								["zoom"],
+								1,
+								10,
+								5,
+								14,
+								10,
+								18,
+							],
+							"text-allow-overlap": true,
+							"text-ignore-placement": true,
+						}}
+						paint={{
+							"text-color": "#99ffe4",
+							"text-opacity": 0.8,
+						}}
+					/>
+				</Source>
 
-			{/* Info card popup */}
-			{selected && popupCoords && (
-				<Popup
-					longitude={popupCoords[0]}
-					latitude={popupCoords[1]}
-					anchor="bottom"
-					closeButton={false}
-					closeOnClick={false}
-					offset={12}
-					className="exploring-popup"
-				>
-					{selected.type === "hike" ? (
-						<div className="min-w-48 max-w-64">
-							<div className="text-sm font-medium text-vesper-text leading-tight">
-								{selected.hike.name}
+				{/* Animated trail drawing */}
+				{drawingGeoJSON && (
+					<Source id="drawing" type="geojson" data={drawingGeoJSON}>
+						<Layer
+							id="drawing-line"
+							type="line"
+							paint={{
+								"line-color": "#99ffe4",
+								"line-width": 3,
+								"line-opacity": 1,
+							}}
+							layout={{
+								"line-cap": "round",
+								"line-join": "round",
+							}}
+						/>
+					</Source>
+				)}
+
+				{/* Landmark dots */}
+				<Source id="landmarks" type="geojson" data={landmarksGeoJSON}>
+					<Layer
+						id="landmarks-glow"
+						type="circle"
+						paint={{
+							"circle-radius": 6,
+							"circle-color": "#ff8080",
+							"circle-opacity": 0.12,
+							"circle-blur": 1,
+						}}
+					/>
+					<Layer
+						id="landmarks-circle"
+						type="circle"
+						paint={{
+							"circle-radius": 2.5,
+							"circle-color": "#ff8080",
+							"circle-opacity": 0.9,
+						}}
+					/>
+				</Source>
+			</MapGL>
+
+			{/* Animated info card */}
+			<AnimatePresence>
+				{selected && popupPos && (
+					<motion.div
+						key={
+							selected.type === "hike"
+								? selected.hike.id
+								: selected.landmark.label
+						}
+						initial={{ opacity: 0, y: 6, scale: 0.97 }}
+						animate={{ opacity: 1, y: 0, scale: 1 }}
+						exit={{ opacity: 0, y: 4, scale: 0.97 }}
+						transition={{ duration: 0.12, ease: "easeOut" }}
+						className="absolute z-20 bg-background/50 backdrop-blur border border-border rounded-lg px-5 py-4 shadow-xl pointer-events-auto"
+						style={{
+							left: popupPos.x,
+							top: popupPos.y,
+							transform: `translate(${popupTransform.tx}, ${popupTransform.ty})`,
+						}}
+					>
+						{selected.type === "hike" ? (
+							<div>
+								<div className="text-sm font-medium text-foreground leading-tight mb-2">
+									{selected.hike.name}
+								</div>
+								<div className="flex gap-4 whitespace-nowrap">
+									<div>
+										<div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+											Distance
+										</div>
+										<div className="font-mono text-xs text-foreground">
+											{selected.hike.distance} km
+										</div>
+									</div>
+									<div>
+										<div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+											Elevation
+										</div>
+										<div className="font-mono text-xs text-foreground">
+											{selected.hike.elevationGain}m
+										</div>
+									</div>
+									<div>
+										<div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+											Time
+										</div>
+										<div className="font-mono text-xs text-foreground">
+											{selected.hike.movingTime}
+										</div>
+									</div>
+									<div>
+										<div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+											Date
+										</div>
+										<div className="font-mono text-xs text-foreground">
+											{formatDate(selected.hike.date)}
+										</div>
+									</div>
+								</div>
 							</div>
-							<div className="flex items-center gap-3 mt-1.5 font-mono text-xs text-vesper-dim">
-								<span>{formatDate(selected.hike.date)}</span>
+						) : (
+							<div>
+								<div className="flex items-center gap-2">
+									<span className="size-1.5 rounded-full bg-vesper-red shrink-0" />
+									<span className="text-sm font-medium text-foreground">
+										{selected.landmark.label}
+									</span>
+								</div>
+								<div className="font-mono text-xs text-muted-foreground mt-1">
+									{selected.landmark.type}
+								</div>
 							</div>
-							<div className="flex items-center gap-3 mt-1 font-mono text-xs">
-								<span className="text-vesper-orange">
-									{selected.hike.distance} km
-								</span>
-								<span className="text-vesper-dim">
-									{selected.hike.elevationGain}m elev
-								</span>
-								<span className="text-vesper-dim">
-									{selected.hike.movingTime}
-								</span>
-							</div>
-						</div>
-					) : (
-						<div className="min-w-32">
-							<div className="flex items-center gap-2">
-								<span className="size-1.5 rounded-full bg-vesper-red shrink-0" />
-								<span className="text-sm font-medium text-vesper-text">
-									{selected.landmark.label}
-								</span>
-							</div>
-							<div className="font-mono text-xs text-vesper-dim mt-1">
-								{selected.landmark.type}
-							</div>
-						</div>
-					)}
-				</Popup>
-			)}
-		</MapGL>
+						)}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</>
 	);
 }

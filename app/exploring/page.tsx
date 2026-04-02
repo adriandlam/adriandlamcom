@@ -28,9 +28,9 @@ export default async function ExploringPage() {
 			<ExploringStatsOverlay stats={stats} />
 
 			{/* Legend */}
-			<div className="absolute bottom-4 left-4 z-10 flex gap-3 font-mono text-xs text-vesper max-md:left-4">
-				<span className="flex items-center gap-1.5">
-					<span className="inline-block w-3 h-0.5 rounded-full bg-vesper-aqua" />
+			<div className="absolute bottom-4 left-4 z-10 flex gap-3 font-mono text-xs text-muted-foreground max-md:left-4">
+				<span className="flex items-center gap-1">
+					<span className="text-vesper-aqua text-sm leading-none">×</span>
 					trails
 				</span>
 				<span className="flex items-center gap-1.5">
