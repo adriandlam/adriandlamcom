@@ -33,6 +33,6 @@ jobs:
           bunx biome check --write .
 
       - name: Commit fixes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "style: autofix biome lint and formatting"
