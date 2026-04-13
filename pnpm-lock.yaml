@@ -118,8 +118,8 @@ importers:
         specifier: 2.4.10
         version: 2.4.10
       '@next/bundle-analyzer':
-        specifier: ^16.2.1
-        version: 16.2.2
+        specifier: ^16.2.3
+        version: 16.2.3
       '@size-limit/preset-app':
         specifier: ^12.0.1
         version: 12.0.1(size-limit@12.0.1(jiti@2.6.1))
@@ -574,8 +574,8 @@ packages:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@next/bundle-analyzer@16.2.2':
-    resolution: {integrity: sha512-wIpZBHyCv1y+y0dnFmqQFlpX91V94Z7RKnpu1TRP0BRaWB/1M74Iqxa9IJ8lzSO0FyTqKldgDHoQJJmn8F+gIA==}
+  '@next/bundle-analyzer@16.2.3':
+    resolution: {integrity: sha512-aDwW4f4SVqbQDWzSBHQJ1KI6H+lx8oX/vS3xGqzLajUu+KQb7uakK88AIMvRIf7TlIonce67g594rzpxvBuJIw==}
 
   '@next/env@16.2.3':
     resolution: {integrity: sha512-ZWXyj4uNu4GCWQw9cjRxWlbD+33mcDszIo9iQxFnBX3Wmgq9ulaSJcl6VhuWx5pCWqqD+9W6Wfz7N0lM5lYPMA==}
@@ -3852,7 +3852,7 @@ snapshots:
       '@types/react': 19.2.14
       react: 19.2.4
 
-  '@next/bundle-analyzer@16.2.2':
+  '@next/bundle-analyzer@16.2.3':
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
