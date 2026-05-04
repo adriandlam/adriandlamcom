@@ -11,7 +11,7 @@
 		"lint:links": "remark content/blog --use remark-validate-links --frail --quiet"
 	},
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.1037.0",
+		"@aws-sdk/client-s3": "^3.1041.0",
 		"@radix-ui/react-avatar": "^1.1.11",
 		"@radix-ui/react-separator": "^1.1.8",
 		"@radix-ui/react-slot": "^1.2.4",
@@ -23,7 +23,7 @@
 		"github-slugger": "^2.0.0",
 		"gray-matter": "^4.0.3",
 		"katex": "^0.16.45",
-		"lucide-react": "^1.11.0",
+		"lucide-react": "^1.14.0",
 		"next": "16.2.3",
 		"motion": "^12.38.0",
 		"next-mdx-remote": "^6.0.0",
@@ -45,7 +45,7 @@
 		"sharp": "^0.34.5",
 		"tailwind-merge": "^3.5.0",
 		"tailwindcss-animate": "^1.0.7",
-		"zod": "^4.3.6"
+		"zod": "^4.4.2"
 	},
 	"size-limit": [
 		{
@@ -55,7 +55,7 @@
 	],
 	"devDependencies": {
 		"@next/bundle-analyzer": "^16.2.1",
-		"@biomejs/biome": "2.4.13",
+		"@biomejs/biome": "2.4.14",
 		"@size-limit/preset-app": "^12.1.0",
 		"@tailwindcss/postcss": "^4.2.4",
 		"@tailwindcss/typography": "^0.5.19",
